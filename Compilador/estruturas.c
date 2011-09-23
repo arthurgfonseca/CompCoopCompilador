@@ -37,5 +37,5 @@ noLista procuraLista(int identificador, noLista *L){
         if(L->identificador == identificador) return *L;
         L = L->prox;
     } 
-    return NULL;
+    return *L;
 }

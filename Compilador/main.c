@@ -16,11 +16,11 @@ int main (int argc, const char * argv[])
 {
     printf("Entrei funcao main");
     
-    noLista *palavraReservada;
+//    noLista *palavraReservada;
     
-    populaTabelaPalavrasReservadas(palavraReservada);
+//    populaTabelaPalavrasReservadas(palavraReservada);
     
-    imprimeLista(palavraReservada);
+//    imprimeLista(palavraReservada);
     
     
     // insert code here...
