@@ -6,9 +6,4 @@
 //  Copyright 2011 Poli USP. All rights reserved.
 //
 
-#ifndef Compilador_constantes_h
-#define Compilador_constantes_h
-
-
-
-#endif
+#define MAX 100000

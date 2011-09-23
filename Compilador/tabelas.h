@@ -6,9 +6,20 @@
 //  Copyright 2011 Poli USP. All rights reserved.
 //
 
-#ifndef Compilador_tabelas_h
-#define Compilador_tabelas_h
 
+#include "estruturas.h"
 
+void criaTabelaPalavrasReservadas(noLista *palavraReservada);
+void populaTabelaPalavrasReservadas(noLista *palavraReservada);
 
-#endif
+void criaTabelaSimbolos();
+void adicionaSimbolo();
+void buscaSimbolo();
+
+void criaTabelaStrings();
+
+void criaListaTokens();
+
+/* FUNCOES CRIADAS PARA TESTE */
+
+void imprimeLista(noLista *lista);
