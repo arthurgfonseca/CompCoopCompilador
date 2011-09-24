@@ -27,7 +27,7 @@ void populaTabelaPalavrasReservadas(noLista **palavraReservada) {
     
     criaTabelaPalavrasReservadas(palavraReservada);
     FILE *entrada;
-    int identificador = 0;
+    int identificador = 1;
     
     
     entrada = fopen("/Users/arthurgfonseca/Sites/Compilador/Compilador/Compilador/palavrasreservadas.txt", "r");

@@ -8,6 +8,9 @@
 
 #include "constantes.h"
 
+
+
+
 typedef struct _noLista{
     int identificador; //Identificador
     char *valorPalavra; //valor da palvra que será guardada
@@ -21,11 +24,13 @@ int ultimoIdentificador(noLista **L);
 
 typedef struct _token{
     int identificador; //Identificador
-    char *valorPalavra; //valor
     int tipo;
+    int linha;
+    char *primeiroValor; //valor
+    char *segundoValor;
     struct _token *prox;
 }token;
 
-void inicializaListaToken(token *T);
-void insereToken(int identificador, int tipo, char *palavra, token *T);
-token procuraToken(int identificador, int tipo, token *L);
+void inicializaListaToken(token **T);
+void insereToken(int identificador, int tipo, int linha, char *primeiraPalavra, char *segundaPalavra, token **T);
+token* procuraToken(int identificador, int tipo, token *L);

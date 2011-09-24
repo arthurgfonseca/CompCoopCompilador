@@ -14,6 +14,8 @@
 
 int main (int argc, const char * argv[])
 {
+    
+    
     printf("Entrei funcao main");
     
     noLista *palavraReservada;
@@ -23,16 +25,8 @@ int main (int argc, const char * argv[])
     
     /* Busca palavra */
     
-    printf("\n\n ENTREI MODO BUSCA \n\n");
-    
-//    char *busca = "while";
-    
-//    buscaSimbolo(busca, &palavraReservada);
     
     
-    
-    // insert code here...
-    printf("Hello, World!\n");
     return 0;
 }
 

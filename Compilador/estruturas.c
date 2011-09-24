@@ -84,3 +84,29 @@ int ultimoIdentificador(noLista **L) {
 //
 //
 
+void inicializaListaToken(token **T) {
+    *T = NULL;
+}
+
+void insereToken(int identificador, int tipo, int linha, char *primeiraPalavra, char *segundaPalavra, token **T) {
+    
+    token *taux, *tLoop;
+    
+    if ( *T != NULL) {
+        tLoop = *T;
+        while( tLoop->prox != NULL){
+            tLoop = tLoop->prox; 
+        }
+    }
+    
+    taux = (token *) malloc (sizeof(token));
+    taux ->identificador = identificador;
+    taux ->primeiroValor = primeiraPalavra;
+    taux ->segundoValor = segundaPalavra;
+    taux ->linha = linha;
+    taux ->prox = NULL;
+    if ( *T != NULL)
+        tLoop->prox = taux;
+    else
+        *T = taux;
+}
