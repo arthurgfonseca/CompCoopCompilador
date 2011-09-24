@@ -113,13 +113,14 @@ void criaTabelaSimbolos(noLista **simbolos) {
     inicializaLista(simbolos);
 }
 
-void adicionaSimbolo(char *palavra, noLista **simbolos) {
+int adicionaSimbolo(char *palavra, noLista **simbolos) {
     
     int identificadorAnterior = ultimoIdentificador(simbolos);
     int identificador;
     identificador = identificadorAnterior + 1;
     
     insereNo(identificador, palavra, simbolos);
+    return identificador;
     
 }
 
@@ -149,13 +150,14 @@ void criaTabelaStrings(noLista **strings) {
     
 }
 
-void adicionaString(char *palavra, noLista **strings) {
+int adicionaString(char *palavra, noLista **strings) {
     
     int identificadorAnterior = ultimoIdentificador(strings);
     int identificador;
     identificador = identificadorAnterior + 1;
     
     insereNo(identificador, palavra, strings);
+    return identificador;
     
 }
 

@@ -84,29 +84,42 @@ int ultimoIdentificador(noLista **L) {
 //
 //
 
-void inicializaListaToken(token **T) {
-    *T = NULL;
-}
-
-void insereToken(int identificador, int tipo, int linha, char *primeiraPalavra, char *segundaPalavra, token **T) {
+token* criaToken(int tipo, int linha, char *primeiraPalavra, char *segundaPalavra) {
     
-    token *taux, *tLoop;
-    
-    if ( *T != NULL) {
-        tLoop = *T;
-        while( tLoop->prox != NULL){
-            tLoop = tLoop->prox; 
-        }
-    }
+    token *taux;
     
     taux = (token *) malloc (sizeof(token));
-    taux ->identificador = identificador;
     taux ->primeiroValor = primeiraPalavra;
     taux ->segundoValor = segundaPalavra;
     taux ->linha = linha;
-    taux ->prox = NULL;
-    if ( *T != NULL)
-        tLoop->prox = taux;
-    else
-        *T = taux;
+    
+    return taux;
 }
+
+//int obtemUltimoIdentificadToken(int tipo, token **T) {
+//    
+//    token *aux, *prox;
+//    aux = *T;
+//    
+//    if (aux != NULL) {
+//        int identificador;
+//        if (aux->tipo == tipo) {
+//            identificador = aux->identificador;
+//        }
+//        prox = aux->prox;
+//        while (prox != NULL) {
+//            
+//            if (prox->tipo == tipo) {
+//                identificador = prox->identificador;
+//            }
+//            
+//            aux = prox;
+//            prox = aux->prox;
+//        }
+//        
+//        return identificador;
+//        
+//    } else {
+//        return -1;
+//    }
+//}

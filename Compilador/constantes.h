@@ -11,13 +11,6 @@
 //
 #define MAX 100000
 
-// Criando a enumeração:
-enum boolean {
-    true = 1, false = 0
-};
-
-typedef  enum boolean  bool;
-
 
 //
 // Definicao dos tipos de dados

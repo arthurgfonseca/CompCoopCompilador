@@ -6,6 +6,10 @@
 //  Copyright 2011 Poli USP. All rights reserved.
 //
 
+
+#ifndef Compilador_estruturas_h
+#define Compilador_estruturas_h
+
 #include "constantes.h"
 
 
@@ -23,14 +27,13 @@ noLista* procuraLista(char *palavra, noLista **L);
 int ultimoIdentificador(noLista **L);
 
 typedef struct _token{
-    int identificador; //Identificador
     int tipo;
     int linha;
     char *primeiroValor; //valor
     char *segundoValor;
-    struct _token *prox;
 }token;
 
-void inicializaListaToken(token **T);
-void insereToken(int identificador, int tipo, int linha, char *primeiraPalavra, char *segundaPalavra, token **T);
-token* procuraToken(int identificador, int tipo, token *L);
+token* criaToken(int tipo, int linha, char *primeiraPalavra, char *segundaPalavra);
+token* procuraToken(int tipo, token *L);
+
+#endif

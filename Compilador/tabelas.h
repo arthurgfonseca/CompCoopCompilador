@@ -14,12 +14,12 @@ void populaTabelaPalavrasReservadas(noLista **palavraReservada);
 int buscaSimboloPalavraReservada(char *palavra, noLista **lista);
 
 void criaTabelaSimbolos(noLista **simbolos);
-void adicionaSimbolo(char *palavra, noLista **simbolos);
+int adicionaSimbolo(char *palavra, noLista **simbolos);
 int buscaTabelaSimbolos(char *palavra, noLista **simbolos);
 
 
 void criaTabelaStrings(noLista **strings);
-void adicionaString(char *palavra, noLista **strings);
+int adicionaString(char *palavra, noLista **strings);
 int buscaTabelaStrings(char *palavra, noLista **strings);
 
 /* FUNCOES CRIADAS PARA TESTE */

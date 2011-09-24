@@ -8,6 +8,5 @@
 
 #include "estruturas.h"
 
-void criaListaTokens(token **tokens);
-void montarTokenPalavra(token **token, char *palavra, int linha, int tipo, noLista **palavrasReservadas, noLista **simbolos, noLista **strings);
-void montarTokenNumero(token **token, char *primeiroNumero, char *segundoNumero, int linha, int tipo);
+token* obterTokenPalavra(char *palavra, int linha, int tipo, noLista **palavrasReservadas, noLista **simbolos, noLista **strings);
+token* obterTokenNumero(char *primeiroNumero, char *segundoNumero, int linha, int tipo);
