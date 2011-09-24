@@ -8,34 +8,79 @@
 
 #include <stdio.h>
 #include <ctype.h>
+#include <stdlib.h>
 #include "estruturas.h"
+#include <string.h>
 
-void inicializaLista(noLista *L){
+//
+//
+//ESTRUTURA DE LISTA
+//
+//
+
+void inicializaLista(noLista **L){
     // Inicia lista como NULL
-    L = NULL;
+    *L = NULL;
 }
 
 //Insere um no na lista
-void insereNo(int identificador, char *palavra, noLista *L){
-    noLista *novo;
+void insereNo(int identificador, char *palavra, noLista **L){
+    noLista *paux, *pLoop;
     
-    while(L->prox != NULL){
-        L = L->prox;
-    }    
-    novo = (noLista *) malloc(sizeof(noLista));         
-    novo->prox = NULL;
-    novo->identificador = identificador;
-    novo->valorPalavra = palavra;
-    L->prox = novo;
+    if ( *L != NULL) {
+        pLoop = *L;
+        while( pLoop->prox != NULL){
+            pLoop = pLoop->prox; 
+        }
+    }
     
+    paux = (noLista *) malloc (sizeof(noLista));
+    paux ->identificador = identificador;
+    paux ->valorPalavra = palavra;
+    paux ->prox = NULL;
+    if ( *L != NULL)
+        pLoop->prox = paux;
+    else
+        *L = paux;
     
 }
 
 //Procura na lista usando o identificador e retorna o valor procurado
-noLista procuraLista(int identificador, noLista *L){
-    while(L != NULL){
-        if(L->identificador == identificador) return *L;
-        L = L->prox;
+noLista* procuraLista(char *palavra, noLista **L){
+    noLista *paux;
+    
+    paux = *L;
+    
+    while(paux != NULL){
+        if(strcmp(paux->valorPalavra, palavra) == 0) return paux;
+        paux = paux->prox;
     } 
-    return *L;
+    return paux;
 }
+
+int ultimoIdentificador(noLista **L) {
+    
+    noLista *aux, *prox;
+    aux = *L;
+    if (aux != NULL) {
+        prox = aux->prox;
+        while (prox != NULL) {
+            
+            aux = prox;
+            prox = aux->prox;
+        }
+        
+        return aux->identificador;
+        
+    } else {
+        return -1;
+    }
+    
+}
+
+//
+//
+//ESTRUTURA DE TOKENS
+//
+//
+

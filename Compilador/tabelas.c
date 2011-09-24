@@ -7,69 +7,190 @@
 //
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "tabelas.h"
 
+//
+//
+// Tabela de Palavras reservadas
+//
+//
 
-void criaTabelaPalavrasReservadas(noLista *palavraReservada) {
+void criaTabelaPalavrasReservadas(noLista **palavraReservada) {
     
     inicializaLista(palavraReservada);
     
 }
 
-void populaTabelaPalavrasReservadas(noLista *palavraReservada) {
+void populaTabelaPalavrasReservadas(noLista **palavraReservada) {
     
     
     criaTabelaPalavrasReservadas(palavraReservada);
-    
     FILE *entrada;
-    char caracterLido;
     int identificador = 0;
     
-    entrada = fopen("palavrasreservadas.txt", "r");
+    
+    entrada = fopen("/Users/arthurgfonseca/Sites/Compilador/Compilador/Compilador/palavrasreservadas.txt", "r");
+//    entrada = fopen("palavrasreservadas.txt", "r");
+    
     
     while (!feof(entrada)) {
         
-        char palavra[MAX];
-        fscanf(entrada, "%c", &caracterLido);
-        int cont = 0;
+     //Verificar ser precisa desalocar da memória
+     //TODO: explicitar o tamanho que será alocado
+        char *palavraLida = malloc(10);
+        
+        fscanf(entrada, "%s", palavraLida);
         
         
-//        Coleta letras do arquivo de entrada até chegar ao final da palavra
-        while (caracterLido != '\n') {
-            
-            palavra[cont] = caracterLido;
-            cont ++;
-            fscanf(entrada, "%c", &caracterLido);
-        }
-        
-        
-        insereNo(identificador, palavra, palavraReservada);
+        insereNo(identificador, palavraLida, palavraReservada);
         
         identificador ++;
+        
+//        Muda posicao de memoria, para apontar para um lugar vazio
+//        palavraLida = palavraLida + 32;
+        
+        
         
     }
     
     fclose(entrada);
     
+    FILE *entradaOperadores;
+    
+    identificador = 101;
+    
+    entradaOperadores = fopen("/Users/arthurgfonseca/Sites/Compilador/Compilador/Compilador/operadores.txt", "r");
+    
+    while (!feof(entradaOperadores)) {
+        
+        //Verificar ser precisa desalocar da memória
+        //TODO: explicitar o tamanho que será alocado
+        char *operadorLido = malloc(10);
+        
+        fscanf(entradaOperadores, "%s", operadorLido);
+        
+        
+        insereNo(identificador, operadorLido, palavraReservada);
+        
+        identificador ++;
+        
+//        Muda posicao de memoria, para apontar para um lugar vazio
+//        operadorLido = operadorLido + 32;
+        
+    }
+    
 }
 
 
-/* Funcoes criada para teste */
+/* Busca simbolos nas três tabelas possiveis (Palavra reservada, Simbolos, String) */
 
-void imprimeLista(noLista *lista) {
+
+int buscaSimboloPalavraReservada(char *palavra, noLista **lista) {
+    
+    noLista *resultado;
+    
+    resultado = procuraLista(palavra, lista);
+    
+    if (resultado == NULL) {
+        return 0;
+    } else {
+        printf("achou alguma coisas %d", resultado->identificador);
+        return resultado->identificador;
+        
+    }
+    
+}
+
+//
+//
+// TABELA DE SIMBOLOS
+//
+//
+
+void criaTabelaSimbolos(noLista **simbolos) {
+    
+    inicializaLista(simbolos);
+}
+
+void adicionaSimbolo(char *palavra, noLista **simbolos) {
+    
+    int identificadorAnterior = ultimoIdentificador(simbolos);
+    int identificador;
+    identificador = identificadorAnterior + 1;
+    
+    insereNo(identificador, palavra, simbolos);
+    
+}
+
+int buscaTabelaSimbolos(char *palavra, noLista **simbolos) {
+    
+    noLista *resultado;
+    resultado = procuraLista(palavra, simbolos);
+    
+    if (resultado == NULL) {
+        return 0;
+    } else {
+        
+        printf("achou alguma coisas %d", resultado->identificador);
+        return resultado->identificador;
+    }
+}
+
+//
+//
+// TABELA DE STRINGS
+//
+//
+
+void criaTabelaStrings(noLista **strings) {
+    
+    inicializaLista(strings);
+    
+}
+
+void adicionaString(char *palavra, noLista **strings) {
+    
+    int identificadorAnterior = ultimoIdentificador(strings);
+    int identificador;
+    identificador = identificadorAnterior + 1;
+    
+    insereNo(identificador, palavra, strings);
+    
+}
+
+int buscaTabelaStrings(char *palavra, noLista **strings) {
+    
+    noLista *resultado;
+    resultado = procuraLista(palavra, strings);
+    
+    if (resultado == NULL) {
+        return 0;
+    } else {
+        printf("achou alguma coisas %d", resultado->identificador);
+        return resultado->identificador;
+    }
+    
+}
+
+//
+//
+/* Funcoes criada para teste */
+//
+//
+
+void imprimeLista(noLista **lista) {
     
     noLista *paux; 
     
-    paux = lista;
+    paux = *lista;
     
     while(paux!=NULL){
-        printf(" %d",paux->identificador);
-        printf(" %s",paux->valorPalavra);
+        printf("\nidentificador %d",paux->identificador);
+        printf("\npalavra %s",paux->valorPalavra);
         printf("\n");
         paux = paux->prox;        
     }    
     printf("\n");
     
 }
-
-

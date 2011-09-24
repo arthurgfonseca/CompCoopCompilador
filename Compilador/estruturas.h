@@ -11,12 +11,13 @@
 typedef struct _noLista{
     int identificador; //Identificador
     char *valorPalavra; //valor da palvra que será guardada
-    struct _noLista *prox;
+    struct _noLista *prox; //Apronta para o próximo da lista
 }noLista;
 
-void inicializaLista(noLista *L);
-void insereNo(int value, char *palavra, noLista *L);
-noLista procuraLista(int identificador, noLista *L);
+void inicializaLista(noLista **L);
+void insereNo(int value, char *palavra, noLista **L);
+noLista* procuraLista(char *palavra, noLista **L);
+int ultimoIdentificador(noLista **L);
 
 typedef struct _token{
     int identificador; //Identificador

@@ -9,17 +9,19 @@
 
 #include "estruturas.h"
 
-void criaTabelaPalavrasReservadas(noLista *palavraReservada);
-void populaTabelaPalavrasReservadas(noLista *palavraReservada);
+void criaTabelaPalavrasReservadas(noLista **palavraReservada);
+void populaTabelaPalavrasReservadas(noLista **palavraReservada);
+int buscaSimboloPalavraReservada(char *palavra, noLista **lista);
 
-void criaTabelaSimbolos();
-void adicionaSimbolo();
-void buscaSimbolo();
+void criaTabelaSimbolos(noLista **simbolos);
+void adicionaSimbolo(char *palavra, noLista **simbolos);
+int buscaTabelaSimbolos(char *palavra, noLista **simbolos);
 
-void criaTabelaStrings();
 
-void criaListaTokens();
+void criaTabelaStrings(noLista **strings);
+void adicionaString(char *palavra, noLista **strings);
+int buscaTabelaStrings(char *palavra, noLista **strings);
 
 /* FUNCOES CRIADAS PARA TESTE */
 
-void imprimeLista(noLista *lista);
+void imprimeLista(noLista **lista);

@@ -10,6 +10,7 @@
 		E24ECD91142BF7D500574E4E /* estruturas.c in Sources */ = {isa = PBXBuildFile; fileRef = E24ECD90142BF7D500574E4E /* estruturas.c */; };
 		E24ECD96142BF80E00574E4E /* lex.c in Sources */ = {isa = PBXBuildFile; fileRef = E24ECD95142BF80E00574E4E /* lex.c */; };
 		E24ECD9A142CCCDF00574E4E /* tabelas.c in Sources */ = {isa = PBXBuildFile; fileRef = E24ECD99142CCCDF00574E4E /* tabelas.c */; };
+		E24ECDA4142E397600574E4E /* token.c in Sources */ = {isa = PBXBuildFile; fileRef = E24ECDA3142E397600574E4E /* token.c */; };
 		E274D6DB142A66AA009890DA /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E274D6DA142A66AA009890DA /* main.c */; };
 		E274D6DD142A66AA009890DA /* Compilador.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = E274D6DC142A66AA009890DA /* Compilador.1 */; };
 /* End PBXBuildFile section */
@@ -35,6 +36,10 @@
 		E24ECD97142C0D6700574E4E /* constantes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = constantes.h; sourceTree = "<group>"; };
 		E24ECD98142CCCD000574E4E /* tabelas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tabelas.h; sourceTree = "<group>"; };
 		E24ECD99142CCCDF00574E4E /* tabelas.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tabelas.c; sourceTree = "<group>"; };
+		E24ECD9B142D41F200574E4E /* palavrasreservadas.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = palavrasreservadas.txt; sourceTree = "<group>"; };
+		E24ECDA0142E1CC300574E4E /* operadores.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = operadores.txt; sourceTree = "<group>"; };
+		E24ECDA2142E396900574E4E /* token.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = token.h; sourceTree = "<group>"; };
+		E24ECDA3142E397600574E4E /* token.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = token.c; sourceTree = "<group>"; };
 		E274D6D6142A66A9009890DA /* Compilador */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Compilador; sourceTree = BUILT_PRODUCTS_DIR; };
 		E274D6DA142A66AA009890DA /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		E274D6DC142A66AA009890DA /* Compilador.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Compilador.1; sourceTree = "<group>"; };
@@ -70,6 +75,8 @@
 		E274D6D9142A66A9009890DA /* Compilador */ = {
 			isa = PBXGroup;
 			children = (
+				E24ECDA0142E1CC300574E4E /* operadores.txt */,
+				E24ECD9B142D41F200574E4E /* palavrasreservadas.txt */,
 				E274D6DA142A66AA009890DA /* main.c */,
 				E274D6DC142A66AA009890DA /* Compilador.1 */,
 				E24ECD93142BF7E100574E4E /* estruturas.h */,
@@ -79,6 +86,8 @@
 				E24ECD97142C0D6700574E4E /* constantes.h */,
 				E24ECD98142CCCD000574E4E /* tabelas.h */,
 				E24ECD99142CCCDF00574E4E /* tabelas.c */,
+				E24ECDA2142E396900574E4E /* token.h */,
+				E24ECDA3142E397600574E4E /* token.c */,
 			);
 			path = Compilador;
 			sourceTree = "<group>";
@@ -137,6 +146,7 @@
 				E24ECD91142BF7D500574E4E /* estruturas.c in Sources */,
 				E24ECD96142BF80E00574E4E /* lex.c in Sources */,
 				E24ECD9A142CCCDF00574E4E /* tabelas.c in Sources */,
+				E24ECDA4142E397600574E4E /* token.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
