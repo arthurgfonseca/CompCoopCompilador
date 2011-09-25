@@ -12,9 +12,6 @@
 
 #include "constantes.h"
 
-
-
-
 typedef struct _noLista{
     int identificador; //Identificador
     char *valorPalavra; //valor da palvra que será guardada

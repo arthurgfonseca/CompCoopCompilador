@@ -7,6 +7,13 @@
  *
  */
 
+#include "estruturas.h"
+
 void inicializarAnalizadorLexico();
-int getToken(FILE* entradaLida);
-int obterTokenDepoisDeIicializarAnalizadorLexico(FILE* entradaLida);
+token getToken(FILE* entradaLida);
+token obterTokenDepoisDeIicializarAnalizadorLexico(FILE* entradaLida);
+int deveConcatenarOCaracterLidoAoLexema();
+void concatenarCharNaString(char caractereASerConcatenado, char* stringQueVaiReceberOChar);
+int encontrouToken();
+token gerarTokenDeFimDeArquivo();
+token gerarTokenAPartirDoLexemaEncontrado(char* lexemaEncontrado);

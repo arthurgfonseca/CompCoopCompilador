@@ -20,6 +20,7 @@ typedef struct _definicaoDeTransicao {
 } definicaoDeTransicao;
 
 void inicializarAutomato(automato *automatoASerInicializado, int numeroDeEstados, int estadoInicial);
+void reiniciarHistoricoDoAutomato(automato *automatoASerReiniciado);
 void inicializarFuncaoDeTransicaoDoAutomato(automato *automatoASerInicializado, int numeroDeEstados, int estadoInicial);
 void modificarFuncaoDeTransicao(automato *automatoASerInicializado, definicaoDeTransicao novaTransicao);
 void modificarFuncaoDeTransicaoLendoTudo(automato *automatoASerInicializado, int estadoAtual, int proximoEstado);

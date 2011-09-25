@@ -25,6 +25,11 @@ void inicializarFuncaoDeTransicaoDoAutomato(automato *automatoASerInicializado, 
 			modificarFuncaoDeTransicaoLendoTudo(automatoASerInicializado, estado, estadoInicial);
 }
 
+void reiniciarHistoricoDoAutomato(automato *automatoASerReiniciado) {
+	automatoASerReiniciado->estadoAtual = 0;
+	automatoASerReiniciado->estadoAnterior = 0;
+}
+
 void modificarFuncaoDeTransicao(automato *automatoASerInicializado, definicaoDeTransicao novaTransicao) {
 	automatoASerInicializado->funcaoDeTransicao[novaTransicao.estadoAtual][(int)novaTransicao.caractereLido] = novaTransicao.proximoEstado;
 }

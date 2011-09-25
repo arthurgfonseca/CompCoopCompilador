@@ -32,7 +32,7 @@ void imprimeToken(token *tokenObtido) {
     
 }
 
-int main (int argc, const char * argv[])
+int mainArthur (int argc, const char * argv[])
 {
     printf("Entrei funcao main");
 /*******************************************/    
@@ -112,3 +112,21 @@ int main (int argc, const char * argv[])
     return 0;
 }
 
+int main (int argc, const char * argv[])
+{
+	FILE* entrada;
+	
+	entrada=fopen("/Volumes/Pessoal/vinicius/teste.txt","r");
+	
+	token tokenLido;
+	
+	tokenLido = getToken(entrada);
+	
+	if (entrada != NULL) 
+		while (tokenLido.tipo == 0)
+			tokenLido = getToken(entrada);
+	
+	fclose (entrada);
+	
+	return 0;
+}

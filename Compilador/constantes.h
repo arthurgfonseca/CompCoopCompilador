@@ -6,14 +6,15 @@
 //  Copyright 2011 Poli USP. All rights reserved.
 //
 
-//
-// Valores fixos
-//
-#define MAX 100000
+#define TRUE 1
+#define FALSE 0
 
+#define TABULACAO 9
+#define LINE_FEED 10
+#define CARRIAGE_RETURN 13
 
 //
-// Definicao dos tipos de dados
+// Definicao dos tipos de tokens
 //
 
 #define PALAVRA 300

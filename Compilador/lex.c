@@ -8,25 +8,32 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 #include "lex.h"
 #include "automato.h"
-
-#define TABULACAO 9
-#define LINE_FEED 10
-#define CARRIAGE_RETURN 13
-
+#include "estruturas.h"
+#include "constantes.h"
 
 automato transdutor;
-int analizadorLexicoInicializado = 0;
+int analizadorLexicoInicializado = FALSE;
+int terminouDeAnalizar = FALSE;
 
 void inicializarAnalizadorLexico() {
-	inicializarAutomato(&transdutor, 12, 0);
+	inicializarAutomato(&transdutor, 14, 0);
 	
 	definicaoDeTransicao novaTransicao;
 	
 	//estado 0
-	//nao e necessario setar as transições de espaço vazio, tab, enter pois 
-	//ao inicializar o automato todas as transições vao para o estado 0
+	modificarFuncaoDeTransicaoLendoTudo(&transdutor, 0, 13);
+	
+	novaTransicao = construirDefinicaoDeTransicao(0, 0, ' '); 
+	modificarFuncaoDeTransicao(&transdutor, novaTransicao);
+	novaTransicao = construirDefinicaoDeTransicao(0, 0, (char)TABULACAO); 
+	modificarFuncaoDeTransicao(&transdutor, novaTransicao);
+	novaTransicao = construirDefinicaoDeTransicao(0, 0, (char)CARRIAGE_RETURN); 
+	modificarFuncaoDeTransicao(&transdutor, novaTransicao);
+	novaTransicao = construirDefinicaoDeTransicao(0, 0, (char)LINE_FEED); 
+	modificarFuncaoDeTransicao(&transdutor, novaTransicao);
 	
 	modificarFuncaoDeTransicaoLendoLetra(&transdutor, 0, 1);
 	modificarFuncaoDeTransicaoLendoDigito(&transdutor, 0, 2);
@@ -99,18 +106,120 @@ void inicializarAnalizadorLexico() {
 	novaTransicao = construirDefinicaoDeTransicao(11, 12, '='); 
 	modificarFuncaoDeTransicao(&transdutor, novaTransicao);
 	
-	analizadorLexicoInicializado = 1;
+	analizadorLexicoInicializado = TRUE;
 }
 
 
 
-int getToken(FILE* entradaLida) {
+token getToken(FILE* entradaLida) {
+	token tokenASerRetornado;
+	
 	if (analizadorLexicoInicializado == 0) 
 		inicializarAnalizadorLexico();
 	
-	return obterTokenDepoisDeIicializarAnalizadorLexico(entradaLida);
+	//TODO: O correto é obtero token aqui. gerenciar as tabelas vendo se ele ja existe e inserir nas tabelas
+	tokenASerRetornado = obterTokenDepoisDeIicializarAnalizadorLexico(entradaLida);
+	
+	reiniciarHistoricoDoAutomato(&transdutor); //importante ficar sempre imediatamente antes do return
+	
+	return tokenASerRetornado;
 }
 
-int obterTokenDepoisDeIicializarAnalizadorLexico(FILE* entradaLida) {
+token obterTokenDepoisDeIicializarAnalizadorLexico(FILE* entradaLida) {
+
+	char lexemaEncontrado[200];
+	//necessário resetar a posicao da memoria que possui o lexema
+	lexemaEncontrado[0] = '\0';
+	char caractereLido;
 	
+	if (terminouDeAnalizar == TRUE)
+		return gerarTokenDeFimDeArquivo();
+		
+	while (encontrouToken() == FALSE) {
+		if (deveConcatenarOCaracterLidoAoLexema() == TRUE) 
+			concatenarCharNaString(caractereLido, &lexemaEncontrado);
+
+		caractereLido = getc(entradaLida);
+		
+		if (caractereLido == EOF) {
+			terminouDeAnalizar = TRUE;
+			return gerarTokenAPartirDoLexemaEncontrado(&lexemaEncontrado);;
+		}
+		
+		atualizarAutomatoParaProximoEstado(&transdutor, caractereLido);
+	}
+	
+	fseek(entradaLida, -1, SEEK_CUR);
+	
+	return gerarTokenAPartirDoLexemaEncontrado(&lexemaEncontrado);;
 }
+
+int deveConcatenarOCaracterLidoAoLexema() {
+	if (transdutor.estadoAtual == 0 &&			
+		(transdutor.estadoAnterior == 0 || 
+		transdutor.estadoAnterior == -1 || 
+		transdutor.estadoAnterior == 5 ||
+		transdutor.estadoAnterior == 8 ||
+		transdutor.estadoAnterior == 13)) 
+			return FALSE;
+
+	return TRUE;
+
+}
+
+void concatenarCharNaString(char caractereASerConcatenado, char* stringQueVaiReceberOChar) {
+	int tamanhoDaString = strlen(stringQueVaiReceberOChar);
+	stringQueVaiReceberOChar[tamanhoDaString] = caractereASerConcatenado;
+	stringQueVaiReceberOChar[tamanhoDaString + 1] = '\0';
+}
+
+int encontrouToken() {
+	return (transdutor.estadoAtual == 0 && transdutor.estadoAnterior != 0 && transdutor.estadoAnterior != 8 && transdutor.estadoAnterior != -1);
+}
+
+token gerarTokenDeFimDeArquivo() {
+	token tokenASerRetornado;
+	tokenASerRetornado.tipo = 1;
+	printf("TOKEN: EOF \n");
+	return tokenASerRetornado;
+}
+
+token gerarTokenAPartirDoLexemaEncontrado(char* lexemaEncontrado) {
+	token tokenASerRetornado;
+	int tipoDoToken;
+	
+	printf("TOKEN: %s		TIPO:", lexemaEncontrado);
+	
+	switch (transdutor.estadoAnterior) {
+		case 1:
+			printf("palavra ");
+			tipoDoToken = PALAVRA;
+			break;
+		case 2:
+			printf("int ");
+			tipoDoToken = INTEIRO;
+			break;
+		case 3:
+			printf("float ");
+			tipoDoToken = FLOAT;
+			break;
+		case 5:
+			printf("string");
+			tipoDoToken = STRING;
+			break;
+		case 11:
+			printf("operador");
+			tipoDoToken = OPERADOR;
+			break;
+		case 12:
+			printf("operador");
+			tipoDoToken = OPERADOR;
+			break;
+	}
+	
+	printf("\n");
+	
+	
+	return tokenASerRetornado;
+}
+
