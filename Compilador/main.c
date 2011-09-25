@@ -10,122 +10,42 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "lex.h"
-#include "tabelas.h"
-#include "token.h"
-
-
+#include "globais.c"
 
 // Função criada apenas para imprimir o token, já que a parte sintatica não está implementada
-void imprimeToken(token *tokenObtido);
+void imprimeToken(token* tokenObtido);
 
-
-void imprimeToken(token *tokenObtido) {
-    
+void imprimeToken(token* tokenObtido) {
     printf("\n\n---- TOKEN GERADO ---- \n\n");
     printf(" tipo -> %d", tokenObtido->tipo);
-    printf("\n linha -> %d", tokenObtido ->linha);
+    printf("\n linha -> %d", tokenObtido->linha);
     printf("\n primeiroValor -> %s", tokenObtido->primeiroValor);
     printf("\n segundoValor -> %s", tokenObtido->segundoValor);
     printf("\n\n---- FIM ----");
-    
-    
-    
 }
 
 int main (int argc, const char * argv[])
 {
-    
-/*******************************************/    
-//    INICIALIZA LISTAS
-/*******************************************/    
-    
-//    Inicializa palavra reservada
-    noLista *palavraReservada;
-    criaTabelaPalavrasReservadas(&palavraReservada);
-    
-//    Inicializa simbolos
-    noLista *simbolos;
-    criaTabelaSimbolos(&simbolos);
-    
-//    Inicializa strings
-    noLista *strings;
-    criaTabelaStrings(&strings);
-    
-//    Token que será obtido
-    token *tokemObtido;
-    
-    
-/*******************************************/    
-//    POPULA TABELA PALAVRAS RESERVADAS
-/*******************************************/
-    
-    populaTabelaPalavrasReservadas(&palavraReservada);
+	numeroDaLinhaLidaNoArquivoFonte = 1;
 
-/*******************************************/    
-//    AREA DE TESTE - GERA TOKEN
-/*******************************************/
-    
-//    char *palavraTeste = "if";
-//    char *palavraTeste = "else";
-//    char *palavraTeste = "while";
-//    char *palavraTeste = "cont";
-    char *palavraTeste = "\"if\"";
-//    char *palavraTeste = "12";
-//    char *palavraTeste = "arthur1";
-    char *segundaPalavra = "123";
-    
-//    printf("\n valor PALAVRA = %d", PALAVRA);
-    
-    int tipo = PALAVRA;
-//    int tipo = INTEIRO;
-//    int tipo = FLOAT;
-    
-    int linha = 10;
-    
-    if (tipo == PALAVRA) {
-        
-        tokemObtido = obterTokenPalavra(palavraTeste, linha, tipo, &palavraReservada, &simbolos, &strings);
-    } else {
-        
-        tokemObtido = obterTokenNumero(palavraTeste, segundaPalavra, linha, tipo);
-    }
-    
-    
-    
-    
-    
-    imprimeToken(tokemObtido);
-    
-//    printf("\n\n----- LISTA DE SIMBOLOS ----");
-//    
-//    imprimeLista(&simbolos);
-//    
-//    printf("\n\n----- LISTA DE STRINGS ----");
-//    
-//    imprimeLista(&strings);
-    
-    
-    printf("\n\n--- FIM PROGRAMA ---");
-    
-    
+	FILE* entrada;
+	
+	entrada=fopen(PATH_PARA_ARQUIVO_FONTE ,"r");
+	
+	token* tokenLido;
+	
+	tokenLido = getToken(entrada);
+	
+	if (entrada != NULL) 
+		while (tokenLido->tipo != EOF) {
+			imprimeToken(tokenLido);
+			tokenLido = getToken(entrada);
+		}
+	
+	imprimeToken(tokenLido);
+	
+	fclose (entrada);    
+	
     return 0;
 }
 
-//int mainVini(int argc, const char * argv[])
-//{
-//	FILE* entrada;
-//	
-//	entrada=fopen(PATH_PARA_ARQUIVO_FONTE ,"r");
-//	
-//	token tokenLido;
-//	
-//	tokenLido = getToken(entrada);
-//	
-//	if (entrada != NULL) 
-//		while (tokenLido.tipo == 0)
-//			tokenLido = getToken(entrada);
-//	
-//	fclose (entrada);
-//	
-//	return 0;
-//}

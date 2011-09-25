@@ -10,10 +10,11 @@
 #include "estruturas.h"
 
 void inicializarAnalizadorLexico();
-token getToken(FILE* entradaLida);
-token obterTokenDepoisDeIicializarAnalizadorLexico(FILE* entradaLida);
+token* getToken(FILE* entradaLida);
+token* obterTokenDepoisDeIicializarAnalizadorLexico(FILE* entradaLida);
 int deveConcatenarOCaracterLidoAoLexema();
 void concatenarCharNaString(char caractereASerConcatenado, char* stringQueVaiReceberOChar);
+void incrementarNumeroDaLinhaLidaCasoNecessario(char caractereLido);
 int encontrouToken();
-token gerarTokenDeFimDeArquivo();
-token gerarTokenAPartirDoLexemaEncontrado(char* lexemaEncontrado);
+token* gerarTokenDeFimDeArquivo();
+token* gerarTokenAPartirDoLexemaEncontrado(char* lexemaEncontrado);

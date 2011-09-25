@@ -13,12 +13,23 @@
 #include "automato.h"
 #include "estruturas.h"
 #include "constantes.h"
+#include "globais.c"
+#include "tabelas.h"
+#include "token.h"
 
 automato transdutor;
 int analizadorLexicoInicializado = FALSE;
 int terminouDeAnalizar = FALSE;
+noLista *palavraReservada;
+noLista *simbolos;
+noLista *strings;
 
 void inicializarAnalizadorLexico() {
+	criaTabelaPalavrasReservadas(&palavraReservada);
+    criaTabelaSimbolos(&simbolos);
+    criaTabelaStrings(&strings);
+    populaTabelaPalavrasReservadas(&palavraReservada);
+	
 	inicializarAutomato(&transdutor, 14, 0);
 	
 	definicaoDeTransicao novaTransicao;
@@ -111,8 +122,8 @@ void inicializarAnalizadorLexico() {
 
 
 
-token getToken(FILE* entradaLida) {
-	token tokenASerRetornado;
+token* getToken(FILE* entradaLida) {
+	token* tokenASerRetornado;
 	
 	if (analizadorLexicoInicializado == 0) 
 		inicializarAnalizadorLexico();
@@ -125,7 +136,7 @@ token getToken(FILE* entradaLida) {
 	return tokenASerRetornado;
 }
 
-token obterTokenDepoisDeIicializarAnalizadorLexico(FILE* entradaLida) {
+token* obterTokenDepoisDeIicializarAnalizadorLexico(FILE* entradaLida) {
 
 	char lexemaEncontrado[200];
 	//necessário resetar a posicao da memoria que possui o lexema
@@ -140,6 +151,7 @@ token obterTokenDepoisDeIicializarAnalizadorLexico(FILE* entradaLida) {
 			concatenarCharNaString(caractereLido, &lexemaEncontrado);
 
 		caractereLido = getc(entradaLida);
+		incrementarNumeroDaLinhaLidaCasoNecessario(caractereLido);
 		
 		if (caractereLido == EOF) {
 			terminouDeAnalizar = TRUE;
@@ -177,49 +189,47 @@ int encontrouToken() {
 	return (transdutor.estadoAtual == 0 && transdutor.estadoAnterior != 0 && transdutor.estadoAnterior != 8 && transdutor.estadoAnterior != -1);
 }
 
-token gerarTokenDeFimDeArquivo() {
-	token tokenASerRetornado;
-	tokenASerRetornado.tipo = 1;
-	printf("TOKEN: EOF \n");
+void incrementarNumeroDaLinhaLidaCasoNecessario(char caractereLido) {
+	if (caractereLido == CARRIAGE_RETURN ||
+		caractereLido == LINE_FEED) 
+		numeroDaLinhaLidaNoArquivoFonte++;
+	
+}
+
+token* gerarTokenDeFimDeArquivo() {
+	token* tokenASerRetornado;
+	tokenASerRetornado = criaToken(EOF, numeroDaLinhaLidaNoArquivoFonte, NULL, NULL);
+
 	return tokenASerRetornado;
 }
 
-token gerarTokenAPartirDoLexemaEncontrado(char* lexemaEncontrado) {
-	token tokenASerRetornado;
-	int tipoDoToken;
-	
-	printf("TOKEN: %s		TIPO:", lexemaEncontrado);
-	
+token* gerarTokenAPartirDoLexemaEncontrado(char* lexemaEncontrado) {
+	token* tokenASerRetornado;
+
 	switch (transdutor.estadoAnterior) {
 		case 1:
-			printf("palavra ");
-			tipoDoToken = PALAVRA;
+			tokenASerRetornado = obterTokenPalavra(lexemaEncontrado, numeroDaLinhaLidaNoArquivoFonte, PALAVRA, &palavraReservada, &simbolos, &strings);
 			break;
 		case 2:
-			printf("int ");
-			tipoDoToken = INTEIRO;
+			tokenASerRetornado = obterTokenNumero(lexemaEncontrado, "", numeroDaLinhaLidaNoArquivoFonte, INTEIRO);
 			break;
 		case 3:
-			printf("float ");
-			tipoDoToken = FLOAT;
+			tokenASerRetornado = obterTokenNumero(lexemaEncontrado, "", numeroDaLinhaLidaNoArquivoFonte, FLOAT);
 			break;
 		case 5:
-			printf("string");
-			tipoDoToken = STRING;
+			tokenASerRetornado = obterTokenPalavra(lexemaEncontrado, numeroDaLinhaLidaNoArquivoFonte, STRING, &palavraReservada, &simbolos, &strings);
 			break;
 		case 11:
-			printf("operador");
-			tipoDoToken = OPERADOR;
+			tokenASerRetornado = obterTokenPalavra(lexemaEncontrado, numeroDaLinhaLidaNoArquivoFonte, OPERADOR, &palavraReservada, &simbolos, &strings);
 			break;
 		case 12:
-			printf("operador");
-			tipoDoToken = OPERADOR;
+			tokenASerRetornado = obterTokenPalavra(lexemaEncontrado, numeroDaLinhaLidaNoArquivoFonte, OPERADOR, &palavraReservada, &simbolos, &strings);
+			break;
+		default:
+			tokenASerRetornado = criaToken((int)lexemaEncontrado[0], numeroDaLinhaLidaNoArquivoFonte, lexemaEncontrado, NULL);
 			break;
 	}
-	
-	printf("\n");
-	
-	
+		
 	return tokenASerRetornado;
 }
 

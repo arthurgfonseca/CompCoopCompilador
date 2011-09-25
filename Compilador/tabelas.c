@@ -92,7 +92,7 @@ int buscaSimboloPalavraReservada(char *palavra, noLista **lista) {
     if (resultado == NULL) {
         return 0;
     } else {
-        printf("achou alguma coisas %d", resultado->identificador);
+        //printf("achou alguma coisas %d", resultado->identificador);
         return resultado->identificador;
         
     }
@@ -135,7 +135,7 @@ int buscaTabelaSimbolos(char *palavra, noLista **simbolos) {
         return 0;
     } else {
         
-        printf("achou alguma coisas %d", resultado->identificador);
+        //printf("achou alguma coisas %d", resultado->identificador);
         return resultado->identificador;
     }
 }
@@ -162,7 +162,7 @@ int adicionaString(char *palavra, noLista **strings) {
         identificador = identificadorAnterior + 1;
     }
     
-    printf("\n\nPALAVAR %s", palavra);
+    //printf("\n\nPALAVAR %s", palavra);
     
     insereNo(identificador, palavra, strings);
     return identificador;
@@ -177,7 +177,7 @@ int buscaTabelaStrings(char *palavra, noLista **strings) {
     if (resultado == NULL) {
         return 0;
     } else {
-        printf("achou alguma coisas %d", resultado->identificador);
+        //printf("achou alguma coisas %d", resultado->identificador);
         return resultado->identificador;
     }
     
@@ -197,11 +197,11 @@ void imprimeLista(noLista **lista) {
     
     
     while(paux!=NULL){
-        printf("\nidentificador %d",paux->identificador);
-        printf("\npalavra %s",paux->valorPalavra);
-        printf("\n");
+        //printf("\nidentificador %d",paux->identificador);
+        //printf("\npalavra %s",paux->valorPalavra);
+        //printf("\n");
         paux = paux->prox;        
     }    
-    printf("\n");
+    //printf("\n");
     
 }
