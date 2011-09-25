@@ -77,7 +77,7 @@ token* obterTokenPalavra(char *palavra, int linha, int tipo, noLista **palavrasR
         }
         
 //        Modificar o tamanho da memoria alocada
-        char *target = malloc(20);
+        char *target = malloc(strlen(palavra));
         strcpy(target, palavraSemAspas);
         
         
