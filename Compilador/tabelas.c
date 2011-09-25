@@ -116,7 +116,12 @@ int adicionaSimbolo(char *palavra, noLista **simbolos) {
     
     int identificadorAnterior = ultimoIdentificador(simbolos);
     int identificador;
-    identificador = identificadorAnterior + 1;
+    if (identificadorAnterior < 0) {
+        identificador = 1;
+    } else {
+        identificador = identificadorAnterior + 1;
+    }
+    
     
     insereNo(identificador, palavra, simbolos);
     return identificador;

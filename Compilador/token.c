@@ -35,7 +35,7 @@ token* obterTokenPalavra(char *palavra, int linha, int tipo, noLista **palavrasR
         printf("\nESPERADO ENTRAR AKI");
         
         //    Verifica se palavra esta na lista de palavras reservadas!
-        resultadoBusca = buscaSimboloPalavraReservada(palavra, simbolos);
+        resultadoBusca = buscaSimboloPalavraReservada(palavra, palavrasReservadas);
         if (resultadoBusca > 0) {
             printf("\nESPERADO ENTRAR AKI 2");
             encontrou = 1;

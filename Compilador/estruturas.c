@@ -92,6 +92,7 @@ token* criaToken(int tipo, int linha, char *primeiraPalavra, char *segundaPalavr
     taux ->primeiroValor = primeiraPalavra;
     taux ->segundoValor = segundaPalavra;
     taux ->linha = linha;
+    taux ->tipo = tipo;
     
     return taux;
 }

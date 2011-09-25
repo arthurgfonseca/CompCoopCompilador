@@ -66,28 +66,44 @@ int main (int argc, const char * argv[])
 //    AREA DE TESTE - GERA TOKEN
 /*******************************************/
     
-    char *palavraTeste = "if";
+//    char *palavraTeste = "if";
 //    char *palavraTeste = "else";
 //    char *palavraTeste = "while";
 //    char *palavraTeste = "cont";
 //    char *palavraTeste = "\"if\"";
-//    char *palavraTeste = "12";
+    char *palavraTeste = "12";
 //    char *palavraTeste = "arthur1";
-//    char *segundaPalavra = "123";
+    char *segundaPalavra = "123";
     
     printf("\n valor PALAVRA = %d", PALAVRA);
     
-    int tipo = PALAVRA;
+//    int tipo = PALAVRA;
 //    int tipo = INTEIRO;
-//    int tipo = FLOAT;
+    int tipo = FLOAT;
     
     int linha = 10;
     
-    tokemObtido = obterTokenPalavra(palavraTeste, linha, tipo, &palavraReservada, &simbolos, &strings);
+    if (tipo == PALAVRA) {
+        
+        tokemObtido = obterTokenPalavra(palavraTeste, linha, tipo, &palavraReservada, &simbolos, &strings);
+    } else {
+        
+        tokemObtido = obterTokenNumero(palavraTeste, segundaPalavra, linha, tipo);
+    }
     
-//    tokemObtido = obterTokenNumero(palavraTeste, segundaPalavra, linha, tipo);
+    
+    
+    
     
     imprimeToken(tokemObtido);
+    
+//    printf("\n\n----- LISTA DE SIMBOLOS ----");
+//    
+//    imprimeLista(&simbolos);
+//    
+//    printf("\n\n----- LISTA DE STRINGS ----");
+//    
+//    imprimeLista(&strings);
     
     
     printf("\n\n--- FIM PROGRAMA ---");
