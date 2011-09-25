@@ -32,7 +32,7 @@ void imprimeToken(token *tokenObtido) {
     
 }
 
-int mainArthur (int argc, const char * argv[])
+int main (int argc, const char * argv[])
 {
     
 /*******************************************/    
@@ -69,16 +69,16 @@ int mainArthur (int argc, const char * argv[])
 //    char *palavraTeste = "else";
 //    char *palavraTeste = "while";
 //    char *palavraTeste = "cont";
-//    char *palavraTeste = "\"if\"";
-    char *palavraTeste = "12";
+    char *palavraTeste = "\"if\"";
+//    char *palavraTeste = "12";
 //    char *palavraTeste = "arthur1";
     char *segundaPalavra = "123";
     
-    printf("\n valor PALAVRA = %d", PALAVRA);
+//    printf("\n valor PALAVRA = %d", PALAVRA);
     
-//    int tipo = PALAVRA;
+    int tipo = PALAVRA;
 //    int tipo = INTEIRO;
-    int tipo = FLOAT;
+//    int tipo = FLOAT;
     
     int linha = 10;
     
@@ -111,21 +111,21 @@ int mainArthur (int argc, const char * argv[])
     return 0;
 }
 
-int main(int argc, const char * argv[])
-{
-	FILE* entrada;
-	
-	entrada=fopen(PATH_PARA_ARQUIVO_FONTE ,"r");
-	
-	token tokenLido;
-	
-	tokenLido = getToken(entrada);
-	
-	if (entrada != NULL) 
-		while (tokenLido.tipo == 0)
-			tokenLido = getToken(entrada);
-	
-	fclose (entrada);
-	
-	return 0;
-}
+//int mainVini(int argc, const char * argv[])
+//{
+//	FILE* entrada;
+//	
+//	entrada=fopen(PATH_PARA_ARQUIVO_FONTE ,"r");
+//	
+//	token tokenLido;
+//	
+//	tokenLido = getToken(entrada);
+//	
+//	if (entrada != NULL) 
+//		while (tokenLido.tipo == 0)
+//			tokenLido = getToken(entrada);
+//	
+//	fclose (entrada);
+//	
+//	return 0;
+//}

@@ -156,7 +156,13 @@ int adicionaString(char *palavra, noLista **strings) {
     
     int identificadorAnterior = ultimoIdentificador(strings);
     int identificador;
-    identificador = identificadorAnterior + 1;
+    if (identificadorAnterior < 0) {
+        identificador = 1;
+    } else {
+        identificador = identificadorAnterior + 1;
+    }
+    
+    printf("\n\nPALAVAR %s", palavra);
     
     insereNo(identificador, palavra, strings);
     return identificador;
@@ -188,6 +194,7 @@ void imprimeLista(noLista **lista) {
     noLista *paux; 
     
     paux = *lista;
+    
     
     while(paux!=NULL){
         printf("\nidentificador %d",paux->identificador);

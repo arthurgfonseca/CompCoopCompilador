@@ -34,10 +34,13 @@ void insereNo(int identificador, char *palavra, noLista **L){
         }
     }
     
+    
     paux = (noLista *) malloc (sizeof(noLista));
     paux ->identificador = identificador;
     paux ->valorPalavra = palavra;
     paux ->prox = NULL;
+    
+    
     if ( *L != NULL)
         pLoop->prox = paux;
     else

@@ -7,8 +7,10 @@
 //
 
 #define PATH_PARA_ARQUIVO_FONTE "/Volumes/Pessoal/vinicius/teste.txt"
-#define PATH_PARA_ARQUIVO_DE_PALAVRAS_RESERVADAS "/Volumes/Pessoal/vinicius/palavrasreservadas.txt"
-#define PATH_PARA_ARQUIVO_DE_OPERADORES "/Volumes/Pessoal/vinicius/operadores.txt"
+//#define PATH_PARA_ARQUIVO_DE_PALAVRAS_RESERVADAS "/Volumes/Pessoal/vinicius/palavrasreservadas.txt"
+//#define PATH_PARA_ARQUIVO_DE_OPERADORES "/Volumes/Pessoal/vinicius/operadores.txt"
+#define PATH_PARA_ARQUIVO_DE_PALAVRAS_RESERVADAS "/Users/arthurgfonseca/Sites/Compilador/Compilador/Compilador/palavrasreservadas.txt"
+#define PATH_PARA_ARQUIVO_DE_OPERADORES "/Users/arthurgfonseca/Sites/Compilador/Compilador/Compilador/operadores.txt"
 
 #define TRUE 1
 #define FALSE 0

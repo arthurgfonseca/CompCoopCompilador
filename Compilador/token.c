@@ -22,22 +22,20 @@ token* obterTokenPalavra(char *palavra, int linha, int tipo, noLista **palavrasR
     int encontrou = 0;
     int isString = 0;
     char primeiroChar = palavra[0];
-    char comparador = '"';
+    char *comparador = "\"";
     
-    if (strcmp(&primeiroChar, &comparador) == 0) {
+    
+    if (strcmp(&primeiroChar, comparador) == 0) {
         isString = 1;
     }
     
     
-    
     if (isString == 0) {
         
-        printf("\nESPERADO ENTRAR AKI");
         
         //    Verifica se palavra esta na lista de palavras reservadas!
         resultadoBusca = buscaSimboloPalavraReservada(palavra, palavrasReservadas);
         if (resultadoBusca > 0) {
-            printf("\nESPERADO ENTRAR AKI 2");
             encontrou = 1;
             token = criaToken(PALAVRARESERVADA, linha, palavra, NULL);
         }
@@ -45,10 +43,8 @@ token* obterTokenPalavra(char *palavra, int linha, int tipo, noLista **palavrasR
         
         //    Se não é Palavra reservada verifica ser é simbolo
         if (encontrou == 0) {
-            printf("\n N ESPERADO ENTRAR AKI");
             resultadoBusca = buscaTabelaSimbolos(palavra, simbolos);
             if (resultadoBusca > 0) {
-                printf("\n N ESPERADO ENTRAR AKI 2");
                 encontrou = 1;
                 token = criaToken(SIMBOLO, linha, palavra, NULL);
             }
@@ -75,15 +71,23 @@ token* obterTokenPalavra(char *palavra, int linha, int tipo, noLista **palavrasR
         int cont = 1;
         char palavraSemAspas[tamanho - 2];
         
-        while (cont < tamanho) {
+        while (cont < tamanho - 1) {
             palavraSemAspas[cont - 1] = palavra[cont];
+            cont ++;
         }
+        
+//        Modificar o tamanho da memoria alocada
+        char *target = malloc(20);
+        strcpy(target, palavraSemAspas);
+        
+        
         int identificador;
-        identificador = adicionaString(palavraSemAspas, strings);
-        token = criaToken(STRING, linha, palavra, NULL);
+        identificador = adicionaString(target, strings);
+        token = criaToken(STRING, linha, target, NULL);
         
         
     }
+    
     
     return token;
     
