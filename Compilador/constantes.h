@@ -16,15 +16,15 @@
 // Definicao dos tipos de dados
 //
 
-#define PALAVRA 100
-#define INTEIRO 101
-#define FLOAT 102
-#define DOUBLE 103
+#define PALAVRA 300
+#define INTEIRO 301
+#define FLOAT 302
+#define DOUBLE 303
 
 
-#define PALAVRARESERVADA 200
-#define OPERADOR 201
-#define SIMBOLO 202
-#define STRING 203
+#define PALAVRARESERVADA 400
+#define OPERADOR 401
+#define SIMBOLO 402
+#define STRING 403
 
 

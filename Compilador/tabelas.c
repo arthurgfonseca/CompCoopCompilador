@@ -25,7 +25,6 @@ void criaTabelaPalavrasReservadas(noLista **palavraReservada) {
 void populaTabelaPalavrasReservadas(noLista **palavraReservada) {
     
     
-    criaTabelaPalavrasReservadas(palavraReservada);
     FILE *entrada;
     int identificador = 1;
     

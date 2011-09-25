@@ -32,9 +32,12 @@ token* obterTokenPalavra(char *palavra, int linha, int tipo, noLista **palavrasR
     
     if (isString == 0) {
         
+        printf("\nESPERADO ENTRAR AKI");
+        
         //    Verifica se palavra esta na lista de palavras reservadas!
         resultadoBusca = buscaSimboloPalavraReservada(palavra, simbolos);
         if (resultadoBusca > 0) {
+            printf("\nESPERADO ENTRAR AKI 2");
             encontrou = 1;
             token = criaToken(PALAVRARESERVADA, linha, palavra, NULL);
         }
@@ -42,9 +45,10 @@ token* obterTokenPalavra(char *palavra, int linha, int tipo, noLista **palavrasR
         
         //    Se não é Palavra reservada verifica ser é simbolo
         if (encontrou == 0) {
-            
+            printf("\n N ESPERADO ENTRAR AKI");
             resultadoBusca = buscaTabelaSimbolos(palavra, simbolos);
             if (resultadoBusca > 0) {
+                printf("\n N ESPERADO ENTRAR AKI 2");
                 encontrou = 1;
                 token = criaToken(SIMBOLO, linha, palavra, NULL);
             }
@@ -101,6 +105,6 @@ token* obterTokenNumero(char *primeiroNumero, char *segundoNumero, int linha, in
         token = criaToken(FLOAT, linha, primeiroNumero, segundoNumero);
     }
     
-    
+    return token;
     
 }
