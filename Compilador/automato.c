@@ -19,9 +19,10 @@ void inicializarAutomato(automato *automatoASerInicializado, int numeroDeEstados
 
 void inicializarFuncaoDeTransicaoDoAutomato(automato *automatoASerInicializado, int numeroDeEstados, int estadoInicial) {
 	automatoASerInicializado->funcaoDeTransicao = alocarMatrizDeInteiros(numeroDeEstados, 256);
-	
-	for (int estado = 0; estado < numeroDeEstados; estado++) 
-		for (int caractere = 0; caractere < 256; caractere++) 
+	int estado;
+	int caractere;
+	for (estado = 0; estado < numeroDeEstados; estado++) 
+		for (caractere = 0; caractere < 256; caractere++) 
 			modificarFuncaoDeTransicaoLendoTudo(automatoASerInicializado, estado, estadoInicial);
 }
 
@@ -35,19 +36,22 @@ void modificarFuncaoDeTransicao(automato *automatoASerInicializado, definicaoDeT
 }
 
 void modificarFuncaoDeTransicaoLendoTudo(automato *automatoASerInicializado, int estadoAtual, int proximoEstado) {
-	for (int caractere = 0; caractere < 256; caractere++) 
+	int caractere;
+    for (caractere = 0; caractere < 256; caractere++) 
 		automatoASerInicializado->funcaoDeTransicao[estadoAtual][caractere] = proximoEstado;
 }
 
 void modificarFuncaoDeTransicaoLendoDigito(automato *automatoASerInicializado, int estadoAtual, int proximoEstado) {
-	for (int digito = 48; digito <= 57; digito++)
+	int digito;
+    for (digito = 48; digito <= 57; digito++)
 		automatoASerInicializado->funcaoDeTransicao[estadoAtual][digito] = proximoEstado;
 }
 
 void modificarFuncaoDeTransicaoLendoLetra(automato *automatoASerInicializado, int estadoAtual, int proximoEstado) {
-	for (int letra = 65; letra <= 90; letra++)
+	int letra;
+    for (letra = 65; letra <= 90; letra++)
 		automatoASerInicializado->funcaoDeTransicao[estadoAtual][letra] = proximoEstado;
-	for (int letra = 97; letra <= 122; letra++)
+	for (letra = 97; letra <= 122; letra++)
 		automatoASerInicializado->funcaoDeTransicao[estadoAtual][letra] = proximoEstado;
 }
 

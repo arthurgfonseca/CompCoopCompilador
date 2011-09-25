@@ -149,14 +149,14 @@ token* obterTokenDepoisDeIicializarAnalizadorLexico(FILE* entradaLida) {
 		
 	while (encontrouToken() == FALSE) {
 		if (deveConcatenarOCaracterLidoAoLexema() == TRUE) 
-			concatenarCharNaString(caractereLido, &lexemaEncontrado);
+			concatenarCharNaString(caractereLido, lexemaEncontrado);
 
 		caractereLido = getc(entradaLida);
 		incrementarNumeroDaLinhaLidaCasoNecessario(caractereLido);
 		
 		if (caractereLido == EOF) {
 			terminouDeAnalizar = TRUE;
-			return gerarTokenAPartirDoLexemaEncontrado(&lexemaEncontrado);;
+			return gerarTokenAPartirDoLexemaEncontrado(lexemaEncontrado);;
 		}
 		
 		atualizarAutomatoParaProximoEstado(&transdutor, caractereLido);
@@ -164,7 +164,7 @@ token* obterTokenDepoisDeIicializarAnalizadorLexico(FILE* entradaLida) {
 	
 	fseek(entradaLida, -1, SEEK_CUR);
 	
-	return gerarTokenAPartirDoLexemaEncontrado(&lexemaEncontrado);;
+	return gerarTokenAPartirDoLexemaEncontrado(lexemaEncontrado);;
 }
 
 int deveConcatenarOCaracterLidoAoLexema() {
