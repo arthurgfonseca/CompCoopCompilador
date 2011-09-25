@@ -20,6 +20,7 @@
 automato transdutor;
 int analizadorLexicoInicializado = FALSE;
 int terminouDeAnalizar = FALSE;
+int deveIncrementarLinhaLida = FALSE;
 noLista *palavraReservada;
 noLista *simbolos;
 noLista *strings;
@@ -190,10 +191,16 @@ int encontrouToken() {
 }
 
 void incrementarNumeroDaLinhaLidaCasoNecessario(char caractereLido) {
-	if (caractereLido == CARRIAGE_RETURN ||
-		caractereLido == LINE_FEED) 
-		numeroDaLinhaLidaNoArquivoFonte++;
-	
+	//deveIncrementarLinhaLida serve para evitar que o numero seja incrementado duas vezes
+	//pois todo char é lido duas vezes pelo algoritmo
+	if ((caractereLido == CARRIAGE_RETURN ||
+		caractereLido == LINE_FEED)) 
+		if (deveIncrementarLinhaLida == TRUE) {
+			numeroDaLinhaLidaNoArquivoFonte++;
+			deveIncrementarLinhaLida = FALSE;
+		} else {
+			deveIncrementarLinhaLida = TRUE;
+		}	
 }
 
 token* gerarTokenDeFimDeArquivo() {

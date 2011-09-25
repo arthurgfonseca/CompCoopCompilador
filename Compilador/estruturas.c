@@ -109,30 +109,3 @@ token* criaToken(int tipo, int linha, char *primeiraPalavra, char *segundaPalavr
     return taux;
 }
 
-//int obtemUltimoIdentificadToken(int tipo, token **T) {
-//    
-//    token *aux, *prox;
-//    aux = *T;
-//    
-//    if (aux != NULL) {
-//        int identificador;
-//        if (aux->tipo == tipo) {
-//            identificador = aux->identificador;
-//        }
-//        prox = aux->prox;
-//        while (prox != NULL) {
-//            
-//            if (prox->tipo == tipo) {
-//                identificador = prox->identificador;
-//            }
-//            
-//            aux = prox;
-//            prox = aux->prox;
-//        }
-//        
-//        return identificador;
-//        
-//    } else {
-//        return -1;
-//    }
-//}
