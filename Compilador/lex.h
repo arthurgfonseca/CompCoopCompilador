@@ -1,14 +1,19 @@
-//
-//  lex.h
-//  Compilador
-//
-//  Created by Arthur Fonseca on 9/22/11.
-//  Copyright 2011 Poli USP. All rights reserved.
-//
+/*
+ *  lex.h
+ *  lexico
+ *
+ *  Created by Vininicius Oyama on 9/24/11.
+ *  Copyright 2011 __MyCompanyName__. All rights reserved.
+ *
+ */
 
-#ifndef Compilador_lex_h
-#define Compilador_lex_h
+#include "estruturas.h"
 
-
-
-#endif
+void inicializarAnalizadorLexico();
+token getToken(FILE* entradaLida);
+token obterTokenDepoisDeIicializarAnalizadorLexico(FILE* entradaLida);
+int deveConcatenarOCaracterLidoAoLexema();
+void concatenarCharNaString(char caractereASerConcatenado, char* stringQueVaiReceberOChar);
+int encontrouToken();
+token gerarTokenDeFimDeArquivo();
+token gerarTokenAPartirDoLexemaEncontrado(char* lexemaEncontrado);

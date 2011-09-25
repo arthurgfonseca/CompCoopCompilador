@@ -29,9 +29,7 @@ void populaTabelaPalavrasReservadas(noLista **palavraReservada) {
     int identificador = 1;
     
     
-    entrada = fopen("/Users/arthurgfonseca/Sites/Compilador/Compilador/Compilador/palavrasreservadas.txt", "r");
-//    entrada = fopen("palavrasreservadas.txt", "r");
-    
+    entrada = fopen(PATH_PARA_ARQUIVO_DE_PALAVRAS_RESERVADAS , "r");  
     
     while (!feof(entrada)) {
         
@@ -59,7 +57,7 @@ void populaTabelaPalavrasReservadas(noLista **palavraReservada) {
     
     identificador = 101;
     
-    entradaOperadores = fopen("/Users/arthurgfonseca/Sites/Compilador/Compilador/Compilador/operadores.txt", "r");
+    entradaOperadores = fopen(PATH_PARA_ARQUIVO_DE_OPERADORES, "r");
     
     while (!feof(entradaOperadores)) {
         

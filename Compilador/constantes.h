@@ -6,14 +6,19 @@
 //  Copyright 2011 Poli USP. All rights reserved.
 //
 
-//
-// Valores fixos
-//
-#define MAX 100000
+#define PATH_PARA_ARQUIVO_FONTE "/Volumes/Pessoal/vinicius/teste.txt"
+#define PATH_PARA_ARQUIVO_DE_PALAVRAS_RESERVADAS "/Volumes/Pessoal/vinicius/palavrasreservadas.txt"
+#define PATH_PARA_ARQUIVO_DE_OPERADORES "/Volumes/Pessoal/vinicius/operadores.txt"
 
+#define TRUE 1
+#define FALSE 0
+
+#define TABULACAO 9
+#define LINE_FEED 10
+#define CARRIAGE_RETURN 13
 
 //
-// Definicao dos tipos de dados
+// Definicao dos tipos de tokens
 //
 
 #define PALAVRA 300

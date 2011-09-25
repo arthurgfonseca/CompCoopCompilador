@@ -32,9 +32,9 @@ void imprimeToken(token *tokenObtido) {
     
 }
 
-int main (int argc, const char * argv[])
+int mainArthur (int argc, const char * argv[])
 {
-    printf("Entrei funcao main");
+    
 /*******************************************/    
 //    INICIALIZA LISTAS
 /*******************************************/    
@@ -60,8 +60,7 @@ int main (int argc, const char * argv[])
 /*******************************************/
     
     populaTabelaPalavrasReservadas(&palavraReservada);
-    
-    
+
 /*******************************************/    
 //    AREA DE TESTE - GERA TOKEN
 /*******************************************/
@@ -112,3 +111,21 @@ int main (int argc, const char * argv[])
     return 0;
 }
 
+int main(int argc, const char * argv[])
+{
+	FILE* entrada;
+	
+	entrada=fopen(PATH_PARA_ARQUIVO_FONTE ,"r");
+	
+	token tokenLido;
+	
+	tokenLido = getToken(entrada);
+	
+	if (entrada != NULL) 
+		while (tokenLido.tipo == 0)
+			tokenLido = getToken(entrada);
+	
+	fclose (entrada);
+	
+	return 0;
+}
