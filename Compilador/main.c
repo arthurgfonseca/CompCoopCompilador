@@ -34,7 +34,7 @@ void imprimeToken(token *tokenObtido) {
 
 int mainArthur (int argc, const char * argv[])
 {
-    printf("Entrei funcao main");
+    
 /*******************************************/    
 //    INICIALIZA LISTAS
 /*******************************************/    
@@ -60,8 +60,7 @@ int mainArthur (int argc, const char * argv[])
 /*******************************************/
     
     populaTabelaPalavrasReservadas(&palavraReservada);
-    
-    
+
 /*******************************************/    
 //    AREA DE TESTE - GERA TOKEN
 /*******************************************/
@@ -112,11 +111,11 @@ int mainArthur (int argc, const char * argv[])
     return 0;
 }
 
-int main (int argc, const char * argv[])
+int main(int argc, const char * argv[])
 {
 	FILE* entrada;
 	
-	entrada=fopen("/Volumes/Pessoal/vinicius/teste.txt","r");
+	entrada=fopen(PATH_PARA_ARQUIVO_FONTE ,"r");
 	
 	token tokenLido;
 	

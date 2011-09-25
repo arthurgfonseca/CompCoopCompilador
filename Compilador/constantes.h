@@ -6,6 +6,10 @@
 //  Copyright 2011 Poli USP. All rights reserved.
 //
 
+#define PATH_PARA_ARQUIVO_FONTE "/Volumes/Pessoal/vinicius/teste.txt"
+#define PATH_PARA_ARQUIVO_DE_PALAVRAS_RESERVADAS "/Volumes/Pessoal/vinicius/palavrasreservadas.txt"
+#define PATH_PARA_ARQUIVO_DE_OPERADORES "/Volumes/Pessoal/vinicius/operadores.txt"
+
 #define TRUE 1
 #define FALSE 0
 
