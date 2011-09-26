@@ -18,7 +18,6 @@ void imprimeToken(token* tokenObtido);
 void imprimeToken(token* tokenObtido) {
     printf("\n\n---- TOKEN GERADO ---- \n\n");
     printf(" tipo -> %d", tokenObtido->tipo);
-    printf("\n linha -> %d", tokenObtido->linha);
     printf("\n primeiroValor -> %s", tokenObtido->primeiroValor);
     printf("\n segundoValor -> %s", tokenObtido->segundoValor);
     printf("\n\n---- FIM ----");

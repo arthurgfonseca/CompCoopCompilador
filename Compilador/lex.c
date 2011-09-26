@@ -38,7 +38,7 @@ void inicializarAnalizadorLexico() {
 	//estado 0
 	modificarFuncaoDeTransicaoLendoTudo(&transdutor, 0, 13);
 	
-	novaTransicao = construirDefinicaoDeTransicao(0, 0, ' '); 
+	novaTransicao = construirDefinicaoDeTransicao(0, 0, WHITE_SPACE); 
 	modificarFuncaoDeTransicao(&transdutor, novaTransicao);
 	novaTransicao = construirDefinicaoDeTransicao(0, 0, (char)TABULACAO); 
 	modificarFuncaoDeTransicao(&transdutor, novaTransicao);
@@ -168,14 +168,21 @@ token* obterTokenDepoisDeIicializarAnalizadorLexico(FILE* entradaLida) {
 }
 
 int deveConcatenarOCaracterLidoAoLexema() {
+	
 	if (transdutor.estadoAtual == 0 &&			
 		(transdutor.estadoAnterior == 0 || 
 		transdutor.estadoAnterior == -1 || 
-		transdutor.estadoAnterior == 5 ||
-		transdutor.estadoAnterior == 8 ||
-		transdutor.estadoAnterior == 13)) 
+		transdutor.estadoAnterior == 8 )) 
 			return FALSE;
 
+	if (transdutor.estadoAtual == 6 ||
+		transdutor.estadoAtual == 7 ||
+		transdutor.estadoAtual == 8 ||
+		transdutor.estadoAtual == 9 ||
+		transdutor.estadoAtual == 10 )
+		
+		return FALSE;
+	
 	return TRUE;
 
 }
@@ -191,6 +198,25 @@ int encontrouToken() {
 }
 
 void incrementarNumeroDaLinhaLidaCasoNecessario(char caractereLido) {
+	//no estado de comentario o caractere nao é lido duas vezes. então ja incrementamos e saimos da função
+	if (transdutor.estadoAtual == 7 || 
+		transdutor.estadoAtual == 8 ||
+		transdutor.estadoAtual == 9 || 
+		transdutor.estadoAtual == 10) 
+		if ((caractereLido == CARRIAGE_RETURN ||
+			 caractereLido == LINE_FEED)) 
+			numeroDaLinhaLidaNoArquivoFonte++;
+			
+	
+	if (transdutor.estadoAtual == 0 &&  
+	    transdutor.estadoAnterior == 0) {
+		if ((caractereLido == CARRIAGE_RETURN ||
+			 caractereLido == LINE_FEED)) 
+			numeroDaLinhaLidaNoArquivoFonte++;
+	}
+	return;
+
+	
 	//deveIncrementarLinhaLida serve para evitar que o numero seja incrementado duas vezes
 	//pois todo char é lido duas vezes pelo algoritmo
 	if ((caractereLido == CARRIAGE_RETURN ||

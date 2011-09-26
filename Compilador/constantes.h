@@ -10,7 +10,6 @@
 //#define PATH_PARA_ARQUIVO_DE_PALAVRAS_RESERVADAS "D:/vinicius/palavrasreservadas.txt"
 //#define PATH_PARA_ARQUIVO_DE_OPERADORES "D:/vinicius/operadores.txt"
 
-
 #define PATH_PARA_ARQUIVO_FONTE "/Volumes/Pessoal/vinicius/teste.txt"
 #define PATH_PARA_ARQUIVO_DE_PALAVRAS_RESERVADAS "/Volumes/Pessoal/vinicius/palavrasreservadas.txt"
 #define PATH_PARA_ARQUIVO_DE_OPERADORES "/Volumes/Pessoal/vinicius/operadores.txt"
@@ -24,6 +23,7 @@
 #define TABULACAO 9
 #define LINE_FEED 10
 #define CARRIAGE_RETURN 13
+#define WHITE_SPACE 32
 
 //
 // Definicao dos tipos de tokens
