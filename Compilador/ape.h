@@ -31,7 +31,8 @@ int linguagemAceitaPeloAPE();
  ******************************/
 submaquina* criarSubmaquina(void (*funcaoTransitarDaSubmaquina)(int));
 void chamarSubmaquinaDaPilha(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal);
-
+void substituirSubmaquinaAtualColocandoAAntigaNaPilha(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal, submaquina* novaSubmaquina);
+	
 /*** linguagem exemplo: 1^n2^n ****/
 submaquina* submaquina1n2nCriarSubmaquina();
 void submaquina1n2nTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal);

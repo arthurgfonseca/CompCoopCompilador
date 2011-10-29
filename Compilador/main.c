@@ -60,6 +60,9 @@ int main (int argc, const char * argv[])
 	int transicaoEncontrada;
 	transicaoEncontrada = transitarAPE(1);
 	transicaoEncontrada = transitarAPE(1);
+	transicaoEncontrada = transitarAPE(1);
+	transicaoEncontrada = transitarAPE(1);
+	transicaoEncontrada = transitarAPE(2);
 	transicaoEncontrada = transitarAPE(2);
 	transicaoEncontrada = transitarAPE(2);
 	transicaoEncontrada = transitarAPE(2);

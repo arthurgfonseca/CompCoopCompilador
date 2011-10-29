@@ -89,6 +89,12 @@ void chamarSubmaquinaDaPilha(int entradaLida, int* algumaSubmaquinaTransitou,int
 	} 
 }
 
+void substituirSubmaquinaAtualColocandoAAntigaNaPilha(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal, submaquina* novaSubmaquina) {
+	colocarSubmaquinaNaPilha(submaquinaAtual);
+	submaquinaAtual =  novaSubmaquina;
+	submaquinaAtual->transitar(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal);
+}
+
 /*** 1^n2^n ***/
 submaquina* submaquina1n2nCriarSubmaquina() {
 	return criarSubmaquina(&submaquina1n2nTransitar);
@@ -102,9 +108,7 @@ void submaquina1n2nTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int
 		submaquinaAtual->estadoAtual = 1;
 	else if (submaquinaAtual->estadoAtual == 1) {
 		submaquinaAtual->estadoAtual = 2;
-		colocarSubmaquinaNaPilha(submaquinaAtual);
-		submaquinaAtual = submaquina1n2nCriarSubmaquina();
-		submaquinaAtual->transitar(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal);
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquina1n2nCriarSubmaquina());
 	} 
 	else if (submaquinaAtual->estadoAtual == 2 && entradaLida == 2) {
 		submaquinaAtual->estadoAtual = 3;
