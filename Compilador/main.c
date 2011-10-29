@@ -55,17 +55,16 @@ int main (int argc, const char * argv[])
 	
 	fclose (entrada);    
 	*/
-	float (*operation)( float, float ) = NULL;
-	operation = &plus;
-
-    /* Podemos usar a forma curta tambem, como veremos */
 	
-    printf( "Plus: 2 + 3 = %g\n", (*operation) ( 2, 3) );
 	inicilizarAPE();
-	transitarAPE(1);
-	transitarAPE(1);
-	transitarAPE(2);
-	transitarAPE(2);
+	int transicaoEncontrada;
+	transicaoEncontrada = transitarAPE(1);
+	transicaoEncontrada = transitarAPE(1);
+	transicaoEncontrada = transitarAPE(2);
+	transicaoEncontrada = transitarAPE(2);
+	transicaoEncontrada = transitarAPE(2);
+	
+	printf( "%d", linguagemAceitaPeloAPE());
     return 0;
 }
 

@@ -9,8 +9,7 @@
 
 typedef struct _submaquina {
     int estadoAtual;
-	void (*transitar)(int);
-	int (*estaNoEstadoFinal)();
+	void (*transitar)(int, int*, int*);
 } submaquina;
 
 typedef struct _noSubmaquina{
@@ -24,15 +23,15 @@ submaquina* retirarSubmaquinaDaPilha();
 /**** APE ***/
 
 void inicilizarAPE();
-void transitarAPE(int entradaLida);
+int transitarAPE(int entradaLida);
 int linguagemAceitaPeloAPE();
 
 /******************************
  ******** SUBMAQUINAS **********
  ******************************/
-submaquina* criarSubmaquina(void (*funcaoTransitarDaSubmaquina)(int), int (*funcaoDeEstadoFinal)());
+submaquina* criarSubmaquina(void (*funcaoTransitarDaSubmaquina)(int));
+void chamarSubmaquinaDaPilha(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal);
 
 /*** linguagem exemplo: 1^n2^n ****/
 submaquina* submaquina1n2nCriarSubmaquina();
-void submaquina1n2nTransitar(int entradaLida);
-int submaquina1n2nEstaNoEstadoFinal();
+void submaquina1n2nTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal);

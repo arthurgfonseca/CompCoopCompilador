@@ -13,6 +13,8 @@
 
 noSubmaquina* pilhaDeSubmaquinas;
 submaquina* submaquinaAtual;
+int algumaSubmaquinaTransitou;
+int estaNoEstadoFinal;
 
 void colocarSubmaquinaNaPilha(submaquina* SubmaquinaASerEmpilhada) {
 	noSubmaquina* novoElementoDaPilha;
@@ -49,16 +51,21 @@ int pilhaDeSubmaquinaEstaVazia() {
 void inicilizarAPE() {
 	pilhaDeSubmaquinas = NULL;
 	submaquinaAtual = submaquina1n2nCriarSubmaquina();
+	algumaSubmaquinaTransitou = FALSE;
+	estaNoEstadoFinal = FALSE;
 	return;
 }
 
-void transitarAPE(int entradaLida) {
-	submaquinaAtual->transitar(entradaLida);
+int transitarAPE(int entradaLida) {
+	algumaSubmaquinaTransitou = FALSE;
+	submaquinaAtual->transitar(entradaLida, &algumaSubmaquinaTransitou, &estaNoEstadoFinal);
+	return algumaSubmaquinaTransitou;
 }
 
 int linguagemAceitaPeloAPE() {
+
 	if (pilhaDeSubmaquinaEstaVazia() == TRUE &&
-		submaquinaAtual->estaNoEstadoFinal() == TRUE)
+		estaNoEstadoFinal == TRUE)
 		return TRUE;
 	
 	return FALSE;
@@ -67,43 +74,44 @@ int linguagemAceitaPeloAPE() {
 /******************************
 ******** SUBMAQUINAS **********
 ******************************/
-submaquina* criarSubmaquina(void (*funcaoTransitarDaSubmaquina)(int), int (*funcaoDeEstadoFinal)()) {
+submaquina* criarSubmaquina(void (*funcaoTransitarDaSubmaquina)(int)) {
 	submaquina* novaSubmaquina = (submaquina*) malloc (sizeof(submaquina*));
 	novaSubmaquina->estadoAtual = 0;
 	novaSubmaquina->transitar = funcaoTransitarDaSubmaquina;
-	novaSubmaquina->estaNoEstadoFinal = funcaoDeEstadoFinal;
 	return novaSubmaquina;
 }
 
+void chamarSubmaquinaDaPilha(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal) {
+	*algumaSubmaquinaTransitou = FALSE;
+	if (pilhaDeSubmaquinaEstaVazia() == FALSE) {
+		submaquinaAtual = retirarSubmaquinaDaPilha();
+		submaquinaAtual->transitar(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal);
+	} 
+}
 
 /*** 1^n2^n ***/
 submaquina* submaquina1n2nCriarSubmaquina() {
-	return criarSubmaquina(&submaquina1n2nTransitar, &submaquina1n2nEstaNoEstadoFinal);
+	return criarSubmaquina(&submaquina1n2nTransitar);
 }
 
-void submaquina1n2nTransitar(int entradaLida) {
+void submaquina1n2nTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal) {
+	*algumaSubmaquinaTransitou = TRUE;
+	*estaNoEstadoFinal = FALSE;
+	
 	if (submaquinaAtual->estadoAtual == 0 && entradaLida == 1)
 		submaquinaAtual->estadoAtual = 1;
 	else if (submaquinaAtual->estadoAtual == 1) {
 		submaquinaAtual->estadoAtual = 2;
 		colocarSubmaquinaNaPilha(submaquinaAtual);
 		submaquinaAtual = submaquina1n2nCriarSubmaquina();
-		submaquinaAtual->transitar(entradaLida);
+		submaquinaAtual->transitar(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal);
 	} 
 	else if (submaquinaAtual->estadoAtual == 2 && entradaLida == 2) {
 		submaquinaAtual->estadoAtual = 3;
+		*estaNoEstadoFinal = TRUE;
 	}
 	else {
-		submaquinaAtual = retirarSubmaquinaDaPilha();
-		if (submaquinaAtual != NULL)
-			submaquinaAtual->transitar(entradaLida);
+		chamarSubmaquinaDaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal);
 	}
 	return;
-}
-
-int submaquina1n2nEstaNoEstadoFinal() {
-	if (submaquinaAtual->estadoAtual == 4)
-		return TRUE;
-	
-	return FALSE;
 }
