@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "lex.h"
+#include "ape.h"
 #include "globais.c"
 
 // Função criada apenas para imprimir o token, já que a parte sintatica não está implementada
@@ -23,8 +24,17 @@ void imprimeToken(token* tokenObtido) {
     printf("\n\n---- FIM ----");
 }
 
+float plus( float a, float b)
+{
+	
+    return (a + b);
+	
+}
+
+
 int main (int argc, const char * argv[])
 {
+	/*
 	numeroDaLinhaLidaNoArquivoFonte = 1;
 
 	FILE* entrada;
@@ -44,7 +54,18 @@ int main (int argc, const char * argv[])
 	imprimeToken(tokenLido);
 	
 	fclose (entrada);    
+	*/
+	float (*operation)( float, float ) = NULL;
+	operation = &plus;
+
+    /* Podemos usar a forma curta tambem, como veremos */
 	
+    printf( "Plus: 2 + 3 = %g\n", (*operation) ( 2, 3) );
+	inicilizarAPE();
+	transitarAPE(1);
+	transitarAPE(1);
+	transitarAPE(2);
+	transitarAPE(2);
     return 0;
 }
 
