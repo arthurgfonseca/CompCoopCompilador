@@ -6,11 +6,16 @@
 //  Copyright 2011 Poli USP. All rights reserved.
 //
 
+//#define PATH_PARA_ARQUIVO_FONTE "D:/vinicius/teste.txt"
+//#define PATH_PARA_ARQUIVO_DE_PALAVRAS_RESERVADAS "D:/vinicius/palavrasreservadas.txt"
+//#define PATH_PARA_ARQUIVO_DE_OPERADORES "D:/vinicius/operadores.txt"
+
 #define PATH_PARA_ARQUIVO_FONTE "/Volumes/Pessoal/vinicius/teste.txt"
-//#define PATH_PARA_ARQUIVO_DE_PALAVRAS_RESERVADAS "/Volumes/Pessoal/vinicius/palavrasreservadas.txt"
-//#define PATH_PARA_ARQUIVO_DE_OPERADORES "/Volumes/Pessoal/vinicius/operadores.txt"
-#define PATH_PARA_ARQUIVO_DE_PALAVRAS_RESERVADAS "/Users/arthurgfonseca/Sites/Compilador/Compilador/Compilador/palavrasreservadas.txt"
-#define PATH_PARA_ARQUIVO_DE_OPERADORES "/Users/arthurgfonseca/Sites/Compilador/Compilador/Compilador/operadores.txt"
+#define PATH_PARA_ARQUIVO_DE_PALAVRAS_RESERVADAS "/Volumes/Pessoal/vinicius/palavrasreservadas.txt"
+#define PATH_PARA_ARQUIVO_DE_OPERADORES "/Volumes/Pessoal/vinicius/operadores.txt"
+
+//#define PATH_PARA_ARQUIVO_DE_PALAVRAS_RESERVADAS "/Users/arthurgfonseca/Sites/Compilador/Compilador/Compilador/palavrasreservadas.txt"
+//#define PATH_PARA_ARQUIVO_DE_OPERADORES "/Users/arthurgfonseca/Sites/Compilador/Compilador/Compilador/operadores.txt"
 
 #define TRUE 1
 #define FALSE 0
@@ -18,6 +23,7 @@
 #define TABULACAO 9
 #define LINE_FEED 10
 #define CARRIAGE_RETURN 13
+#define WHITE_SPACE 32
 
 //
 // Definicao dos tipos de tokens
@@ -27,7 +33,6 @@
 #define INTEIRO 301
 #define FLOAT 302
 #define DOUBLE 303
-
 
 #define PALAVRARESERVADA 400
 #define OPERADOR 401

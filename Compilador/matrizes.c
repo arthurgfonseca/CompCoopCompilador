@@ -14,8 +14,8 @@ int** alocarMatrizDeInteiros (int numeroDeLinhas, int numeroDeColunas)
 {
 	int** matrizASerAlocada; 
 	matrizASerAlocada = (int **) calloc (numeroDeLinhas, sizeof(int*));
-	
-	for ( int indiceLinha = 0; indiceLinha < numeroDeLinhas; indiceLinha++ ) 
+	int indiceLinha;
+	for ( indiceLinha = 0; indiceLinha < numeroDeLinhas; indiceLinha++ ) 
 		matrizASerAlocada[indiceLinha] = (int*) calloc (numeroDeColunas, sizeof(int));
 	
 	return matrizASerAlocada;
