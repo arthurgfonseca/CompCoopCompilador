@@ -13,7 +13,7 @@
 #include "ape.h"
 #include "globais.c"
 
-// Função criada apenas para imprimir o token, já que a parte sintatica não está implementada
+// Função criada apenas para imprimir o token
 void imprimeToken(token* tokenObtido);
 
 void imprimeToken(token* tokenObtido) {
@@ -24,17 +24,10 @@ void imprimeToken(token* tokenObtido) {
     printf("\n\n---- FIM ----");
 }
 
-float plus( float a, float b)
-{
-	
-    return (a + b);
-	
-}
-
 
 int main (int argc, const char * argv[])
 {
-	/*
+	
 	numeroDaLinhaLidaNoArquivoFonte = 1;
 
 	FILE* entrada;
@@ -44,9 +37,16 @@ int main (int argc, const char * argv[])
 	token* tokenLido;
 	
 	tokenLido = getToken(entrada);
+	inicilizarAPE();
+	int transicaoEncontrada = TRUE;
 	
 	if (entrada != NULL) 
-		while (tokenLido->tipo != EOF) {
+		while (tokenLido->tipo != EOF && transicaoEncontrada == TRUE) {
+			/*
+			if (tokenLido->tipo == PALAVRARESERVADA)
+				transicaoEncontrada = transitarAPE(obterIdUnicoDaPalavraReservada(tokenLido));
+			else
+				transicaoEncontrada = transitarAPE(tokenLido->tipo);*/
 			imprimeToken(tokenLido);
 			tokenLido = getToken(entrada);
 		}
@@ -54,9 +54,15 @@ int main (int argc, const char * argv[])
 	imprimeToken(tokenLido);
 	
 	fclose (entrada);    
-	*/
 	
-	inicilizarAPE();
+	if (linguagemAceitaPeloAPE() == TRUE)
+		printf("\n \n ACEITOU");
+	else 
+		printf("\n \n NAO ACEITOU");
+	
+
+	
+	/*
 	int transicaoEncontrada;
 	transicaoEncontrada = transitarAPE(1);
 	transicaoEncontrada = transitarAPE(1);
@@ -68,6 +74,7 @@ int main (int argc, const char * argv[])
 	transicaoEncontrada = transitarAPE(2);
 	
 	printf( "%d", linguagemAceitaPeloAPE());
+	 */
     return 0;
 }
 

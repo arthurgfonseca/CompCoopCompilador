@@ -31,7 +31,7 @@ void inicializarAnalizadorLexico() {
     criaTabelaStrings(&strings);
     populaTabelaPalavrasReservadas(&palavraReservada);
 	
-	inicializarAutomato(&transdutor, 14, 0);
+	inicializarAutomato(&transdutor, 15, 0);
 	
 	definicaoDeTransicao novaTransicao;
 	
@@ -46,8 +46,11 @@ void inicializarAnalizadorLexico() {
 	modificarFuncaoDeTransicao(&transdutor, novaTransicao);
 	novaTransicao = construirDefinicaoDeTransicao(0, 0, (char)LINE_FEED); 
 	modificarFuncaoDeTransicao(&transdutor, novaTransicao);
+	novaTransicao = construirDefinicaoDeTransicao(0, 0, (char)ESPACONULO); 
+	modificarFuncaoDeTransicao(&transdutor, novaTransicao);
 	
 	modificarFuncaoDeTransicaoLendoLetra(&transdutor, 0, 1);
+
 	modificarFuncaoDeTransicaoLendoDigito(&transdutor, 0, 2);
 	
 	novaTransicao = construirDefinicaoDeTransicao(0, 4, '"'); 
@@ -68,6 +71,8 @@ void inicializarAnalizadorLexico() {
 	//estado 1
 	modificarFuncaoDeTransicaoLendoLetra(&transdutor, 1, 1);
 	modificarFuncaoDeTransicaoLendoDigito(&transdutor, 1, 1);
+	novaTransicao = construirDefinicaoDeTransicao(1, 1, '_'); 
+	modificarFuncaoDeTransicao(&transdutor, novaTransicao);
 	
 	//estado 2
 	modificarFuncaoDeTransicaoLendoDigito(&transdutor, 2, 2);
@@ -118,6 +123,10 @@ void inicializarAnalizadorLexico() {
 	novaTransicao = construirDefinicaoDeTransicao(11, 12, '='); 
 	modificarFuncaoDeTransicao(&transdutor, novaTransicao);
 	
+	//estado 13(qualquer caractere) para o caso de dois pipes 
+	novaTransicao = construirDefinicaoDeTransicao(13, 14, '|'); 
+	modificarFuncaoDeTransicao(&transdutor, novaTransicao);
+	
 	analizadorLexicoInicializado = TRUE;
 }
 
@@ -156,7 +165,10 @@ token* obterTokenDepoisDeIicializarAnalizadorLexico(FILE* entradaLida) {
 		
 		if (caractereLido == EOF) {
 			terminouDeAnalizar = TRUE;
-			return gerarTokenAPartirDoLexemaEncontrado(lexemaEncontrado);;
+			if (lexemaEncontrado[0] == '\0')
+				return gerarTokenDeFimDeArquivo();
+			else
+				return gerarTokenAPartirDoLexemaEncontrado(lexemaEncontrado);;
 		}
 		
 		atualizarAutomatoParaProximoEstado(&transdutor, caractereLido);
@@ -258,6 +270,9 @@ token* gerarTokenAPartirDoLexemaEncontrado(char* lexemaEncontrado) {
 		case 12:
 			tokenASerRetornado = obterTokenPalavra(lexemaEncontrado, numeroDaLinhaLidaNoArquivoFonte, OPERADOR, &palavraReservada, &simbolos, &strings);
 			break;
+		case 14:
+			tokenASerRetornado = criaToken(OPERADOR_OU, numeroDaLinhaLidaNoArquivoFonte, lexemaEncontrado, NULL);
+			break;
 		default:
 			tokenASerRetornado = criaToken((int)lexemaEncontrado[0], numeroDaLinhaLidaNoArquivoFonte, lexemaEncontrado, NULL);
 			break;
@@ -266,3 +281,45 @@ token* gerarTokenAPartirDoLexemaEncontrado(char* lexemaEncontrado) {
 	return tokenASerRetornado;
 }
 
+int obterIdUnicoDaPalavraReservada(token* tokenDePalavraReservada) {
+	char* palavraReservadaDoToken = tokenDePalavraReservada->primeiroValor;
+	
+	if (strcmp(palavraReservadaDoToken, (char*) "program") == 0)
+		return PALAVRARESERVADA_program;
+	if (strcmp(palavraReservadaDoToken, (char*) "execute") == 0)
+		return PALAVRARESERVADA_execute;
+	if (strcmp(palavraReservadaDoToken, (char*) "endprogram") == 0)
+		return PALAVRARESERVADA_endprogram;
+	
+	if (strcmp(palavraReservadaDoToken, (char*) "declare") == 0)
+		return PALAVRARESERVADA_declare;
+	if (strcmp(palavraReservadaDoToken, (char*) "return") == 0)
+		return PALAVRARESERVADA_return;
+	if (strcmp(palavraReservadaDoToken, (char*) "enddeclare") == 0)
+		return PALAVRARESERVADA_endprogram;
+	
+	if (strcmp(palavraReservadaDoToken, (char*) "while") == 0)
+		return PALAVRARESERVADA_while;
+	if (strcmp(palavraReservadaDoToken, (char*) "endwhile") == 0)
+		return PALAVRARESERVADA_endwhile;
+	
+	if (strcmp(palavraReservadaDoToken, (char*) "if") == 0)
+		return PALAVRARESERVADA_if;
+	if (strcmp(palavraReservadaDoToken, (char*) "else") == 0)
+		return PALAVRARESERVADA_else;
+	if (strcmp(palavraReservadaDoToken, (char*) "endif") == 0)
+		return PALAVRARESERVADA_endif;
+	
+	
+	if (strcmp(palavraReservadaDoToken, (char*) "print") == 0)
+		return PALAVRARESERVADA_print;
+	if (strcmp(palavraReservadaDoToken, (char*) "scan") == 0)
+		return PALAVRARESERVADA_scan;
+	
+	if (strcmp(palavraReservadaDoToken, (char*) "int") == 0)
+		return PALAVRARESERVADA_int;
+	if (strcmp(palavraReservadaDoToken, (char*) "float") == 0)
+		return PALAVRARESERVADA_float;
+	if (strcmp(palavraReservadaDoToken, (char*) "void") == 0)
+		return PALAVRARESERVADA_void;
+}

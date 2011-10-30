@@ -14,6 +14,7 @@ float
 for
 goto
 if
+endif
 int
 long
 register
@@ -30,3 +31,11 @@ unsigned
 void
 volatile
 while
+endwhile
+program
+execute
+endprogram
+declare
+enddeclare
+scan
+print
