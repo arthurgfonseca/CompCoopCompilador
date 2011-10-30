@@ -39,6 +39,7 @@
 #define OPERADOR 401
 #define SIMBOLO 402
 #define STRING 403
+#define OPERADOR_OU 404
 
 #define PALAVRARESERVADA_auto 1001
 #define PALAVRARESERVADA_break 1002

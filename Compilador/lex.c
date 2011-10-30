@@ -31,7 +31,7 @@ void inicializarAnalizadorLexico() {
     criaTabelaStrings(&strings);
     populaTabelaPalavrasReservadas(&palavraReservada);
 	
-	inicializarAutomato(&transdutor, 14, 0);
+	inicializarAutomato(&transdutor, 15, 0);
 	
 	definicaoDeTransicao novaTransicao;
 	
@@ -121,6 +121,10 @@ void inicializarAnalizadorLexico() {
 	//estado 11
 	
 	novaTransicao = construirDefinicaoDeTransicao(11, 12, '='); 
+	modificarFuncaoDeTransicao(&transdutor, novaTransicao);
+	
+	//estado 13(qualquer caractere) para o caso de dois pipes 
+	novaTransicao = construirDefinicaoDeTransicao(13, 14, '|'); 
 	modificarFuncaoDeTransicao(&transdutor, novaTransicao);
 	
 	analizadorLexicoInicializado = TRUE;
@@ -265,6 +269,9 @@ token* gerarTokenAPartirDoLexemaEncontrado(char* lexemaEncontrado) {
 			break;
 		case 12:
 			tokenASerRetornado = obterTokenPalavra(lexemaEncontrado, numeroDaLinhaLidaNoArquivoFonte, OPERADOR, &palavraReservada, &simbolos, &strings);
+			break;
+		case 14:
+			tokenASerRetornado = criaToken(OPERADOR_OU, numeroDaLinhaLidaNoArquivoFonte, lexemaEncontrado, NULL);
 			break;
 		default:
 			tokenASerRetornado = criaToken((int)lexemaEncontrado[0], numeroDaLinhaLidaNoArquivoFonte, lexemaEncontrado, NULL);
