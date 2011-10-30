@@ -36,3 +36,16 @@ void substituirSubmaquinaAtualColocandoAAntigaNaPilha(int entradaLida, int* algu
 /*** linguagem exemplo: 1^n2^n ****/
 submaquina* submaquina1n2nCriarSubmaquina();
 void submaquina1n2nTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal);
+
+/*** submaquinas da nossa linguagem ***/
+//programa
+submaquina* submaquinaProgramaCriarSubmaquina();
+void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal);
+
+//comandos
+submaquina* submaquinaComandosCriarSubmaquina();
+void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal);
+
+//expressões
+submaquina* submaquinaExpressoesCriarSubmaquina();
+void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal);

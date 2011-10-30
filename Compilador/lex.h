@@ -18,3 +18,4 @@ void incrementarNumeroDaLinhaLidaCasoNecessario(char caractereLido);
 int encontrouToken();
 token* gerarTokenDeFimDeArquivo();
 token* gerarTokenAPartirDoLexemaEncontrado(char* lexemaEncontrado);
+int obterIdUnicoDoTokenDePalavraReservada(token* tokenDePalavraReservada);
