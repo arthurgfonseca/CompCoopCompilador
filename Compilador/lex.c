@@ -46,6 +46,8 @@ void inicializarAnalizadorLexico() {
 	modificarFuncaoDeTransicao(&transdutor, novaTransicao);
 	novaTransicao = construirDefinicaoDeTransicao(0, 0, (char)LINE_FEED); 
 	modificarFuncaoDeTransicao(&transdutor, novaTransicao);
+	novaTransicao = construirDefinicaoDeTransicao(0, 0, (char)ESPACONULO); 
+	modificarFuncaoDeTransicao(&transdutor, novaTransicao);
 	
 	modificarFuncaoDeTransicaoLendoLetra(&transdutor, 0, 1);
 
@@ -159,7 +161,10 @@ token* obterTokenDepoisDeIicializarAnalizadorLexico(FILE* entradaLida) {
 		
 		if (caractereLido == EOF) {
 			terminouDeAnalizar = TRUE;
-			return gerarTokenAPartirDoLexemaEncontrado(lexemaEncontrado);;
+			if (lexemaEncontrado[0] == '\0')
+				return gerarTokenDeFimDeArquivo();
+			else
+				return gerarTokenAPartirDoLexemaEncontrado(lexemaEncontrado);;
 		}
 		
 		atualizarAutomatoParaProximoEstado(&transdutor, caractereLido);

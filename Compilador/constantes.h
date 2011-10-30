@@ -20,6 +20,7 @@
 #define TRUE 1
 #define FALSE 0
 
+#define ESPACONULO 0
 #define TABULACAO 9
 #define LINE_FEED 10
 #define CARRIAGE_RETURN 13

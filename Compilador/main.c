@@ -45,7 +45,7 @@ int main (int argc, const char * argv[])
 			if (tokenLido->tipo == PALAVRARESERVADA)
 				transicaoEncontrada = transitarAPE(obterIdUnicoDaPalavraReservada(tokenLido));
 			else
-				transicaoEncontrada = transitarAPE((int) (tokenLido->primeiroValor));
+				transicaoEncontrada = transitarAPE(tokenLido->tipo);
 			imprimeToken(tokenLido);
 			tokenLido = getToken(entrada);
 		}
@@ -54,7 +54,12 @@ int main (int argc, const char * argv[])
 	
 	fclose (entrada);    
 	
+	if (linguagemAceitaPeloAPE() == TRUE)
+		printf("\n \n ACEITOU");
+	else 
+		printf("\n \n NAO ACEITOU");
 	
+
 	
 	/*
 	int transicaoEncontrada;
