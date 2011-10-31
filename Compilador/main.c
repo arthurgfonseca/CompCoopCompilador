@@ -58,7 +58,7 @@ int main (int argc, const char * argv[])
 			semantico_tbd();
 		}
 	
-	imprimeToken(tokenLido);
+	//imprimeToken(tokenLido);
 	
 
 	fclose (entrada);    
