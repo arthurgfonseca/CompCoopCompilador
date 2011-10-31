@@ -5,14 +5,14 @@ echo "========== ========== ==========\n";
 
 $arquivoEntrada = @fopen("estados.txt", "r");
 $matrizDeTransicao;
-/*
+
 //submaquina programa
-function eEstadoFinal($estado) {
-	if ($estado == 9)
+function PeEstadoFinal($estado) {
+	if ($estado == 8)
 		return true;
 		
 	return false;
-}*/
+}
 
 //submaquina comando
 function eEstadoFinal($estado) {
@@ -25,22 +25,25 @@ function eEstadoFinal($estado) {
 
 
 //submaquina expressao
-/*
-function eEstadoFinal($estado) {
+
+function EeEstadoFinal($estado) {
 	if ($estado == 1 ||
 	$estado ==  3 ||
-	$estado ==  8 ||
-	$estado ==  10 ||
-	$estado ==  15 ||
-	$estado ==  17 ||
-	$estado ==  23 ||
-	$estado ==  29 ||
-	$estado ==  34 ||
-	$estado ==  36)
+	$estado ==  9 ||
+	$estado ==  11 ||
+	$estado ==  12 ||
+	$estado ==  14 ||
+	$estado ==  22 ||
+	$estado ==  24 ||
+	$estado ==  30 ||
+	$estado ==  36 ||
+	$estado ==  52 ||
+	$estado ==  54 ||
+	$estado ==  70)
 		return true;
 		
 	return false;
-}*/
+}
 
 //necessario fazer para todos os terminais exceto caracteres que o token é o proprio codigo ascii
 function traduzirEntradaLidaNoWirthParaEntradaNoCodigoC($entradaLida) {
