@@ -5,53 +5,120 @@ echo "========== ========== ==========\n";
 
 $arquivoEntrada = @fopen("estados.txt", "r");
 $matrizDeTransicao;
-
+/*
+//submaquina programa
 function eEstadoFinal($estado) {
-	if ($estado == 3)
+	if ($estado == 9)
 		return true;
 		
 	return false;
 }
 
+//submaquina comando
+function eEstadoFinal($estado) {
+	if ($estado == 6)
+		return true;
+		
+	return false;
+}
+*/
+//submaquina expressao
+function eEstadoFinal($estado) {
+	if ($estado == 1 ||
+	$estado ==  3 ||
+	$estado ==  7 ||
+	$estado ==  12 ||
+	$estado ==  13 ||
+	$estado ==  15 ||
+	$estado ==  18 ||
+	$estado ==  21 ||
+	$estado ==  22 ||
+	$estado ==  25 ||
+	$estado ==  26 ||
+	$estado ==  27 ||
+	$estado ==  29 ||
+	$estado ==  32 ||
+	$estado ==  36)
+		return true;
+		
+	return false;
+}
+
+//necessario fazer para todos os terminais exceto caracteres que o token é o proprio codigo ascii
 function traduzirEntradaLidaNoWirthParaEntradaNoCodigoC($entradaLida) {
+	$retorno = "";
 	switch ($entradaLida) {
 		case '||':
-			return "OPERADOR_OU";
+			$retorno = "entradaLida == OPERADOR_OU";
+			break;
 		case 'else':
-			return "PALAVRARESERVADA_else";
+			$retorno = "entradaLida == PALAVRARESERVADA_else";
+			break;
 		case 'numero_fracionario':
-			return "PALAVRARESERVADA_float";
+			$retorno = "entradaLida == PALAVRARESERVADA_float";
+			break;
 		case 'if':
-			return "PALAVRARESERVADA_if";
+			$retorno = "entradaLida == PALAVRARESERVADA_if";
+			break;
 		case 'endif':
-			return "PALAVRARESERVADA_endif";
+			$retorno = "entradaLida == PALAVRARESERVADA_endif";
+			break;
 		case 'numero_inteiro':
-			return "PALAVRARESERVADA_int";
+			$retorno = "entradaLida == INTEIRO";
+			break;
 		case 'return':
-			return "PALAVRARESERVADA_return";
+			$retorno = "entradaLida == PALAVRARESERVADA_return";
+			break;
 		case 'void':
-			return "PALAVRARESERVADA_void";
+			$retorno = "entradaLida == PALAVRARESERVADA_void";
+			break;
 		case 'while':
-			return "PALAVRARESERVADA_while";
+			$retorno = "entradaLida == PALAVRARESERVADA_while";
+			break;
 		case 'endwhile':
-			return "PALAVRARESERVADA_endwhile";
+			$retorno = "entradaLida == PALAVRARESERVADA_endwhile";
+			break;
 		case 'program':
-			return "PALAVRARESERVADA_program";
+			$retorno = "entradaLida == PALAVRARESERVADA_program";
+			break;
 		case 'execute':
-			return "PALAVRARESERVADA_execute";
+			$retorno = "entradaLida == PALAVRARESERVADA_execute";
+			break;
 		case 'endprogram':
-			return "PALAVRARESERVADA_endprogram";
+			$retorno = "entradaLida == PALAVRARESERVADA_endprogram";
+			break;
 		case 'enddeclare':
-			return "PALAVRARESERVADA_enddeclare";
+			$retorno = "entradaLida == PALAVRARESERVADA_enddeclare";
+			break;
 		case 'scan':
-			return "PALAVRARESERVADA_scan";
+			$retorno = "entradaLida == PALAVRARESERVADA_scan";
+			break;
 		case 'print':
-			return "PALAVRARESERVADA_print";
+			$retorno = "entradaLida == PALAVRARESERVADA_print";
+			break;
 		case 'declare':
-			return "PALAVRARESERVADA_declare";
+			$retorno = "entradaLida == PALAVRARESERVADA_declare";
+			break;
+		case 'tipo':
+			$retorno = "(entradaLida == PALAVRARESERVADA_int || entradaLida == PALAVRARESERVADA_float)";
+			break;
+		case 'identificador':
+			$retorno = "entradaLida == SIMBOLO";
+			break;
+		case 'operadores_matematicos':
+			$retorno = "(entradaLida == '+' || entradaLida == '-' || entradaLida == '*' || entradaLida == '/')";
+			break;
+		case 'operadores_de_comparacao':
+			$retorno = "entradaLida == OPERADOR";
+			break;
+		case '&&':
+			$retorno = "entradaLida == '&'";
+			break;
 		default:
-			return "'".$entradaLida."'";
+			$retorno = "entradaLida == '".$entradaLida."'";
+			break;
 	}
+	return $retorno;
 }
 if ($arquivoEntrada) {
     while (($buffer = fgets($arquivoEntrada, 4096)) !== false) {
@@ -59,13 +126,15 @@ if ($arquivoEntrada) {
 		$transicao = explode(") -> ", $estadoDePartida[1]);
 		$estadoDeChegada = $transicao[1];
 		$estadoDePartida = $estadoDePartida[0];
-		$transicao = traduzirEntradaLidaNoWirthParaEntradaNoCodigoC(str_replace('"', "", $transicao[0]));
+		$transicao = str_replace('"', "", $transicao[0]);
 		$matrizDeTransicao[$estadoDePartida][$transicao] = str_replace("\n", "", $estadoDeChegada);
     }
     fclose($arquivoEntrada);
 }
 
 $primeiroIfGeral = true;
+echo "int naoEncontrouTransicao;\n";
+echo "naoEncontrouTransicao = TRUE;\n";
 
 echo "*algumaSubmaquinaTransitou = TRUE;\n*estaNoEstadoFinal = FALSE;\n\n";
 foreach($matrizDeTransicao as $estadoDePartida => $transicoes) {
@@ -80,41 +149,37 @@ foreach($matrizDeTransicao as $estadoDePartida => $transicoes) {
 	$submaquina = false;
 	
 	//verifica se existe submaquina
-	if (isset($transicoes["'programa'"])) {
+	if (isset($transicoes["programa"])) {
 		$submaquina["nomeFuncao"] = "submaquinaProgramaCriarSubmaquina";
-		$submaquina["proximoEstado"] = $transicoes["'programa'"];
-		unset($transicoes["'programa'"]);
+		$submaquina["proximoEstado"] = $transicoes["programa"];
+		unset($transicoes["programa"]);
 	}
 	
-	if (isset($transicoes["'comando'"])) {
+	if (isset($transicoes["comandos"])) {
 		$submaquina["nomeFuncao"] = "submaquinaComandosCriarSubmaquina";
-		$submaquina["proximoEstado"] = $transicoes["'comando'"];
-		unset($transicoes["'comando'"]);
+		$submaquina["proximoEstado"] = $transicoes["comandos"];
+		unset($transicoes["comandos"]);
 	}
 	
-	if (isset($transicoes["'expressao'"])) {
+	if (isset($transicoes["expressao"])) {
 		$submaquina["nomeFuncao"] = "submaquinaExpressoesCriarSubmaquina";
-		$submaquina["proximoEstado"] = $transicoes["'expressao'"];
-		unset($transicoes["'expressao'"]);
-	}
-	
-	if (isset($transicoes["'S'"])) {
-		$submaquina["nomeFuncao"] = "subS";
-		$submaquina["proximoEstado"] = $transicoes["'S'"];
-		unset($transicoes["'S'"]);
+		$submaquina["proximoEstado"] = $transicoes["expressao"];
+		unset($transicoes["expressao"]);
 	}
 	
 	foreach($transicoes as $entradaLida => $estadoDeChegada) {
+
 		if ($primeiroIfTransicao) {
-			echo "\tif (entradaLida == {$entradaLida}) {\n\t\tsubmaquinaAtual->estadoAtual = {$estadoDeChegada};\n";
+			echo "\tif (".traduzirEntradaLidaNoWirthParaEntradaNoCodigoC($entradaLida).") {\n\t\tsubmaquinaAtual->estadoAtual = {$estadoDeChegada};\n";
 			$primeiroIfTransicao = false;
 		} else {
-			echo "\telse if (entradaLida == {$entradaLida}) {\n\t\tsubmaquinaAtual->estadoAtual = {$estadoDeChegada};\n";
+			echo "\telse if (".traduzirEntradaLidaNoWirthParaEntradaNoCodigoC($entradaLida).") {\n\t\tsubmaquinaAtual->estadoAtual = {$estadoDeChegada};\n";
 		}
 		
 		if (eEstadoFinal($estadoDeChegada))
 			echo "\t\t*estaNoEstadoFinal = TRUE;\n";
-			
+		
+		echo "\t\tnaoEncontrouTransicao = FALSE;\n";
 		echo "\t}\n";
 	}
 	
@@ -123,10 +188,16 @@ foreach($matrizDeTransicao as $estadoDePartida => $transicoes) {
 		{
 			echo "\tsubmaquinaAtual->estadoAtual = {$submaquina['proximoEstado']};\n";
 			echo "\tsubstituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, {$submaquina['nomeFuncao']}());\n";	
+			if (eEstadoFinal($submaquina['proximoEstado']))
+				echo "\t*estaNoEstadoFinal = TRUE;\n";
+			echo "\tnaoEncontrouTransicao = FALSE;\n";
 		}
 		else {
 			echo "\telse {\n\t\tsubmaquinaAtual->estadoAtual = {$submaquina['proximoEstado']};\n";
 			echo "\t\tsubstituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, {$submaquina['nomeFuncao']}());\n";
+			if (eEstadoFinal($submaquina['proximoEstado']))
+				echo "\t\t*estaNoEstadoFinal = TRUE;\n";
+			echo "\t\tnaoEncontrouTransicao = FALSE;\n";
 			echo "\t}\n";
 		}
 	}
@@ -134,7 +205,7 @@ foreach($matrizDeTransicao as $estadoDePartida => $transicoes) {
 	echo "}\n";
 }
 
-echo "else {\n\tchamarSubmaquinaDaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal);\n}\n";
+echo "\n\nif(naoEncontrouTransicao == TRUE) {\n\tchamarSubmaquinaDaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal);\n}\n";
 echo "return;\n";
 
 echo "----------------- ------------- -----------\n";
