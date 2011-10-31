@@ -265,10 +265,13 @@ token* gerarTokenAPartirDoLexemaEncontrado(char* lexemaEncontrado) {
 			tokenASerRetornado = obterTokenPalavra(lexemaEncontrado, numeroDaLinhaLidaNoArquivoFonte, STRING, &palavraReservada, &simbolos, &strings);
 			break;
 		case 11:
-			tokenASerRetornado = obterTokenPalavra(lexemaEncontrado, numeroDaLinhaLidaNoArquivoFonte, OPERADOR, &palavraReservada, &simbolos, &strings);
-			break;
+			if (strcmp(lexemaEncontrado,(char*) "=") == 0) 
+				tokenASerRetornado = tokenASerRetornado = criaToken('=', numeroDaLinhaLidaNoArquivoFonte, lexemaEncontrado, NULL);
+			else
+				tokenASerRetornado = tokenASerRetornado = criaToken(OPERADOR, numeroDaLinhaLidaNoArquivoFonte, lexemaEncontrado, NULL);
+				break;
 		case 12:
-			tokenASerRetornado = obterTokenPalavra(lexemaEncontrado, numeroDaLinhaLidaNoArquivoFonte, OPERADOR, &palavraReservada, &simbolos, &strings);
+			tokenASerRetornado = tokenASerRetornado = criaToken(OPERADOR, numeroDaLinhaLidaNoArquivoFonte, lexemaEncontrado, NULL);
 			break;
 		case 14:
 			tokenASerRetornado = criaToken(OPERADOR_OU, numeroDaLinhaLidaNoArquivoFonte, lexemaEncontrado, NULL);
