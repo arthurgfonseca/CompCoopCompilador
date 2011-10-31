@@ -52,7 +52,7 @@ int main (int argc, const char * argv[])
 				transicaoEncontrada = transitarAPE(obterIdUnicoDaPalavraReservada(tokenLido));
 			else
 				transicaoEncontrada = transitarAPE(tokenLido->tipo);
-			imprimeToken(tokenLido);
+			//imprimeToken(tokenLido);
 			tokenLido = getToken(entrada);
 			
 			semantico_tbd();
@@ -60,6 +60,7 @@ int main (int argc, const char * argv[])
 	
 	imprimeToken(tokenLido);
 	
+
 	fclose (entrada);    
 	
 	if (linguagemAceitaPeloAPE() == TRUE)
