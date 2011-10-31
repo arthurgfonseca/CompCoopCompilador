@@ -17,6 +17,7 @@
 		E24ECDA4142E397600574E4E /* token.c in Sources */ = {isa = PBXBuildFile; fileRef = E24ECDA3142E397600574E4E /* token.c */; };
 		E274D6DB142A66AA009890DA /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = E274D6DA142A66AA009890DA /* main.c */; };
 		E274D6DD142A66AA009890DA /* Compilador.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = E274D6DC142A66AA009890DA /* Compilador.1 */; };
+		E2F7C618145F17FF00D621C6 /* submaquinas.c in Sources */ = {isa = PBXBuildFile; fileRef = E2F7C616145F17FF00D621C6 /* submaquinas.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -54,6 +55,8 @@
 		E274D6D6142A66A9009890DA /* Compilador */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Compilador; sourceTree = BUILT_PRODUCTS_DIR; };
 		E274D6DA142A66AA009890DA /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		E274D6DC142A66AA009890DA /* Compilador.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Compilador.1; sourceTree = "<group>"; };
+		E2F7C616145F17FF00D621C6 /* submaquinas.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = submaquinas.c; sourceTree = "<group>"; };
+		E2F7C617145F17FF00D621C6 /* submaquinas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = submaquinas.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +89,8 @@
 		E274D6D9142A66A9009890DA /* Compilador */ = {
 			isa = PBXGroup;
 			children = (
+				E2F7C616145F17FF00D621C6 /* submaquinas.c */,
+				E2F7C617145F17FF00D621C6 /* submaquinas.h */,
 				E24ECDA0142E1CC300574E4E /* operadores.txt */,
 				E24ECD9B142D41F200574E4E /* palavrasreservadas.txt */,
 				E274D6DA142A66AA009890DA /* main.c */,
@@ -169,6 +174,7 @@
 				2C536B2C142EC69C00D04164 /* matrizes.c in Sources */,
 				2C7A429B142FA772001E2B36 /* globais.c in Sources */,
 				2C635FBC145B43730023C828 /* ape.c in Sources */,
+				E2F7C618145F17FF00D621C6 /* submaquinas.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
