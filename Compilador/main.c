@@ -24,6 +24,11 @@ void imprimeToken(token* tokenObtido) {
     printf("\n\n---- FIM ----");
 }
 
+void semantico_tbd();
+
+void semantico_tbd() {
+	printf("TODO \n");
+}	
 
 int main (int argc, const char * argv[])
 {
@@ -47,8 +52,10 @@ int main (int argc, const char * argv[])
 				transicaoEncontrada = transitarAPE(obterIdUnicoDaPalavraReservada(tokenLido));
 			else
 				transicaoEncontrada = transitarAPE(tokenLido->tipo);
-			imprimeToken(tokenLido);
+			//imprimeToken(tokenLido);
 			tokenLido = getToken(entrada);
+			
+			semantico_tbd();
 		}
 	
 	imprimeToken(tokenLido);
