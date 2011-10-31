@@ -29,7 +29,7 @@ int linguagemAceitaPeloAPE();
 /******************************
  ******** SUBMAQUINAS **********
  ******************************/
-submaquina* criarSubmaquina(void (*funcaoTransitarDaSubmaquina)(int));
+submaquina* criarSubmaquina(void (*funcaoTransitarDaSubmaquina)(int, int*, int*));
 void chamarSubmaquinaDaPilha(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal);
 void substituirSubmaquinaAtualColocandoAAntigaNaPilha(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal, submaquina* novaSubmaquina);
 	

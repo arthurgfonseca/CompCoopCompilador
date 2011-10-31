@@ -75,7 +75,7 @@ int linguagemAceitaPeloAPE() {
 /******************************
 ******** SUBMAQUINAS **********
 ******************************/
-submaquina* criarSubmaquina(void (*funcaoTransitarDaSubmaquina)(int)) {
+submaquina* criarSubmaquina(void (*funcaoTransitarDaSubmaquina)(int, int*, int*)) {
 	submaquina* novaSubmaquina = (submaquina*) malloc (sizeof(submaquina*));
 	novaSubmaquina->estadoAtual = 0;
 	novaSubmaquina->transitar = funcaoTransitarDaSubmaquina;
