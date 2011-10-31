@@ -185,13 +185,13 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 	else if (submaquinaAtual->estadoAtual == 6) {
 		if (entradaLida == PALAVRARESERVADA_endprogram) {
 			submaquinaAtual->estadoAtual = 8;
-			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 7) {
 		if (entradaLida == '(') {
 			submaquinaAtual->estadoAtual = 9;
+			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
 		}
 	}
@@ -207,7 +207,7 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 	}
 	else if (submaquinaAtual->estadoAtual == 10) {
 		if (entradaLida == SIMBOLO) {
-			submaquinaAtual->estadoAtual = 24;
+			submaquinaAtual->estadoAtual = 23;
 			naoEncontrouTransicao = FALSE;
 		}
 	}
@@ -232,13 +232,13 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 			naoEncontrouTransicao = FALSE;
 		}
 		else if (entradaLida == ';') {
-			submaquinaAtual->estadoAtual = 16;
+			submaquinaAtual->estadoAtual = 3;
 			naoEncontrouTransicao = FALSE;
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 13) {
 		if (entradaLida == SIMBOLO) {
-			submaquinaAtual->estadoAtual = 18;
+			submaquinaAtual->estadoAtual = 17;
 			naoEncontrouTransicao = FALSE;
 		}
 	}
@@ -250,75 +250,74 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 	}
 	else if (submaquinaAtual->estadoAtual == 15) {
 		if (entradaLida == INTEIRO) {
-			submaquinaAtual->estadoAtual = 17;
+			submaquinaAtual->estadoAtual = 16;
 			naoEncontrouTransicao = FALSE;
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 16) {
-		submaquinaAtual->estadoAtual = 6;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaComandosCriarSubmaquina());
-		naoEncontrouTransicao = FALSE;
-	}
-	else if (submaquinaAtual->estadoAtual == 17) {
 		if (entradaLida == ']') {
-			submaquinaAtual->estadoAtual = 19;
+			submaquinaAtual->estadoAtual = 18;
 			naoEncontrouTransicao = FALSE;
 		}
 	}
-	else if (submaquinaAtual->estadoAtual == 18) {
+	else if (submaquinaAtual->estadoAtual == 17) {
 		if (entradaLida == ',') {
 			submaquinaAtual->estadoAtual = 13;
 			naoEncontrouTransicao = FALSE;
 		}
 		else if (entradaLida == '[') {
-			submaquinaAtual->estadoAtual = 20;
+			submaquinaAtual->estadoAtual = 19;
 			naoEncontrouTransicao = FALSE;
 		}
 		else if (entradaLida == ';') {
-			submaquinaAtual->estadoAtual = 21;
+			submaquinaAtual->estadoAtual = 20;
 			naoEncontrouTransicao = FALSE;
 		}
 	}
-	else if (submaquinaAtual->estadoAtual == 19) {
+	else if (submaquinaAtual->estadoAtual == 18) {
 		if (entradaLida == ',') {
 			submaquinaAtual->estadoAtual = 5;
 			naoEncontrouTransicao = FALSE;
 		}
 		else if (entradaLida == ';') {
-			submaquinaAtual->estadoAtual = 16;
+			submaquinaAtual->estadoAtual = 3;
+			naoEncontrouTransicao = FALSE;
+		}
+	}
+	else if (submaquinaAtual->estadoAtual == 19) {
+		if (entradaLida == 'digito') {
+			submaquinaAtual->estadoAtual = 21;
 			naoEncontrouTransicao = FALSE;
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 20) {
-		if (entradaLida == INTEIRO) {
-			submaquinaAtual->estadoAtual = 22;
-			naoEncontrouTransicao = FALSE;
-		}
-	}
-	else if (submaquinaAtual->estadoAtual == 21) {
 		submaquinaAtual->estadoAtual = 14;
 		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaComandosCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
-	else if (submaquinaAtual->estadoAtual == 22) {
-		if (entradaLida == ']') {
-			submaquinaAtual->estadoAtual = 23;
+	else if (submaquinaAtual->estadoAtual == 21) {
+		if (entradaLida == 'digito') {
+			submaquinaAtual->estadoAtual = 21;
+			naoEncontrouTransicao = FALSE;
+		}
+		else if (entradaLida == ']') {
+			submaquinaAtual->estadoAtual = 22;
 			naoEncontrouTransicao = FALSE;
 		}
 	}
-	else if (submaquinaAtual->estadoAtual == 23) {
+	else if (submaquinaAtual->estadoAtual == 22) {
 		if (entradaLida == ',') {
 			submaquinaAtual->estadoAtual = 13;
 			naoEncontrouTransicao = FALSE;
 		}
 		else if (entradaLida == ';') {
-			submaquinaAtual->estadoAtual = 21;
+			submaquinaAtual->estadoAtual = 20;
 			naoEncontrouTransicao = FALSE;
 		}
 	}
-	else if (submaquinaAtual->estadoAtual == 24) {
+	else if (submaquinaAtual->estadoAtual == 23) {
 		if (entradaLida == ',') {
-			submaquinaAtual->estadoAtual = 25;
+			submaquinaAtual->estadoAtual = 24;
 			naoEncontrouTransicao = FALSE;
 		}
 		else if (entradaLida == ')') {
@@ -326,7 +325,7 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 			naoEncontrouTransicao = FALSE;
 		}
 	}
-	else if (submaquinaAtual->estadoAtual == 25) {
+	else if (submaquinaAtual->estadoAtual == 24) {
 		if ((entradaLida == PALAVRARESERVADA_int || entradaLida == PALAVRARESERVADA_float)) {
 			submaquinaAtual->estadoAtual = 10;
 			naoEncontrouTransicao = FALSE;
@@ -1455,5 +1454,9 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 	if(naoEncontrouTransicao == TRUE) {
 		chamarSubmaquinaDaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal);
 	}
+
 	return;	
+
+
+	
 }

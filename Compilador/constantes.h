@@ -10,9 +10,15 @@
 //#define PATH_PARA_ARQUIVO_DE_PALAVRAS_RESERVADAS "D:/vinicius/palavrasreservadas.txt"
 //#define PATH_PARA_ARQUIVO_DE_OPERADORES "D:/vinicius/operadores.txt"
 
+
 #define PATH_PARA_ARQUIVO_FONTE "/Users/arthurgfonseca/Sites/Compilador/Compilador/ENTRADA.txt"
 #define PATH_PARA_ARQUIVO_DE_PALAVRAS_RESERVADAS "/Users/arthurgfonseca/Sites/Compilador/Compilador/Compilador/palavrasreservadas.txt"
 #define PATH_PARA_ARQUIVO_DE_OPERADORES "/Users/arthurgfonseca/Sites/Compilador/Compilador/Compilador/operadores.txt"
+
+//#define PATH_PARA_ARQUIVO_FONTE "/Volumes/Pessoal/vinicius/ENTRADA.txt"
+//#define PATH_PARA_ARQUIVO_DE_PALAVRAS_RESERVADAS "/Volumes/Pessoal/vinicius/palavrasreservadas.txt"
+//#define PATH_PARA_ARQUIVO_DE_OPERADORES "/Volumes/Pessoal/vinicius/operadores.txt"
+
 
 //#define PATH_PARA_ARQUIVO_DE_PALAVRAS_RESERVADAS "/Users/arthurgfonseca/Sites/Compilador/Compilador/Compilador/palavrasreservadas.txt"
 //#define PATH_PARA_ARQUIVO_DE_OPERADORES "/Users/arthurgfonseca/Sites/Compilador/Compilador/Compilador/operadores.txt"
