@@ -12,37 +12,35 @@ function eEstadoFinal($estado) {
 		return true;
 		
 	return false;
-}
+}*/
 
 //submaquina comando
 function eEstadoFinal($estado) {
-	if ($estado == 6)
+	if ($estado == 7)
 		return true;
 		
 	return false;
 }
-*/
+
+
+
 //submaquina expressao
+/*
 function eEstadoFinal($estado) {
 	if ($estado == 1 ||
 	$estado ==  3 ||
-	$estado ==  7 ||
-	$estado ==  12 ||
-	$estado ==  13 ||
+	$estado ==  8 ||
+	$estado ==  10 ||
 	$estado ==  15 ||
-	$estado ==  18 ||
-	$estado ==  21 ||
-	$estado ==  22 ||
-	$estado ==  25 ||
-	$estado ==  26 ||
-	$estado ==  27 ||
+	$estado ==  17 ||
+	$estado ==  23 ||
 	$estado ==  29 ||
-	$estado ==  32 ||
+	$estado ==  34 ||
 	$estado ==  36)
 		return true;
 		
 	return false;
-}
+}*/
 
 //necessario fazer para todos os terminais exceto caracteres que o token é o proprio codigo ascii
 function traduzirEntradaLidaNoWirthParaEntradaNoCodigoC($entradaLida) {
