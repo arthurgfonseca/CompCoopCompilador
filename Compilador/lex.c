@@ -267,6 +267,8 @@ token* gerarTokenAPartirDoLexemaEncontrado(char* lexemaEncontrado) {
 		case 11:
 			if (strcmp(lexemaEncontrado,(char*) "=") == 0) 
 				tokenASerRetornado = tokenASerRetornado = criaToken('=', numeroDaLinhaLidaNoArquivoFonte, lexemaEncontrado, NULL);
+			else if (strcmp(lexemaEncontrado,(char*) "!") == 0) 
+				tokenASerRetornado = tokenASerRetornado = criaToken('!', numeroDaLinhaLidaNoArquivoFonte, lexemaEncontrado, NULL);
 			else
 				tokenASerRetornado = tokenASerRetornado = criaToken(OPERADOR, numeroDaLinhaLidaNoArquivoFonte, lexemaEncontrado, NULL);
 				break;
@@ -299,7 +301,7 @@ int obterIdUnicoDaPalavraReservada(token* tokenDePalavraReservada) {
 	if (strcmp(palavraReservadaDoToken, (char*) "return") == 0)
 		return PALAVRARESERVADA_return;
 	if (strcmp(palavraReservadaDoToken, (char*) "enddeclare") == 0)
-		return PALAVRARESERVADA_endprogram;
+		return PALAVRARESERVADA_enddeclare;
 	
 	if (strcmp(palavraReservadaDoToken, (char*) "while") == 0)
 		return PALAVRARESERVADA_while;
