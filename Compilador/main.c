@@ -58,15 +58,15 @@ int main (int argc, const char * argv[])
 			semantico_tbd();
 		}
 	
-	//imprimeToken(tokenLido);
+	imprimeToken(tokenLido);
 	
 
 	fclose (entrada);    
 	
-	if (linguagemAceitaPeloAPE() == TRUE)
-		printf("\n \n ACEITOU");
-	else 
-		printf("\n \n NAO ACEITOU");
+//	if (linguagemAceitaPeloAPE() == TRUE)
+//		printf("\n \n ACEITOU");
+//	else 
+//		printf("\n \n NAO ACEITOU");
 	
 
 	
