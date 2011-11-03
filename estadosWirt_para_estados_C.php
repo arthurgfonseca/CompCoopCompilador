@@ -4,7 +4,7 @@ $arquivoEntrada = @fopen("estados.txt", "r");
 $matrizDeTransicao;
 
 //submaquina programa
-function eEstadoFinal($estado) {
+function PeEstadoFinal($estado) {
 	if ($estado == 9)
 		return true;
 		
@@ -12,7 +12,7 @@ function eEstadoFinal($estado) {
 }
 
 //submaquina comando
-function CeEstadoFinal($estado) {
+function eEstadoFinal($estado) {
 	if ($estado == 12)
 		return true;
 		
@@ -23,7 +23,7 @@ function CeEstadoFinal($estado) {
 
 //submaquina expressao
 
-function EstadoFinal($estado) {
+function EeEstadoFinal($estado) {
 	if ($estado == 1 ||
 	$estado ==  4 ||
 	$estado ==  9 ||
