@@ -10,7 +10,7 @@
 //#define PATH_PARA_ARQUIVO_DE_PALAVRAS_RESERVADAS "D:/vinicius/palavrasreservadas.txt"
 //#define PATH_PARA_ARQUIVO_DE_OPERADORES "D:/vinicius/operadores.txt"
 
-#define PATH_PARA_ARQUIVO_FONTE "/Volumes/Pessoal/vinicius/ENTRADA.txt"
+#define PATH_PARA_ARQUIVO_FONTE "/Volumes/Pessoal/vinicius/teste.txt"
 #define PATH_PARA_ARQUIVO_DE_PALAVRAS_RESERVADAS "/Volumes/Pessoal/vinicius/palavrasreservadas.txt"
 #define PATH_PARA_ARQUIVO_DE_OPERADORES "/Volumes/Pessoal/vinicius/operadores.txt"
 
