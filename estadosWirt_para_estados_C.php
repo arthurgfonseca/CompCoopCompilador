@@ -25,10 +25,10 @@ function CeEstadoFinal($estado) {
 
 function EstadoFinal($estado) {
 	if ($estado == 1 ||
-	$estado ==  3 ||
-	$estado ==  8 ||
-	$estado ==  10 ||
-	$estado ==  21 ||
+	$estado ==  4 ||
+	$estado ==  9 ||
+	$estado ==  12 ||
+	$estado ==  20 ||
 	$estado ==  23)
 		return true;
 		

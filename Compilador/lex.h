@@ -13,6 +13,7 @@ void inicializarAnalizadorLexico();
 token* getToken(FILE* entradaLida);
 token* obterTokenDepoisDeIicializarAnalizadorLexico(FILE* entradaLida);
 int deveConcatenarOCaracterLidoAoLexema();
+int deveReiniciarOLexema();
 void concatenarCharNaString(char caractereASerConcatenado, char* stringQueVaiReceberOChar);
 void incrementarNumeroDaLinhaLidaCasoNecessario(char caractereLido);
 int encontrouToken();

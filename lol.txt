@@ -4,80 +4,180 @@ naoEncontrouTransicao = TRUE;
 *estaNoEstadoFinal = FALSE;
 
 if (submaquinaAtual->estadoAtual == 0) {
-	if (entradaLida == PALAVRARESERVADA_program) {
-		submaquinaAtual->estadoAtual = 1;
-		naoEncontrouTransicao = FALSE;
-	}
-}
-else if (submaquinaAtual->estadoAtual == 1) {
-	if (entradaLida == PALAVRARESERVADA_declare) {
+	if (entradaLida == SIMBOLO) {
 		submaquinaAtual->estadoAtual = 2;
 		naoEncontrouTransicao = FALSE;
 	}
-	else if (entradaLida == PALAVRARESERVADA_execute) {
+	else if (entradaLida == '(') {
 		submaquinaAtual->estadoAtual = 3;
 		naoEncontrouTransicao = FALSE;
 	}
-}
-else if (submaquinaAtual->estadoAtual == 2) {
-	if ((entradaLida == PALAVRARESERVADA_int || entradaLida == PALAVRARESERVADA_float)) {
+	else if (entradaLida == INTEIRO) {
 		submaquinaAtual->estadoAtual = 4;
 		naoEncontrouTransicao = FALSE;
 	}
-	else if (entradaLida == PALAVRARESERVADA_void) {
+	else if (entradaLida == PALAVRARESERVADA_float) {
+		submaquinaAtual->estadoAtual = 4;
+		naoEncontrouTransicao = FALSE;
+	}
+	else if (entradaLida == '!') {
 		submaquinaAtual->estadoAtual = 5;
 		naoEncontrouTransicao = FALSE;
 	}
 }
-else if (submaquinaAtual->estadoAtual == 3) {
-	if ((entradaLida == PALAVRARESERVADA_int || entradaLida == PALAVRARESERVADA_float)) {
+else if (submaquinaAtual->estadoAtual == 1) {
+	if (entradaLida == '[') {
 		submaquinaAtual->estadoAtual = 6;
 		naoEncontrouTransicao = FALSE;
 	}
-	else {
+	else if ((entradaLida == '+' || entradaLida == '-' || entradaLida == '*' || entradaLida == '/')) {
 		submaquinaAtual->estadoAtual = 7;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaComandosCriarSubmaquina());
+		naoEncontrouTransicao = FALSE;
+	}
+	else if (entradaLida == OPERADOR) {
+		submaquinaAtual->estadoAtual = 8;
+		naoEncontrouTransicao = FALSE;
+	}
+	else if (entradaLida == OPERADOR_OU) {
+		submaquinaAtual->estadoAtual = 0;
+		naoEncontrouTransicao = FALSE;
+	}
+	else if (entradaLida == '&') {
+		submaquinaAtual->estadoAtual = 0;
 		naoEncontrouTransicao = FALSE;
 	}
 }
-else if (submaquinaAtual->estadoAtual == 4) {
-	if (entradaLida == '[') {
-		submaquinaAtual->estadoAtual = 23;
+else if (submaquinaAtual->estadoAtual == 2) {
+	if (entradaLida == '(') {
+		submaquinaAtual->estadoAtual = 24;
 		naoEncontrouTransicao = FALSE;
 	}
-	else if (entradaLida == SIMBOLO) {
+}
+else if (submaquinaAtual->estadoAtual == 3) {
+	submaquinaAtual->estadoAtual = 19;
+	substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+	naoEncontrouTransicao = FALSE;
+}
+else if (submaquinaAtual->estadoAtual == 4) {
+	if ((entradaLida == '+' || entradaLida == '-' || entradaLida == '*' || entradaLida == '/')) {
+		submaquinaAtual->estadoAtual = 7;
+		naoEncontrouTransicao = FALSE;
+	}
+	else if (entradaLida == OPERADOR) {
 		submaquinaAtual->estadoAtual = 8;
+		naoEncontrouTransicao = FALSE;
+	}
+	else if (entradaLida == OPERADOR_OU) {
+		submaquinaAtual->estadoAtual = 0;
+		naoEncontrouTransicao = FALSE;
+	}
+	else if (entradaLida == '&') {
+		submaquinaAtual->estadoAtual = 0;
 		naoEncontrouTransicao = FALSE;
 	}
 }
 else if (submaquinaAtual->estadoAtual == 5) {
 	if (entradaLida == SIMBOLO) {
-		submaquinaAtual->estadoAtual = 8;
+		submaquinaAtual->estadoAtual = 10;
+		naoEncontrouTransicao = FALSE;
+	}
+	else if (entradaLida == '(') {
+		submaquinaAtual->estadoAtual = 11;
+		naoEncontrouTransicao = FALSE;
+	}
+	else if (entradaLida == INTEIRO) {
+		submaquinaAtual->estadoAtual = 12;
+		naoEncontrouTransicao = FALSE;
+	}
+	else if (entradaLida == PALAVRARESERVADA_float) {
+		submaquinaAtual->estadoAtual = 12;
 		naoEncontrouTransicao = FALSE;
 	}
 }
 else if (submaquinaAtual->estadoAtual == 6) {
-	if (entradaLida == SIMBOLO) {
-		submaquinaAtual->estadoAtual = 13;
-		naoEncontrouTransicao = FALSE;
-	}
+	submaquinaAtual->estadoAtual = 29;
+	substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+	naoEncontrouTransicao = FALSE;
 }
 else if (submaquinaAtual->estadoAtual == 7) {
-	if (entradaLida == PALAVRARESERVADA_endprogram) {
-		submaquinaAtual->estadoAtual = 9;
-		*estaNoEstadoFinal = TRUE;
+	if (entradaLida == SIMBOLO) {
+		submaquinaAtual->estadoAtual = 21;
+		naoEncontrouTransicao = FALSE;
+	}
+	else if (entradaLida == '(') {
+		submaquinaAtual->estadoAtual = 22;
+		naoEncontrouTransicao = FALSE;
+	}
+	else if (entradaLida == INTEIRO) {
+		submaquinaAtual->estadoAtual = 23;
+		naoEncontrouTransicao = FALSE;
+	}
+	else if (entradaLida == PALAVRARESERVADA_float) {
+		submaquinaAtual->estadoAtual = 23;
 		naoEncontrouTransicao = FALSE;
 	}
 }
 else if (submaquinaAtual->estadoAtual == 8) {
-	if (entradaLida == '(') {
-		submaquinaAtual->estadoAtual = 10;
+	if (entradaLida == 'operando') {
+		submaquinaAtual->estadoAtual = 12;
+		naoEncontrouTransicao = FALSE;
+	}
+}
+else if (submaquinaAtual->estadoAtual == 9) {
+	if (entradaLida == '[') {
+		submaquinaAtual->estadoAtual = 17;
+		naoEncontrouTransicao = FALSE;
+	}
+	else if (entradaLida == OPERADOR_OU) {
+		submaquinaAtual->estadoAtual = 0;
+		naoEncontrouTransicao = FALSE;
+	}
+	else if (entradaLida == '&') {
+		submaquinaAtual->estadoAtual = 0;
 		naoEncontrouTransicao = FALSE;
 	}
 }
 else if (submaquinaAtual->estadoAtual == 10) {
-	if ((entradaLida == PALAVRARESERVADA_int || entradaLida == PALAVRARESERVADA_float)) {
-		submaquinaAtual->estadoAtual = 11;
+	if (entradaLida == '(') {
+		submaquinaAtual->estadoAtual = 14;
+		naoEncontrouTransicao = FALSE;
+	}
+}
+else if (submaquinaAtual->estadoAtual == 11) {
+	submaquinaAtual->estadoAtual = 13;
+	substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+	naoEncontrouTransicao = FALSE;
+}
+else if (submaquinaAtual->estadoAtual == 12) {
+	if (entradaLida == OPERADOR_OU) {
+		submaquinaAtual->estadoAtual = 0;
+		naoEncontrouTransicao = FALSE;
+	}
+	else if (entradaLida == '&') {
+		submaquinaAtual->estadoAtual = 0;
+		naoEncontrouTransicao = FALSE;
+	}
+}
+else if (submaquinaAtual->estadoAtual == 13) {
+	if (entradaLida == ')') {
+		submaquinaAtual->estadoAtual = 12;
+		naoEncontrouTransicao = FALSE;
+	}
+}
+else if (submaquinaAtual->estadoAtual == 14) {
+	if (entradaLida == ')') {
+		submaquinaAtual->estadoAtual = 12;
+		naoEncontrouTransicao = FALSE;
+	}
+	else {
+		submaquinaAtual->estadoAtual = 15;
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+		naoEncontrouTransicao = FALSE;
+	}
+}
+else if (submaquinaAtual->estadoAtual == 15) {
+	if (entradaLida == ',') {
+		submaquinaAtual->estadoAtual = 16;
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (entradaLida == ')') {
@@ -85,132 +185,143 @@ else if (submaquinaAtual->estadoAtual == 10) {
 		naoEncontrouTransicao = FALSE;
 	}
 }
-else if (submaquinaAtual->estadoAtual == 11) {
-	if (entradaLida == SIMBOLO) {
-		submaquinaAtual->estadoAtual = 25;
-		naoEncontrouTransicao = FALSE;
-	}
-}
-else if (submaquinaAtual->estadoAtual == 12) {
-	if ((entradaLida == PALAVRARESERVADA_int || entradaLida == PALAVRARESERVADA_float)) {
-		submaquinaAtual->estadoAtual = 14;
-		naoEncontrouTransicao = FALSE;
-	}
-	else {
-		submaquinaAtual->estadoAtual = 15;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaComandosCriarSubmaquina());
-		naoEncontrouTransicao = FALSE;
-	}
-}
-else if (submaquinaAtual->estadoAtual == 13) {
-	if (entradaLida == '[') {
-		submaquinaAtual->estadoAtual = 16;
-		naoEncontrouTransicao = FALSE;
-	}
-	else if (entradaLida == ',') {
-		submaquinaAtual->estadoAtual = 6;
-		naoEncontrouTransicao = FALSE;
-	}
-	else if (entradaLida == ';') {
-		submaquinaAtual->estadoAtual = 3;
-		naoEncontrouTransicao = FALSE;
-	}
-}
-else if (submaquinaAtual->estadoAtual == 14) {
-	if (entradaLida == SIMBOLO) {
-		submaquinaAtual->estadoAtual = 17;
-		naoEncontrouTransicao = FALSE;
-	}
-}
-else if (submaquinaAtual->estadoAtual == 15) {
-	if (entradaLida == PALAVRARESERVADA_enddeclare) {
-		submaquinaAtual->estadoAtual = 1;
-		naoEncontrouTransicao = FALSE;
-	}
-}
 else if (submaquinaAtual->estadoAtual == 16) {
-	if (entradaLida == INTEIRO) {
-		submaquinaAtual->estadoAtual = 19;
-		naoEncontrouTransicao = FALSE;
-	}
+	submaquinaAtual->estadoAtual = 15;
+	substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+	naoEncontrouTransicao = FALSE;
 }
 else if (submaquinaAtual->estadoAtual == 17) {
-	if (entradaLida == '[') {
-		submaquinaAtual->estadoAtual = 18;
-		naoEncontrouTransicao = FALSE;
-	}
-	else if (entradaLida == ',') {
-		submaquinaAtual->estadoAtual = 14;
-		naoEncontrouTransicao = FALSE;
-	}
-	else if (entradaLida == ';') {
-		submaquinaAtual->estadoAtual = 12;
-		naoEncontrouTransicao = FALSE;
-	}
+	submaquinaAtual->estadoAtual = 18;
+	substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+	naoEncontrouTransicao = FALSE;
 }
 else if (submaquinaAtual->estadoAtual == 18) {
-	if (entradaLida == INTEIRO) {
-		submaquinaAtual->estadoAtual = 21;
+	if (entradaLida == ']') {
+		submaquinaAtual->estadoAtual = 12;
 		naoEncontrouTransicao = FALSE;
 	}
 }
 else if (submaquinaAtual->estadoAtual == 19) {
-	if (entradaLida == ']') {
-		submaquinaAtual->estadoAtual = 20;
+	if (entradaLida == ')') {
+		submaquinaAtual->estadoAtual = 4;
 		naoEncontrouTransicao = FALSE;
 	}
 }
 else if (submaquinaAtual->estadoAtual == 20) {
-	if (entradaLida == ',') {
-		submaquinaAtual->estadoAtual = 6;
+	if (entradaLida == '[') {
+		submaquinaAtual->estadoAtual = 32;
 		naoEncontrouTransicao = FALSE;
 	}
-	else if (entradaLida == ';') {
-		submaquinaAtual->estadoAtual = 3;
+	else if ((entradaLida == '+' || entradaLida == '-' || entradaLida == '*' || entradaLida == '/')) {
+		submaquinaAtual->estadoAtual = 7;
+		naoEncontrouTransicao = FALSE;
+	}
+	else if (entradaLida == OPERADOR_OU) {
+		submaquinaAtual->estadoAtual = 0;
+		naoEncontrouTransicao = FALSE;
+	}
+	else if (entradaLida == '&') {
+		submaquinaAtual->estadoAtual = 0;
 		naoEncontrouTransicao = FALSE;
 	}
 }
 else if (submaquinaAtual->estadoAtual == 21) {
-	if (entradaLida == ']') {
-		submaquinaAtual->estadoAtual = 22;
+	if (entradaLida == '(') {
+		submaquinaAtual->estadoAtual = 28;
 		naoEncontrouTransicao = FALSE;
 	}
 }
 else if (submaquinaAtual->estadoAtual == 22) {
-	if (entradaLida == ',') {
-		submaquinaAtual->estadoAtual = 14;
-		naoEncontrouTransicao = FALSE;
-	}
-	else if (entradaLida == ';') {
-		submaquinaAtual->estadoAtual = 12;
-		naoEncontrouTransicao = FALSE;
-	}
+	submaquinaAtual->estadoAtual = 26;
+	substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+	naoEncontrouTransicao = FALSE;
 }
 else if (submaquinaAtual->estadoAtual == 23) {
-	if (entradaLida == INTEIRO) {
-		submaquinaAtual->estadoAtual = 24;
+	if ((entradaLida == '+' || entradaLida == '-' || entradaLida == '*' || entradaLida == '/')) {
+		submaquinaAtual->estadoAtual = 7;
+		naoEncontrouTransicao = FALSE;
+	}
+	else if (entradaLida == OPERADOR_OU) {
+		submaquinaAtual->estadoAtual = 0;
+		naoEncontrouTransicao = FALSE;
+	}
+	else if (entradaLida == '&') {
+		submaquinaAtual->estadoAtual = 0;
 		naoEncontrouTransicao = FALSE;
 	}
 }
 else if (submaquinaAtual->estadoAtual == 24) {
-	if (entradaLida == ']') {
-		submaquinaAtual->estadoAtual = 5;
+	if (entradaLida == ')') {
+		submaquinaAtual->estadoAtual = 4;
+		naoEncontrouTransicao = FALSE;
+	}
+	else {
+		submaquinaAtual->estadoAtual = 25;
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 }
 else if (submaquinaAtual->estadoAtual == 25) {
 	if (entradaLida == ',') {
-		submaquinaAtual->estadoAtual = 26;
+		submaquinaAtual->estadoAtual = 27;
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (entradaLida == ')') {
-		submaquinaAtual->estadoAtual = 12;
+		submaquinaAtual->estadoAtual = 4;
 		naoEncontrouTransicao = FALSE;
 	}
 }
 else if (submaquinaAtual->estadoAtual == 26) {
-	if ((entradaLida == PALAVRARESERVADA_int || entradaLida == PALAVRARESERVADA_float)) {
-		submaquinaAtual->estadoAtual = 11;
+	if (entradaLida == ')') {
+		submaquinaAtual->estadoAtual = 23;
+		naoEncontrouTransicao = FALSE;
+	}
+}
+else if (submaquinaAtual->estadoAtual == 27) {
+	submaquinaAtual->estadoAtual = 25;
+	substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+	naoEncontrouTransicao = FALSE;
+}
+else if (submaquinaAtual->estadoAtual == 28) {
+	if (entradaLida == ')') {
+		submaquinaAtual->estadoAtual = 23;
+		naoEncontrouTransicao = FALSE;
+	}
+	else {
+		submaquinaAtual->estadoAtual = 30;
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+		naoEncontrouTransicao = FALSE;
+	}
+}
+else if (submaquinaAtual->estadoAtual == 29) {
+	if (entradaLida == ']') {
+		submaquinaAtual->estadoAtual = 4;
+		naoEncontrouTransicao = FALSE;
+	}
+}
+else if (submaquinaAtual->estadoAtual == 30) {
+	if (entradaLida == ',') {
+		submaquinaAtual->estadoAtual = 31;
+		naoEncontrouTransicao = FALSE;
+	}
+	else if (entradaLida == ')') {
+		submaquinaAtual->estadoAtual = 23;
+		naoEncontrouTransicao = FALSE;
+	}
+}
+else if (submaquinaAtual->estadoAtual == 31) {
+	submaquinaAtual->estadoAtual = 30;
+	substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+	naoEncontrouTransicao = FALSE;
+}
+else if (submaquinaAtual->estadoAtual == 32) {
+	submaquinaAtual->estadoAtual = 33;
+	substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+	naoEncontrouTransicao = FALSE;
+}
+else if (submaquinaAtual->estadoAtual == 33) {
+	if (entradaLida == ']') {
+		submaquinaAtual->estadoAtual = 23;
 		naoEncontrouTransicao = FALSE;
 	}
 }

@@ -89,7 +89,7 @@ void inicializarAnalizadorLexico() {
 	
 	//estado 5 -> retorna para o inicial sempre
 	
-	//estado 6
+	//estado 6	
 	novaTransicao = construirDefinicaoDeTransicao(6, 7, '/'); 
 	modificarFuncaoDeTransicao(&transdutor, novaTransicao);
 	
@@ -155,11 +155,14 @@ token* obterTokenDepoisDeIicializarAnalizadorLexico(FILE* entradaLida) {
 	
 	if (terminouDeAnalizar == TRUE)
 		return gerarTokenDeFimDeArquivo();
-		
+	
 	while (encontrouToken() == FALSE) {
 		if (deveConcatenarOCaracterLidoAoLexema() == TRUE) 
 			concatenarCharNaString(caractereLido, lexemaEncontrado);
 
+		if (deveReiniciarOLexema())
+			lexemaEncontrado[0] = '\0';
+		
 		caractereLido = getc(entradaLida);
 		incrementarNumeroDaLinhaLidaCasoNecessario(caractereLido);
 		
@@ -187,8 +190,7 @@ int deveConcatenarOCaracterLidoAoLexema() {
 		transdutor.estadoAnterior == 8 )) 
 			return FALSE;
 
-	if (transdutor.estadoAtual == 6 ||
-		transdutor.estadoAtual == 7 ||
+	if (transdutor.estadoAtual == 7 ||
 		transdutor.estadoAtual == 8 ||
 		transdutor.estadoAtual == 9 ||
 		transdutor.estadoAtual == 10 )
@@ -199,6 +201,17 @@ int deveConcatenarOCaracterLidoAoLexema() {
 
 }
 
+int deveReiniciarOLexema() {
+	
+	if (transdutor.estadoAtual == 0 &&			
+		(transdutor.estadoAnterior == 7 || 
+		 transdutor.estadoAnterior == 8)) 
+		return TRUE;
+	
+	return FALSE;
+	
+}
+			
 void concatenarCharNaString(char caractereASerConcatenado, char* stringQueVaiReceberOChar) {
 	int tamanhoDaString = strlen(stringQueVaiReceberOChar);
 	stringQueVaiReceberOChar[tamanhoDaString] = caractereASerConcatenado;
