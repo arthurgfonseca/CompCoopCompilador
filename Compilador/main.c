@@ -11,10 +11,7 @@
 #include <stdlib.h>
 #include "lex.h"
 #include "ape.h"
-#include "semantico.h"
 #include "globais.c"
-
-noLista *tabelaDeSimbolos;
 
 // Função criada apenas para imprimir o token
 void imprimeToken(token* tokenObtido);
@@ -28,21 +25,6 @@ void imprimeToken(token* tokenObtido) {
     printf("\n\n---- FIM ----");
 }
 
-void imprimirVariaveis(FILE* saida) {
-	char stringDeSaida[80];
-	fprintf(saida, (char*)"\n\n\n");
-    while(tabelaDeSimbolos != NULL){
-		strcpy(stringDeSaida, (char*)"");
-		strcat (stringDeSaida, tabelaDeSimbolos->nomeVar);
-		strcat (stringDeSaida,(char*)" K /");
-		strcat (stringDeSaida, tabelaDeSimbolos->valorVar);
-		strcat (stringDeSaida,(char*)"\n");
-		fprintf(saida, (char*)stringDeSaida);
-        tabelaDeSimbolos = tabelaDeSimbolos->prox;
-    } 
-	
-}
-
 int main (int argc, const char * argv[])
 {
 	
@@ -50,8 +32,6 @@ int main (int argc, const char * argv[])
 
 	FILE* entrada;
 	FILE* saida;
-	criaTabelaSimbolos(&tabelaDeSimbolos);
-	inicializarSemantico();
 	
 	entrada=fopen(PATH_PARA_ARQUIVO_FONTE ,"r");
 	saida=fopen(PATH_PARA_ARQUIVO_MVN ,"w");
@@ -60,27 +40,24 @@ int main (int argc, const char * argv[])
 	token* tokenAntigo;
 	
 	tokenLido = getToken(entrada);
-	inicilizarAPE();
+	inicilizarAPE(saida);
 	int transicaoEncontrada = TRUE;
-	int deuErroSemantico = FALSE;
+	//int deuErroSemantico = FALSE;
 	int acaoSemantica = -1;
-	char comandoMVNASerImpresso[80];
 	
 	if (entrada != NULL) 
-		while (tokenLido->tipo != EOF && transicaoEncontrada == TRUE && deuErroSemantico == FALSE) {		
+		while (tokenLido->tipo != EOF && transicaoEncontrada == TRUE) {		
 			
-			deuErroSemantico = semantico_tbd(&tabelaDeSimbolos, tokenAntigo, acaoSemantica, saida);
+			//deuErroSemantico = semantico_tbd(&tabelaDeSimbolos, tokenAntigo, acaoSemantica, saida);
 			
 			if (tokenLido->tipo == PALAVRARESERVADA)
-				transicaoEncontrada = transitarAPE(obterIdUnicoDaPalavraReservada(tokenLido), &acaoSemantica);
+				transicaoEncontrada = transitarAPE(obterIdUnicoDaPalavraReservada(tokenLido), tokenLido);
 			else
-				transicaoEncontrada = transitarAPE(tokenLido->tipo, &acaoSemantica);
+				transicaoEncontrada = transitarAPE(tokenLido->tipo, tokenLido);
 			imprimeToken(tokenLido);
 			tokenAntigo = tokenLido;
 			tokenLido = getToken(entrada);
 		}
-	
-	imprimirVariaveis(saida);
 	
 	fclose (entrada);    
 	

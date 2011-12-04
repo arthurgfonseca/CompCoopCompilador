@@ -9,7 +9,7 @@
 
 #include "constantes.h"
 #include "ape.h"
-#include <stdio.h>
+#include "semantico.h"
 
 noSubmaquina* pilhaDeSubmaquinas;
 submaquina* submaquinaAtual;
@@ -48,19 +48,18 @@ int pilhaDeSubmaquinaEstaVazia() {
 		return FALSE;
 }
 
-void inicilizarAPE() {
+void inicilizarAPE(FILE* saida) {
 	pilhaDeSubmaquinas = NULL;
-//	submaquinaAtual = submaquina1n2nCriarSubmaquina();
 	submaquinaAtual = submaquinaProgramaCriarSubmaquina();
 	algumaSubmaquinaTransitou = FALSE;
 	estaNoEstadoFinal = FALSE;
+	inicializarSemantico(saida);
 	return;
 }
 
-int transitarAPE(int entradaLida, int* acaoSemantica) {
+int transitarAPE(int entradaLida, token* tokenLido) {
 	algumaSubmaquinaTransitou = FALSE;
-	*acaoSemantica = -1;
-	submaquinaAtual->transitar(entradaLida, &algumaSubmaquinaTransitou, &estaNoEstadoFinal, acaoSemantica);
+	submaquinaAtual->transitar(entradaLida, &algumaSubmaquinaTransitou, &estaNoEstadoFinal, tokenLido);
 	return algumaSubmaquinaTransitou;
 }
 
@@ -76,25 +75,25 @@ int linguagemAceitaPeloAPE() {
 /******************************
 ******** SUBMAQUINAS **********
 ******************************/
-submaquina* criarSubmaquina(void (*funcaoTransitarDaSubmaquina)(int, int*, int*, int*)) {
+submaquina* criarSubmaquina(void (*funcaoTransitarDaSubmaquina)(int, int*, int*, token*)) {
 	submaquina* novaSubmaquina = (submaquina*) malloc (sizeof(submaquina*));
 	novaSubmaquina->estadoAtual = 0;
 	novaSubmaquina->transitar = funcaoTransitarDaSubmaquina;
 	return novaSubmaquina;
 }
 
-void chamarSubmaquinaDaPilha(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,int* acaoSemantica) {
+void chamarSubmaquinaDaPilha(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,token* tokenLido) {
 	*algumaSubmaquinaTransitou = FALSE;
 	if (pilhaDeSubmaquinaEstaVazia() == FALSE) {
 		submaquinaAtual = retirarSubmaquinaDaPilha();
-		submaquinaAtual->transitar(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica);
+		submaquinaAtual->transitar(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido);
 	} 
 }
 
-void substituirSubmaquinaAtualColocandoAAntigaNaPilha(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal, int* acaoSemantica , submaquina* novaSubmaquina) {
+void substituirSubmaquinaAtualColocandoAAntigaNaPilha(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal, token* tokenLido , submaquina* novaSubmaquina) {
 	colocarSubmaquinaNaPilha(submaquinaAtual);
 	submaquinaAtual =  novaSubmaquina;
-	submaquinaAtual->transitar(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica);
+	submaquinaAtual->transitar(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido);
 }
 
 /*** 1^n2^n ***/
@@ -102,7 +101,7 @@ submaquina* submaquina1n2nCriarSubmaquina() {
 	return criarSubmaquina(&submaquina1n2nTransitar);
 }
 
-void submaquina1n2nTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal, int* acaoSemantica) {
+void submaquina1n2nTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal, token* tokenLido) {
 	*algumaSubmaquinaTransitou = TRUE;
 	*estaNoEstadoFinal = FALSE;
 	
@@ -110,7 +109,7 @@ void submaquina1n2nTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int
 		submaquinaAtual->estadoAtual = 1;
 	else if (submaquinaAtual->estadoAtual == 1) {
 		submaquinaAtual->estadoAtual = 2;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquina1n2nCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquina1n2nCriarSubmaquina());
 		
 	} 
 	else if (submaquinaAtual->estadoAtual == 2 & entradaLida == 2) {
@@ -118,7 +117,7 @@ void submaquina1n2nTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int
 		*estaNoEstadoFinal = TRUE;
 	}
 	else {
-		chamarSubmaquinaDaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica);
+		chamarSubmaquinaDaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido);
 	}
 	return;
 }
@@ -129,7 +128,7 @@ submaquina* submaquinaProgramaCriarSubmaquina() {
 	return criarSubmaquina(&submaquinaProgramaTransitar);
 }
 
-void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,int* acaoSemantica) {
+void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,token* tokenLido) {
 	int naoEncontrouTransicao;
 	naoEncontrouTransicao = TRUE;
 	*algumaSubmaquinaTransitou = TRUE;
@@ -139,7 +138,7 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		if (entradaLida == PALAVRARESERVADA_program) {
 			submaquinaAtual->estadoAtual = 1;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_INICIO_DO_PROGRAMA;
+			semantico_tbd(tokenLido,ACAOSEMANTICA_INICIO_DO_PROGRAMA);
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 1) {
@@ -150,7 +149,7 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		else if (entradaLida == PALAVRARESERVADA_execute) {
 			submaquinaAtual->estadoAtual = 3;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_INICIO_DO_EXECUTE;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_INICIO_DO_EXECUTE);
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 2) {
@@ -170,7 +169,7 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		}
 		else {
 			submaquinaAtual->estadoAtual = 7;
-			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaComandosCriarSubmaquina());
+			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaComandosCriarSubmaquina());
 			naoEncontrouTransicao = FALSE;
 		}
 	}
@@ -194,7 +193,7 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		if (entradaLida == SIMBOLO) {
 			submaquinaAtual->estadoAtual = 13;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_DECLARACAO_DE_VARIAVEL;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_DECLARACAO_DE_VARIAVEL);
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 7) {
@@ -202,6 +201,7 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 			submaquinaAtual->estadoAtual = 9;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_FIM_DO_PROGRAMA);
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 8) {
@@ -233,7 +233,7 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		}
 		else {
 			submaquinaAtual->estadoAtual = 15;
-			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaComandosCriarSubmaquina());
+			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaComandosCriarSubmaquina());
 			naoEncontrouTransicao = FALSE;
 		}
 	}
@@ -352,7 +352,7 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 	
 	
 	if(naoEncontrouTransicao == TRUE) {
-		chamarSubmaquinaDaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica);
+		chamarSubmaquinaDaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido);
 	}
 	return;	
 }
@@ -363,7 +363,7 @@ submaquina* submaquinaComandosCriarSubmaquina() {
 	return criarSubmaquina(&submaquinaComandosTransitar);
 }
 
-void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,int* acaoSemantica) {
+void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,token* tokenLido) {
 	int naoEncontrouTransicao;
 	naoEncontrouTransicao = TRUE;
 	*algumaSubmaquinaTransitou = TRUE;
@@ -373,7 +373,7 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		if (entradaLida == SIMBOLO) {
 			submaquinaAtual->estadoAtual = 1;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_ATRIBUICAO_DE_VARIAVEL_INICIO;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_COMANDO_LE_SIMBOLO);
 		}
 		else if (entradaLida == PALAVRARESERVADA_scan) {
 			submaquinaAtual->estadoAtual = 2;
@@ -426,10 +426,11 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		if (entradaLida == ';') {
 			submaquinaAtual->estadoAtual = 13;
 			naoEncontrouTransicao = FALSE;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_COMANDO_FIM);
 		}
 		else {
 			submaquinaAtual->estadoAtual = 11;
-			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
+			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaExpressoesCriarSubmaquina());
 			naoEncontrouTransicao = FALSE;
 		}
 	}
@@ -452,23 +453,24 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		}
 		else {
 			submaquinaAtual->estadoAtual = 19;
-			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
+			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaExpressoesCriarSubmaquina());
 			naoEncontrouTransicao = FALSE;
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 8) {
 		submaquinaAtual->estadoAtual = 16;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 9) {
 		submaquinaAtual->estadoAtual = 11;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
+		semantico_tbd(tokenLido, ACAOSEMANTICA_COMANDO_ATRIBUICAO_DE_VARIAVEL_FIM);
 	}
 	else if (submaquinaAtual->estadoAtual == 10) {
 		submaquinaAtual->estadoAtual = 12;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaExpressoesCriarSubmaquina());
 		*estaNoEstadoFinal = TRUE;
 		naoEncontrouTransicao = FALSE;
 	}
@@ -476,7 +478,7 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		if (entradaLida == ';') {
 			submaquinaAtual->estadoAtual = 13;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_COMANDO_FIM;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_COMANDO_FIM);
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 12) {
@@ -489,6 +491,7 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		if (entradaLida == SIMBOLO) {
 			submaquinaAtual->estadoAtual = 1;
 			naoEncontrouTransicao = FALSE;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_COMANDO_LE_SIMBOLO);
 		}
 		else if (entradaLida == PALAVRARESERVADA_scan) {
 			submaquinaAtual->estadoAtual = 2;
@@ -513,7 +516,7 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 	}
 	else if (submaquinaAtual->estadoAtual == 14) {
 		submaquinaAtual->estadoAtual = 15;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaComandosCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaComandosCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 15) {
@@ -536,7 +539,7 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 	}
 	else if (submaquinaAtual->estadoAtual == 18) {
 		submaquinaAtual->estadoAtual = 20;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 19) {
@@ -557,12 +560,12 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 	}
 	else if (submaquinaAtual->estadoAtual == 21) {
 		submaquinaAtual->estadoAtual = 23;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaComandosCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaComandosCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 22) {
 		submaquinaAtual->estadoAtual = 19;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 23) {
@@ -577,7 +580,7 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 	}
 	else if (submaquinaAtual->estadoAtual == 24) {
 		submaquinaAtual->estadoAtual = 25;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaComandosCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaComandosCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 25) {
@@ -604,7 +607,7 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 	}
 	else if (submaquinaAtual->estadoAtual == 28) {
 		submaquinaAtual->estadoAtual = 29;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 29) {
@@ -622,7 +625,7 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 	
 	
 	if(naoEncontrouTransicao == TRUE) {
-		chamarSubmaquinaDaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica);
+		chamarSubmaquinaDaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido);
 	}
 	return;	
 }
@@ -631,7 +634,7 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 submaquina* submaquinaExpressoesCriarSubmaquina() {
 	return criarSubmaquina(&submaquinaExpressoesTransitar);
 }
-void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,int* acaoSemantica) {
+void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,token* tokenLido) {
 	int naoEncontrouTransicao;
 	naoEncontrouTransicao = TRUE;
 	*algumaSubmaquinaTransitou = TRUE;
@@ -642,18 +645,18 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 			submaquinaAtual->estadoAtual = 1;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_SIMBOLO;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_EXPRESSAO_LE_SIMBOLO);
 		}
 		else if (entradaLida == '(') {
 			submaquinaAtual->estadoAtual = 2;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_ABRE_PARENTESES;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_EXPRESSAO_LE_ABRE_PARENTESES);
 		}
 		else if (entradaLida == INTEIRO) {
 			submaquinaAtual->estadoAtual = 3;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_INTEIRO;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_EXPRESSAO_LE_INTEIRO);
 		}
 		else if (entradaLida == PALAVRARESERVADA_float) {
 			submaquinaAtual->estadoAtual = 3;
@@ -677,7 +680,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 		else if ((entradaLida == '+' || entradaLida == '-' || entradaLida == '*' || entradaLida == '/')) {
 			submaquinaAtual->estadoAtual = 7;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_ARITMETICO;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_ARITMETICO);
 		}
 		else if (entradaLida == OPERADOR) {
 			submaquinaAtual->estadoAtual = 4;
@@ -694,14 +697,14 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 	}
 	else if (submaquinaAtual->estadoAtual == 2) {
 		submaquinaAtual->estadoAtual = 17;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 3) {
 		if ((entradaLida == '+' || entradaLida == '-' || entradaLida == '*' || entradaLida == '/')) {
 			submaquinaAtual->estadoAtual = 7;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_ARITMETICO;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_ARITMETICO);
 		}
 		else if (entradaLida == OPERADOR) {
 			submaquinaAtual->estadoAtual = 4;
@@ -721,18 +724,18 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 			submaquinaAtual->estadoAtual = 8;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_SIMBOLO;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_EXPRESSAO_LE_SIMBOLO);
 		}
 		else if (entradaLida == '(') {
 			submaquinaAtual->estadoAtual = 9;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_ABRE_PARENTESES;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_EXPRESSAO_LE_ABRE_PARENTESES);
 		}
 		else if (entradaLida == INTEIRO) {
 			submaquinaAtual->estadoAtual = 10;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_INTEIRO;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_EXPRESSAO_LE_INTEIRO);
 		}
 		else if (entradaLida == PALAVRARESERVADA_float) {
 			submaquinaAtual->estadoAtual = 10;
@@ -742,7 +745,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 	}
 	else if (submaquinaAtual->estadoAtual == 5) {
 		submaquinaAtual->estadoAtual = 18;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 6) {
@@ -753,7 +756,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 		}
 		else {
 			submaquinaAtual->estadoAtual = 19;
-			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
+			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaExpressoesCriarSubmaquina());
 			naoEncontrouTransicao = FALSE;
 		}
 	}
@@ -762,18 +765,18 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 			submaquinaAtual->estadoAtual = 21;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_SIMBOLO;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_EXPRESSAO_LE_SIMBOLO);
 		}
 		else if (entradaLida == '(') {
 			submaquinaAtual->estadoAtual = 22;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_ABRE_PARENTESES;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_EXPRESSAO_LE_ABRE_PARENTESES);
 		}
 		else if (entradaLida == INTEIRO) {
 			submaquinaAtual->estadoAtual = 23;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_INTEIRO;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_EXPRESSAO_LE_INTEIRO);
 		}
 		else if (entradaLida == PALAVRARESERVADA_float) {
 			submaquinaAtual->estadoAtual = 23;
@@ -789,7 +792,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 		else if (entradaLida == '(') {
 			submaquinaAtual->estadoAtual = 13;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_ABRE_PARENTESES;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_EXPRESSAO_LE_ABRE_PARENTESES);
 		}
 		else if (entradaLida == OPERADOR_OU) {
 			submaquinaAtual->estadoAtual = 0;
@@ -802,7 +805,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 	}
 	else if (submaquinaAtual->estadoAtual == 9) {
 		submaquinaAtual->estadoAtual = 11;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 10) {
@@ -820,12 +823,12 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 			submaquinaAtual->estadoAtual = 10;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_FECHA_PARENTESES;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_EXPRESSAO_LE_FECHA_PARENTESES);
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 12) {
 		submaquinaAtual->estadoAtual = 16;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 13) {
@@ -833,11 +836,11 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 			submaquinaAtual->estadoAtual = 10;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_FECHA_PARENTESES;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_EXPRESSAO_LE_FECHA_PARENTESES);
 		}
 		else {
 			submaquinaAtual->estadoAtual = 14;
-			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
+			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaExpressoesCriarSubmaquina());
 			naoEncontrouTransicao = FALSE;
 		}
 	}
@@ -846,7 +849,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 			submaquinaAtual->estadoAtual = 10;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_FECHA_PARENTESES;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_EXPRESSAO_LE_FECHA_PARENTESES);
 		}
 		else if (entradaLida == ',') {
 			submaquinaAtual->estadoAtual = 15;
@@ -855,7 +858,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 	}
 	else if (submaquinaAtual->estadoAtual == 15) {
 		submaquinaAtual->estadoAtual = 14;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 16) {
@@ -870,7 +873,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 			submaquinaAtual->estadoAtual = 3;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_FECHA_PARENTESES;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_EXPRESSAO_LE_FECHA_PARENTESES);
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 18) {
@@ -885,7 +888,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 			submaquinaAtual->estadoAtual = 3;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_FECHA_PARENTESES;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_EXPRESSAO_LE_FECHA_PARENTESES);
 		}
 		else if (entradaLida == ',') {
 			submaquinaAtual->estadoAtual = 20;
@@ -894,7 +897,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 	}
 	else if (submaquinaAtual->estadoAtual == 20) {
 		submaquinaAtual->estadoAtual = 19;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 21) {
@@ -909,7 +912,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 		else if ((entradaLida == '+' || entradaLida == '-' || entradaLida == '*' || entradaLida == '/')) {
 			submaquinaAtual->estadoAtual = 7;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_ARITMETICO;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_ARITMETICO);
 		}
 		else if (entradaLida == OPERADOR_OU) {
 			submaquinaAtual->estadoAtual = 0;
@@ -922,14 +925,14 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 	}
 	else if (submaquinaAtual->estadoAtual == 22) {
 		submaquinaAtual->estadoAtual = 24;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 23) {
 		if ((entradaLida == '+' || entradaLida == '-' || entradaLida == '*' || entradaLida == '/')) {
 			submaquinaAtual->estadoAtual = 7;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_ARITMETICO;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_ARITMETICO);
 		}
 		else if (entradaLida == OPERADOR_OU) {
 			submaquinaAtual->estadoAtual = 0;
@@ -945,12 +948,12 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 			submaquinaAtual->estadoAtual = 23;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
-			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_FECHA_PARENTESES;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_EXPRESSAO_LE_FECHA_PARENTESES);
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 25) {
 		submaquinaAtual->estadoAtual = 29;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 26) {
@@ -961,7 +964,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 		}
 		else {
 			submaquinaAtual->estadoAtual = 27;
-			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
+			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaExpressoesCriarSubmaquina());
 			naoEncontrouTransicao = FALSE;
 		}
 	}
@@ -978,7 +981,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 	}
 	else if (submaquinaAtual->estadoAtual == 28) {
 		submaquinaAtual->estadoAtual = 27;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 29) {
@@ -995,8 +998,8 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 	}
 	
 	if(naoEncontrouTransicao == TRUE) {
-		*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_FIM;
-		chamarSubmaquinaDaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica);
+		semantico_tbd(tokenLido, ACAOSEMANTICA_EXPRESSAO_FIM);
+		chamarSubmaquinaDaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, tokenLido);
 	}
 	return;	
 }

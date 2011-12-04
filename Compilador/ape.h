@@ -7,9 +7,12 @@
  *
  */
 
+#include <stdio.h>
+#include "estruturas.h"
+
 typedef struct _submaquina {
     int estadoAtual;
-	void (*transitar)(int, int*, int*, int*);
+	void (*transitar)(int, int*, int*, token*);
 } submaquina;
 
 typedef struct _noSubmaquina{
@@ -22,30 +25,30 @@ submaquina* retirarSubmaquinaDaPilha();
 
 /**** APE ***/
 
-void inicilizarAPE();
-int transitarAPE(int entradaLida, int* acaoSemantica);
+void inicilizarAPE(FILE* saida);
+int transitarAPE(int entradaLida, token* tokenLido);
 int linguagemAceitaPeloAPE();
 
 /******************************
  ******** SUBMAQUINAS **********
  ******************************/
-submaquina* criarSubmaquina(void (*funcaoTransitarDaSubmaquina)(int, int*, int*, int*));
-void chamarSubmaquinaDaPilha(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,int* acaoSemantica);
-void substituirSubmaquinaAtualColocandoAAntigaNaPilha(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,int* acaoSemantica, submaquina* novaSubmaquina);
+submaquina* criarSubmaquina(void (*funcaoTransitarDaSubmaquina)(int, int*, int*, token*));
+void chamarSubmaquinaDaPilha(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,token* acaoSemantica);
+void substituirSubmaquinaAtualColocandoAAntigaNaPilha(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,token* acaoSemantica, submaquina* novaSubmaquina);
 	
 /*** linguagem exemplo: 1^n2^n ****/
 submaquina* submaquina1n2nCriarSubmaquina();
-void submaquina1n2nTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,int* acaoSemantica);
+void submaquina1n2nTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,token* acaoSemantica);
 
 /*** submaquinas da nossa linguagem ***/
 //programa
 submaquina* submaquinaProgramaCriarSubmaquina();
-void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,int* acaoSemantica);
+void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,token* acaoSemantica);
 
 //comandos
 submaquina* submaquinaComandosCriarSubmaquina();
-void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,int* acaoSemantica);
+void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,token* acaoSemantica);
 
 //expressões
 submaquina* submaquinaExpressoesCriarSubmaquina();
-void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,int* acaoSemantica);
+void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,token* acaoSemantica);

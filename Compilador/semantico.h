@@ -8,6 +8,7 @@
  */
 
 #include "estruturas.h"
+#include <stdio.h>
 
 typedef struct _noPilhaString{
 	char valor[50];
@@ -18,7 +19,8 @@ void inicializaPilha(noPilhaString** noPilha);
 void empilhar(char stringEmpilhada[50], noPilhaString**  noPilha);
 void desempilhar(char stringDesempilhada[50], noPilhaString** noPilha);
 
-void inicializarSemantico();
-int semantico_tbd(noLista** tabelaDeSimbolos, token* tokenLido, int acaoSemantica, FILE* saida);
-int nomeJaExisteNaTabelaDeSimbolos(char* nome, noLista** tabelaDeSimbolos);
-void gerarCodigoExpressao(FILE* saida, noLista** tabelaDeSimbolos);
+void inicializarSemantico(FILE* arquivoDeSaida);
+void semantico_tbd(token* tokenLido, int acaoSemantica);
+int nomeJaExisteNaTabelaDeSimbolos(char* nome);
+void gerarCodigoExpressao();
+void imprimirVariaveis();

@@ -7,4 +7,6 @@
  *
  */
 
+#include <stdlib.h>
+
 int numeroDaLinhaLidaNoArquivoFonte;

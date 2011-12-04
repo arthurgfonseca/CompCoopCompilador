@@ -53,6 +53,9 @@ void insereNo(int identificador, char *palavra, char *valor, noLista **L){
 noLista* procuraLista(char *palavra, noLista **L){
     noLista *paux;
     
+	if (L == NULL)
+		return NULL;
+	
     paux = *L;
     
     while(paux != NULL){
