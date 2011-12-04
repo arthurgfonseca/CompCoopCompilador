@@ -33,22 +33,22 @@ int linguagemAceitaPeloAPE();
  ******** SUBMAQUINAS **********
  ******************************/
 submaquina* criarSubmaquina(void (*funcaoTransitarDaSubmaquina)(int, int*, int*, token*));
-void chamarSubmaquinaDaPilha(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,token* acaoSemantica);
+void chamarSubmaquinaDaPilha(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,token* tokenLido);
 void substituirSubmaquinaAtualColocandoAAntigaNaPilha(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,token* acaoSemantica, submaquina* novaSubmaquina);
 	
 /*** linguagem exemplo: 1^n2^n ****/
 submaquina* submaquina1n2nCriarSubmaquina();
-void submaquina1n2nTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,token* acaoSemantica);
+void submaquina1n2nTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,token* tokenLido);
 
 /*** submaquinas da nossa linguagem ***/
 //programa
 submaquina* submaquinaProgramaCriarSubmaquina();
-void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,token* acaoSemantica);
+void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,token* tokenLido);
 
 //comandos
 submaquina* submaquinaComandosCriarSubmaquina();
-void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,token* acaoSemantica);
+void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,token* tokenLido);
 
 //expressões
 submaquina* submaquinaExpressoesCriarSubmaquina();
-void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,token* acaoSemantica);
+void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,token* tokenLido);

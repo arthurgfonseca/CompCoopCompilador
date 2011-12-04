@@ -390,6 +390,7 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		else if (entradaLida == PALAVRARESERVADA_if) {
 			submaquinaAtual->estadoAtual = 5;
 			naoEncontrouTransicao = FALSE;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_COMANDO_IF_INICIO);
 		}
 		else if (entradaLida == PALAVRARESERVADA_while) {
 			submaquinaAtual->estadoAtual = 6;
@@ -508,6 +509,7 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		else if (entradaLida == PALAVRARESERVADA_if) {
 			submaquinaAtual->estadoAtual = 5;
 			naoEncontrouTransicao = FALSE;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_COMANDO_IF_INICIO);
 		}
 		else if (entradaLida == PALAVRARESERVADA_while) {
 			submaquinaAtual->estadoAtual = 6;
@@ -556,6 +558,7 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		if (entradaLida == ')') {
 			submaquinaAtual->estadoAtual = 21;
 			naoEncontrouTransicao = FALSE;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_COMANDO_IF_INICIO_THEN);
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 21) {
@@ -572,10 +575,12 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		if (entradaLida == PALAVRARESERVADA_endif) {
 			submaquinaAtual->estadoAtual = 13;
 			naoEncontrouTransicao = FALSE;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_COMANDO_IF_FIM_SEM_ELSE);
 		}
 		else if (entradaLida == PALAVRARESERVADA_else) {
 			submaquinaAtual->estadoAtual = 24;
 			naoEncontrouTransicao = FALSE;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_COMANDO_IF_INICIO_ELSE);
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 24) {
@@ -587,6 +592,7 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		if (entradaLida == PALAVRARESERVADA_endif) {
 			submaquinaAtual->estadoAtual = 13;
 			naoEncontrouTransicao = FALSE;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_COMANDO_IF_FIM_COM_ELSE);
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 26) {
@@ -685,6 +691,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 		else if (entradaLida == OPERADOR) {
 			submaquinaAtual->estadoAtual = 4;
 			naoEncontrouTransicao = FALSE;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO);
 		}
 		else if (entradaLida == OPERADOR_OU) {
 			submaquinaAtual->estadoAtual = 0;
@@ -709,6 +716,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 		else if (entradaLida == OPERADOR) {
 			submaquinaAtual->estadoAtual = 4;
 			naoEncontrouTransicao = FALSE;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO);
 		}
 		else if (entradaLida == OPERADOR_OU) {
 			submaquinaAtual->estadoAtual = 0;

@@ -64,7 +64,10 @@ void semantico_tbd(token *tokenLido, int acaoSemantica) {
 	int devePararDeGerarCodigo;
 	char nomeDaVariavel[50];
 	
+	char comando[80];
+	
 	strcpy(nomeDaVariavel, (char*)(""));
+	strcpy(comando, (char*)(""));
 	
 	switch (acaoSemantica) {
 		case ACAOSEMANTICA_INICIO_DO_PROGRAMA:
@@ -72,7 +75,7 @@ void semantico_tbd(token *tokenLido, int acaoSemantica) {
 			break;
 			
 		case ACAOSEMANTICA_INICIO_DO_EXECUTE:
-			fprintf(saida, "EXECUTE ");
+			fprintf(saida, "EXECUTE + 0\n");
 			break;
 			
 		case ACAOSEMANTICA_FIM_DO_PROGRAMA:
@@ -197,7 +200,8 @@ void semantico_tbd(token *tokenLido, int acaoSemantica) {
 			break;
 			
 		case ACAOSEMANTICA_EXPRESSAO_FIM:
-			if (contadorDeSubexpressoes == 0) {
+			if (contadorDeSubexpressoes == 0 || 
+				pilhaDeComandosAnteriores[pilhaDeComandosAnteriores[0] - 1] == ACAOSEMANTICA_COMANDO_IF_INICIO) {
 				while (pilhaDeOperandos != NULL && pilhaDeOperadores != NULL)
 					gerarCodigoExpressao();
 				
@@ -208,6 +212,124 @@ void semantico_tbd(token *tokenLido, int acaoSemantica) {
 						pilhaDeOperandos = NULL;
 					}
 			}	
+			
+			//caso seja expressão de comparação faz os calculos da comparacao
+			strcpy(nomeDaVariavel, (char*)(""));
+			strcat(nomeDaVariavel, (char*)("comparacao-parametro-2"));
+			
+			if (nomeJaExisteNaTabelaDeSimbolos(nomeDaVariavel) == FALSE) {
+				adicionaSimboloNaTabela(nomeDaVariavel, (char*)"0", &tabelaDeSimbolos);
+			}
+			
+			//caso em que termina a expressão e era uma comparação
+			switch (pilhaDeComandosAnteriores[pilhaDeComandosAnteriores[0]]) {
+				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_IGUAL:
+					fprintf(saida, "MM %s\n", nomeDaVariavel);
+					fprintf(saida, "LD comparacao-parametro-1\n");
+					fprintf(saida, "- comparacao-parametro-2\n");
+					fprintf(saida, "JZ ");
+					pilhaDeComandosAnteriores[0]--;
+					break;
+				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_MENOR:
+					fprintf(saida, "MM %s\n", nomeDaVariavel);
+					fprintf(saida, "LD comparacao-parametro-1\n");
+					fprintf(saida, "- comparacao-parametro-2\n");
+					fprintf(saida, "JN ");
+					pilhaDeComandosAnteriores[0]--;
+					break;
+				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_MAIOR:
+					fprintf(saida, "MM %s\n", nomeDaVariavel);
+					fprintf(saida, "LD comparacao-parametro-2\n");
+					fprintf(saida, "- comparacao-parametro-1\n");
+					fprintf(saida, "JN ");
+					pilhaDeComandosAnteriores[0]--;
+					break;
+				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_MAIOR_IGUAL:
+					pilhaDeComandosAnteriores[0]--;
+					break;
+				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_MENOR_IGUAL:
+					pilhaDeComandosAnteriores[0]--;
+					break;
+				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_DIFERENTE:
+					pilhaDeComandosAnteriores[0]--;
+					break;
+					
+			}
+			
+			
+			break;
+			
+		case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO:
+			//desempilha todas as operações
+			if (contadorDeSubexpressoes == 0 || 
+				pilhaDeComandosAnteriores[pilhaDeComandosAnteriores[0] - 1] == ACAOSEMANTICA_COMANDO_IF_INICIO) {
+				while (pilhaDeOperandos != NULL && pilhaDeOperadores != NULL)
+					gerarCodigoExpressao();
+				
+				if (pilhaDeOperandos != NULL)
+					if (pilhaDeOperandos->prox == NULL) {
+						desempilhar(nomeDaVariavel, &pilhaDeOperandos);
+						fprintf(saida, "LD %s\n", nomeDaVariavel);
+						pilhaDeOperandos = NULL;
+					}
+			}	
+			
+			strcpy(nomeDaVariavel, (char*)(""));
+			strcat(nomeDaVariavel, (char*)("comparacao-parametro-1"));
+			
+			if (nomeJaExisteNaTabelaDeSimbolos(nomeDaVariavel) == FALSE) {
+				adicionaSimboloNaTabela(nomeDaVariavel, (char*)"0", &tabelaDeSimbolos);
+			}
+			
+			fprintf(saida, "MM %s\n", nomeDaVariavel);
+			
+			pilhaDeComandosAnteriores[0]++;
+			
+			if(strcmp(tokenLido->primeiroValor, (char*)">") == 0)
+				pilhaDeComandosAnteriores[pilhaDeComandosAnteriores[0]]=ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_MAIOR;
+			
+		    if(strcmp(tokenLido->primeiroValor, (char*)"<") == 0)
+				pilhaDeComandosAnteriores[pilhaDeComandosAnteriores[0]]=ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_MENOR;
+			
+			if(strcmp(tokenLido->primeiroValor, (char*)"==") == 0)
+				pilhaDeComandosAnteriores[pilhaDeComandosAnteriores[0]]=ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_IGUAL;
+			
+			if(strcmp(tokenLido->primeiroValor, (char*)">=") == 0)
+				pilhaDeComandosAnteriores[pilhaDeComandosAnteriores[0]]=ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_MAIOR_IGUAL;
+			
+		    if(strcmp(tokenLido->primeiroValor, (char*)"<=") == 0)
+				pilhaDeComandosAnteriores[pilhaDeComandosAnteriores[0]]=ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_MENOR_IGUAL;
+			
+			if(strcmp(tokenLido->primeiroValor, (char*)"!=") == 0)
+				pilhaDeComandosAnteriores[pilhaDeComandosAnteriores[0]]=ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_DIFERENTE;
+				 
+			break;
+			
+		case ACAOSEMANTICA_COMANDO_IF_INICIO:
+			fprintf(saida, "IF%d +0 \n", contadorDeIf++);
+			pilhaDeComandosAnteriores[0]++;
+			pilhaDeComandosAnteriores[pilhaDeComandosAnteriores[0]]=ACAOSEMANTICA_COMANDO_IF_INICIO;
+			break;
+			
+		case ACAOSEMANTICA_COMANDO_IF_FIM_SEM_ELSE:
+			fprintf(saida, "IF%dELSE + 0\n", contadorDeIf);
+			fprintf(saida, "IF%dEND + 0 \n", contadorDeIf);
+			pilhaDeComandosAnteriores[0]--;
+			break;	
+			
+		case ACAOSEMANTICA_COMANDO_IF_FIM_COM_ELSE:
+			fprintf(saida, "IF%dEND + 0\n", contadorDeIf);
+			pilhaDeComandosAnteriores[0]--;
+			break;	
+			
+		case ACAOSEMANTICA_COMANDO_IF_INICIO_THEN:
+			fprintf(saida, "IF%dTHEN\n", contadorDeIf);
+			fprintf(saida, "JP IF%dELSE\n", contadorDeIf);
+			fprintf(saida, "IF%dTHEN + 0\n", contadorDeIf);
+			break;
+			
+		case ACAOSEMANTICA_COMANDO_IF_INICIO_ELSE:
+			fprintf(saida, "IF%dELSE +0\n", contadorDeIf);
 			break;
 	}
 
@@ -229,7 +351,8 @@ void gerarCodigoExpressao() {
 	desempilhar(operandoDepois, &pilhaDeOperandos);
 	desempilhar(operador, &pilhaDeOperadores);
 	
-	fprintf(saida, "LD %s\n", operandoDepois);
+	if (strcmp(operandoDepois, (char*)("")) != 0) 
+		fprintf(saida, "LD %s\n", operandoDepois);
 
 	if ((strcmp(operador, (char*)("")) != 0) && (strcmp(operador, (char*)(")")) != 0) && (strcmp(operador, (char*)("(")) != 0)) {
 		fprintf(saida, "%s %s\n", operador, operandoTopo);
