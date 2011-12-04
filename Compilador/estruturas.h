@@ -14,8 +14,8 @@
 
 typedef struct _noLista{
     int identificador; //Identificador
-	char *nomeVar;
-    char *valorVar; 
+	char nomeVar[50];
+    char valorVar[50]; 
     struct _noLista *prox; //Apronta para o próximo da lista
 }noLista;
 

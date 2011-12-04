@@ -91,7 +91,6 @@ int main (int argc, const char * argv[])
 	else 
 		printf("\n \n NAO ACEITOU A LINGUAGEM");
 	
-
     return 0;
 }
 

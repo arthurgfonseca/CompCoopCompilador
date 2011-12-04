@@ -37,8 +37,8 @@ void insereNo(int identificador, char *palavra, char *valor, noLista **L){
     
     paux = (noLista *) malloc (sizeof(noLista));
     paux ->identificador = identificador;
-    paux ->nomeVar = palavra;
-    paux ->valorVar = valor;
+    strcpy(paux->nomeVar, palavra);
+	strcpy(paux->valorVar, valor);
     paux ->prox = NULL;
     
     
