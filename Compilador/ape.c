@@ -352,6 +352,7 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 	return;	
 }
 
+
 //comandos
 submaquina* submaquinaComandosCriarSubmaquina() {
 	return criarSubmaquina(&submaquinaComandosTransitar);

@@ -22,12 +22,11 @@ int analizadorLexicoInicializado = FALSE;
 int terminouDeAnalizar = FALSE;
 int deveIncrementarLinhaLida = FALSE;
 noLista *palavraReservada;
-noLista *simbolos;
+//noLista *simbolos;
 noLista *strings;
 
 void inicializarAnalizadorLexico() {
 	criaTabelaPalavrasReservadas(&palavraReservada);
-    criaTabelaSimbolos(&simbolos);
     criaTabelaStrings(&strings);
     populaTabelaPalavrasReservadas(&palavraReservada);
 	
@@ -179,7 +178,7 @@ token* obterTokenDepoisDeIicializarAnalizadorLexico(FILE* entradaLida) {
 	
 	fseek(entradaLida, -1, SEEK_CUR);
 	
-	return gerarTokenAPartirDoLexemaEncontrado(lexemaEncontrado);;
+	return gerarTokenAPartirDoLexemaEncontrado(lexemaEncontrado);
 }
 
 int deveConcatenarOCaracterLidoAoLexema() {
@@ -266,7 +265,7 @@ token* gerarTokenAPartirDoLexemaEncontrado(char* lexemaEncontrado) {
 
 	switch (transdutor.estadoAnterior) {
 		case 1:
-			tokenASerRetornado = obterTokenPalavra(lexemaEncontrado, numeroDaLinhaLidaNoArquivoFonte, PALAVRA, &palavraReservada, &simbolos, &strings);
+			tokenASerRetornado = obterTokenPalavra(lexemaEncontrado, numeroDaLinhaLidaNoArquivoFonte, PALAVRA, &palavraReservada, &strings);
 			break;
 		case 2:
 			tokenASerRetornado = obterTokenNumero(lexemaEncontrado, "", numeroDaLinhaLidaNoArquivoFonte, INTEIRO);
@@ -275,7 +274,7 @@ token* gerarTokenAPartirDoLexemaEncontrado(char* lexemaEncontrado) {
 			tokenASerRetornado = obterTokenNumero(lexemaEncontrado, "", numeroDaLinhaLidaNoArquivoFonte, FLOAT);
 			break;
 		case 5:
-			tokenASerRetornado = obterTokenPalavra(lexemaEncontrado, numeroDaLinhaLidaNoArquivoFonte, STRING, &palavraReservada, &simbolos, &strings);
+			tokenASerRetornado = obterTokenPalavra(lexemaEncontrado, numeroDaLinhaLidaNoArquivoFonte, STRING, &palavraReservada, &strings);
 			break;
 		case 11:
 			if (strcmp(lexemaEncontrado,(char*) "=") == 0) 
