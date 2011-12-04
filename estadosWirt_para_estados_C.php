@@ -178,14 +178,14 @@ foreach($matrizDeTransicao as $estadoDePartida => $transicoes) {
 		if ($primeiroIfTransicao)
 		{
 			echo "\tsubmaquinaAtual->estadoAtual = {$submaquina['proximoEstado']};\n";
-			echo "\tsubstituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, {$submaquina['nomeFuncao']}());\n";	
+			echo "\tsubstituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, {$submaquina['nomeFuncao']}());\n";	
 			if (eEstadoFinal($submaquina['proximoEstado']))
 				echo "\t*estaNoEstadoFinal = TRUE;\n";
 			echo "\tnaoEncontrouTransicao = FALSE;\n";
 		}
 		else {
 			echo "\telse {\n\t\tsubmaquinaAtual->estadoAtual = {$submaquina['proximoEstado']};\n";
-			echo "\t\tsubstituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, {$submaquina['nomeFuncao']}());\n";
+			echo "\t\tsubstituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, {$submaquina['nomeFuncao']}());\n";
 			if (eEstadoFinal($submaquina['proximoEstado']))
 				echo "\t\t*estaNoEstadoFinal = TRUE;\n";
 			echo "\t\tnaoEncontrouTransicao = FALSE;\n";

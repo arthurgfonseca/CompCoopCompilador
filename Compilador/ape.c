@@ -137,9 +137,9 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 	
 	if (submaquinaAtual->estadoAtual == 0) {
 		if (entradaLida == PALAVRARESERVADA_program) {
-			*acaoSemantica = ACAOSEMANTICA_INICIO_DO_PROGRAMA;
 			submaquinaAtual->estadoAtual = 1;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_INICIO_DO_PROGRAMA;
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 1) {
@@ -150,6 +150,7 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		else if (entradaLida == PALAVRARESERVADA_execute) {
 			submaquinaAtual->estadoAtual = 3;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_INICIO_DO_EXECUTE;
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 2) {
@@ -372,6 +373,7 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		if (entradaLida == SIMBOLO) {
 			submaquinaAtual->estadoAtual = 1;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_ATRIBUICAO_DE_VARIAVEL_INICIO;
 		}
 		else if (entradaLida == PALAVRARESERVADA_scan) {
 			submaquinaAtual->estadoAtual = 2;
@@ -639,15 +641,18 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 			submaquinaAtual->estadoAtual = 1;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_SIMBOLO;
 		}
 		else if (entradaLida == '(') {
 			submaquinaAtual->estadoAtual = 2;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_ABRE_PARENTESES;
 		}
 		else if (entradaLida == INTEIRO) {
 			submaquinaAtual->estadoAtual = 3;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_INTEIRO;
 		}
 		else if (entradaLida == PALAVRARESERVADA_float) {
 			submaquinaAtual->estadoAtual = 3;
@@ -671,6 +676,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 		else if ((entradaLida == '+' || entradaLida == '-' || entradaLida == '*' || entradaLida == '/')) {
 			submaquinaAtual->estadoAtual = 7;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_ARITMETICO;
 		}
 		else if (entradaLida == OPERADOR) {
 			submaquinaAtual->estadoAtual = 4;
@@ -694,6 +700,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 		if ((entradaLida == '+' || entradaLida == '-' || entradaLida == '*' || entradaLida == '/')) {
 			submaquinaAtual->estadoAtual = 7;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_ARITMETICO;
 		}
 		else if (entradaLida == OPERADOR) {
 			submaquinaAtual->estadoAtual = 4;
@@ -713,15 +720,18 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 			submaquinaAtual->estadoAtual = 8;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_SIMBOLO;
 		}
 		else if (entradaLida == '(') {
 			submaquinaAtual->estadoAtual = 9;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_ABRE_PARENTESES;
 		}
 		else if (entradaLida == INTEIRO) {
 			submaquinaAtual->estadoAtual = 10;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_INTEIRO;
 		}
 		else if (entradaLida == PALAVRARESERVADA_float) {
 			submaquinaAtual->estadoAtual = 10;
@@ -751,15 +761,18 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 			submaquinaAtual->estadoAtual = 21;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_SIMBOLO;
 		}
 		else if (entradaLida == '(') {
 			submaquinaAtual->estadoAtual = 22;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_ABRE_PARENTESES;
 		}
 		else if (entradaLida == INTEIRO) {
 			submaquinaAtual->estadoAtual = 23;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_INTEIRO;
 		}
 		else if (entradaLida == PALAVRARESERVADA_float) {
 			submaquinaAtual->estadoAtual = 23;
@@ -775,6 +788,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 		else if (entradaLida == '(') {
 			submaquinaAtual->estadoAtual = 13;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_ABRE_PARENTESES;
 		}
 		else if (entradaLida == OPERADOR_OU) {
 			submaquinaAtual->estadoAtual = 0;
@@ -805,6 +819,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 			submaquinaAtual->estadoAtual = 10;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_FECHA_PARENTESES;
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 12) {
@@ -817,6 +832,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 			submaquinaAtual->estadoAtual = 10;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_FECHA_PARENTESES;
 		}
 		else {
 			submaquinaAtual->estadoAtual = 14;
@@ -829,6 +845,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 			submaquinaAtual->estadoAtual = 10;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_FECHA_PARENTESES;
 		}
 		else if (entradaLida == ',') {
 			submaquinaAtual->estadoAtual = 15;
@@ -852,6 +869,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 			submaquinaAtual->estadoAtual = 3;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_FECHA_PARENTESES;
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 18) {
@@ -866,6 +884,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 			submaquinaAtual->estadoAtual = 3;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_FECHA_PARENTESES;
 		}
 		else if (entradaLida == ',') {
 			submaquinaAtual->estadoAtual = 20;
@@ -889,6 +908,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 		else if ((entradaLida == '+' || entradaLida == '-' || entradaLida == '*' || entradaLida == '/')) {
 			submaquinaAtual->estadoAtual = 7;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_ARITMETICO;
 		}
 		else if (entradaLida == OPERADOR_OU) {
 			submaquinaAtual->estadoAtual = 0;
@@ -908,6 +928,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 		if ((entradaLida == '+' || entradaLida == '-' || entradaLida == '*' || entradaLida == '/')) {
 			submaquinaAtual->estadoAtual = 7;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_ARITMETICO;
 		}
 		else if (entradaLida == OPERADOR_OU) {
 			submaquinaAtual->estadoAtual = 0;
@@ -923,6 +944,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 			submaquinaAtual->estadoAtual = 23;
 			*estaNoEstadoFinal = TRUE;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_LE_FECHA_PARENTESES;
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 25) {
@@ -972,6 +994,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 	}
 	
 	if(naoEncontrouTransicao == TRUE) {
+		*acaoSemantica = ACAOSEMANTICA_EXPRESSAO_FIM;
 		chamarSubmaquinaDaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica);
 	}
 	return;	

@@ -228,10 +228,13 @@ void incrementarNumeroDaLinhaLidaCasoNecessario(char caractereLido) {
 		transdutor.estadoAtual == 9 || 
 		transdutor.estadoAtual == 10) 
 		if ((caractereLido == CARRIAGE_RETURN ||
-			 caractereLido == LINE_FEED)) 
-			numeroDaLinhaLidaNoArquivoFonte++;
+			 caractereLido == LINE_FEED)) {
 			
-	
+				numeroDaLinhaLidaNoArquivoFonte++;
+				return;
+		}
+			
+	/*
 	if (transdutor.estadoAtual == 0 &&  
 	    transdutor.estadoAnterior == 0) {
 		if ((caractereLido == CARRIAGE_RETURN ||
@@ -239,7 +242,7 @@ void incrementarNumeroDaLinhaLidaCasoNecessario(char caractereLido) {
 			numeroDaLinhaLidaNoArquivoFonte++;
 	}
 	return;
-
+	 */
 	
 	//deveIncrementarLinhaLida serve para evitar que o numero seja incrementado duas vezes
 	//pois todo char é lido duas vezes pelo algoritmo

@@ -30,14 +30,14 @@ void imprimeToken(token* tokenObtido) {
 
 void imprimirVariaveis(FILE* saida) {
 	char stringDeSaida[80];
-	
+	fprintf(saida, (char*)"\n\n\n");
     while(tabelaDeSimbolos != NULL){
-		strcpy(stringDeSaida, "");
+		strcpy(stringDeSaida, (char*)"");
 		strcat (stringDeSaida, tabelaDeSimbolos->nomeVar);
-		strcat (stringDeSaida," K /");
+		strcat (stringDeSaida,(char*)" K /");
 		strcat (stringDeSaida, tabelaDeSimbolos->valorVar);
-		fprintf(saida, stringDeSaida);
-		strcat (stringDeSaida,"\n");
+		strcat (stringDeSaida,(char*)"\n");
+		fprintf(saida, (char*)stringDeSaida);
         tabelaDeSimbolos = tabelaDeSimbolos->prox;
     } 
 	
@@ -46,11 +46,12 @@ void imprimirVariaveis(FILE* saida) {
 int main (int argc, const char * argv[])
 {
 	
-	numeroDaLinhaLidaNoArquivoFonte = 1;
+	numeroDaLinhaLidaNoArquivoFonte = 0;
 
 	FILE* entrada;
 	FILE* saida;
 	criaTabelaSimbolos(&tabelaDeSimbolos);
+	inicializarSemantico();
 	
 	entrada=fopen(PATH_PARA_ARQUIVO_FONTE ,"r");
 	saida=fopen(PATH_PARA_ARQUIVO_MVN ,"w");
@@ -88,8 +89,8 @@ int main (int argc, const char * argv[])
 	
 	if (linguagemAceitaPeloAPE() == TRUE)
 		printf("\n \n ACEITOU LINGUAGEM");
-	else 
-		printf("\n \n NAO ACEITOU A LINGUAGEM");
+	else
+		printf("\n \n NAO ACEITOU A LINGUAGEM");	
 	
     return 0;
 }
