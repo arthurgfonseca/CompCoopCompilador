@@ -19,6 +19,7 @@ int contadorDeIf;
 int contadorDeWhile;
 int contadorDeSubexpressoes;
 int pilhaDeComandosAnteriores[1000];
+int pilhaDeCondicionais[1000];
 char nomeUltimaVariavelDeAtribuicao[50];
 noPilhaString* pilhaDeOperadores;
 noPilhaString* pilhaDeOperandos;
@@ -58,6 +59,7 @@ void inicializarSemantico(FILE* arquivoDeSaida) {
 	saida = arquivoDeSaida;
 	criaTabelaSimbolos(&tabelaDeSimbolos);
 	pilhaDeComandosAnteriores[0] = 0;
+	pilhaDeCondicionais[0] = 0;
 }
 void semantico_tbd(token *tokenLido, int acaoSemantica) {
 
@@ -306,30 +308,35 @@ void semantico_tbd(token *tokenLido, int acaoSemantica) {
 			break;
 			
 		case ACAOSEMANTICA_COMANDO_IF_INICIO:
-			fprintf(saida, "IF%d +0 \n", contadorDeIf++);
+			contadorDeIf++;
+			fprintf(saida, "IF%d +0 \n", contadorDeIf);
+			pilhaDeCondicionais[0]++;
+			pilhaDeCondicionais[pilhaDeCondicionais[0]] = contadorDeIf;
 			pilhaDeComandosAnteriores[0]++;
 			pilhaDeComandosAnteriores[pilhaDeComandosAnteriores[0]]=ACAOSEMANTICA_COMANDO_IF_INICIO;
 			break;
 			
 		case ACAOSEMANTICA_COMANDO_IF_FIM_SEM_ELSE:
-			fprintf(saida, "IF%dELSE + 0\n", contadorDeIf);
-			fprintf(saida, "IF%dEND + 0 \n", contadorDeIf);
+			fprintf(saida, "IF%dELSE + 0\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+			fprintf(saida, "IF%dEND + 0 \n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+			pilhaDeCondicionais[0]--;
 			pilhaDeComandosAnteriores[0]--;
 			break;	
 			
 		case ACAOSEMANTICA_COMANDO_IF_FIM_COM_ELSE:
-			fprintf(saida, "IF%dEND + 0\n", contadorDeIf);
+			fprintf(saida, "IF%dEND + 0\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+			pilhaDeCondicionais[0]--;
 			pilhaDeComandosAnteriores[0]--;
 			break;	
 			
 		case ACAOSEMANTICA_COMANDO_IF_INICIO_THEN:
-			fprintf(saida, "IF%dTHEN\n", contadorDeIf);
-			fprintf(saida, "JP IF%dELSE\n", contadorDeIf);
-			fprintf(saida, "IF%dTHEN + 0\n", contadorDeIf);
+			fprintf(saida, "IF%dTHEN\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+			fprintf(saida, "JP IF%dELSE\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+			fprintf(saida, "IF%dTHEN + 0\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
 			break;
 			
 		case ACAOSEMANTICA_COMANDO_IF_INICIO_ELSE:
-			fprintf(saida, "IF%dELSE +0\n", contadorDeIf);
+			fprintf(saida, "IF%dELSE +0\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
 			break;
 	}
 
