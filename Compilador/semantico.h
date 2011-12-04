@@ -9,5 +9,5 @@
 
 #include "estruturas.h"
 
-int semantico_tbd(noLista** tabelaDeSimbolos, token* tokenLido, int acaoSemantica);
+int semantico_tbd(noLista** tabelaDeSimbolos, token* tokenLido, int acaoSemantica, FILE* saida);
 int nomeJaExisteNaTabelaDeSimbolos(char* nome, noLista** tabelaDeSimbolos);

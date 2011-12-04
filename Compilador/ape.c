@@ -57,9 +57,10 @@ void inicilizarAPE() {
 	return;
 }
 
-int transitarAPE(int entradaLida) {
+int transitarAPE(int entradaLida, int* acaoSemantica) {
 	algumaSubmaquinaTransitou = FALSE;
-	submaquinaAtual->transitar(entradaLida, &algumaSubmaquinaTransitou, &estaNoEstadoFinal);
+	*acaoSemantica = -1;
+	submaquinaAtual->transitar(entradaLida, &algumaSubmaquinaTransitou, &estaNoEstadoFinal, acaoSemantica);
 	return algumaSubmaquinaTransitou;
 }
 
@@ -75,25 +76,25 @@ int linguagemAceitaPeloAPE() {
 /******************************
 ******** SUBMAQUINAS **********
 ******************************/
-submaquina* criarSubmaquina(void (*funcaoTransitarDaSubmaquina)(int, int*, int*)) {
+submaquina* criarSubmaquina(void (*funcaoTransitarDaSubmaquina)(int, int*, int*, int*)) {
 	submaquina* novaSubmaquina = (submaquina*) malloc (sizeof(submaquina*));
 	novaSubmaquina->estadoAtual = 0;
 	novaSubmaquina->transitar = funcaoTransitarDaSubmaquina;
 	return novaSubmaquina;
 }
 
-void chamarSubmaquinaDaPilha(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal) {
+void chamarSubmaquinaDaPilha(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,int* acaoSemantica) {
 	*algumaSubmaquinaTransitou = FALSE;
 	if (pilhaDeSubmaquinaEstaVazia() == FALSE) {
 		submaquinaAtual = retirarSubmaquinaDaPilha();
-		submaquinaAtual->transitar(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal);
+		submaquinaAtual->transitar(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica);
 	} 
 }
 
-void substituirSubmaquinaAtualColocandoAAntigaNaPilha(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal, submaquina* novaSubmaquina) {
+void substituirSubmaquinaAtualColocandoAAntigaNaPilha(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal, int* acaoSemantica , submaquina* novaSubmaquina) {
 	colocarSubmaquinaNaPilha(submaquinaAtual);
 	submaquinaAtual =  novaSubmaquina;
-	submaquinaAtual->transitar(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal);
+	submaquinaAtual->transitar(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica);
 }
 
 /*** 1^n2^n ***/
@@ -101,7 +102,7 @@ submaquina* submaquina1n2nCriarSubmaquina() {
 	return criarSubmaquina(&submaquina1n2nTransitar);
 }
 
-void submaquina1n2nTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal) {
+void submaquina1n2nTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal, int* acaoSemantica) {
 	*algumaSubmaquinaTransitou = TRUE;
 	*estaNoEstadoFinal = FALSE;
 	
@@ -109,14 +110,15 @@ void submaquina1n2nTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int
 		submaquinaAtual->estadoAtual = 1;
 	else if (submaquinaAtual->estadoAtual == 1) {
 		submaquinaAtual->estadoAtual = 2;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquina1n2nCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquina1n2nCriarSubmaquina());
+		
 	} 
 	else if (submaquinaAtual->estadoAtual == 2 & entradaLida == 2) {
 		submaquinaAtual->estadoAtual = 3;
 		*estaNoEstadoFinal = TRUE;
 	}
 	else {
-		chamarSubmaquinaDaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal);
+		chamarSubmaquinaDaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica);
 	}
 	return;
 }
@@ -127,7 +129,7 @@ submaquina* submaquinaProgramaCriarSubmaquina() {
 	return criarSubmaquina(&submaquinaProgramaTransitar);
 }
 
-void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal) {
+void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,int* acaoSemantica) {
 	int naoEncontrouTransicao;
 	naoEncontrouTransicao = TRUE;
 	*algumaSubmaquinaTransitou = TRUE;
@@ -135,6 +137,7 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 	
 	if (submaquinaAtual->estadoAtual == 0) {
 		if (entradaLida == PALAVRARESERVADA_program) {
+			*acaoSemantica = ACAOSEMANTICA_INICIO_DO_PROGRAMA;
 			submaquinaAtual->estadoAtual = 1;
 			naoEncontrouTransicao = FALSE;
 		}
@@ -166,7 +169,7 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		}
 		else {
 			submaquinaAtual->estadoAtual = 7;
-			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaComandosCriarSubmaquina());
+			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaComandosCriarSubmaquina());
 			naoEncontrouTransicao = FALSE;
 		}
 	}
@@ -190,6 +193,7 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		if (entradaLida == SIMBOLO) {
 			submaquinaAtual->estadoAtual = 13;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_DECLARACAO_DE_VARIAVEL;
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 7) {
@@ -228,7 +232,7 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		}
 		else {
 			submaquinaAtual->estadoAtual = 15;
-			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaComandosCriarSubmaquina());
+			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaComandosCriarSubmaquina());
 			naoEncontrouTransicao = FALSE;
 		}
 	}
@@ -347,7 +351,7 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 	
 	
 	if(naoEncontrouTransicao == TRUE) {
-		chamarSubmaquinaDaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal);
+		chamarSubmaquinaDaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica);
 	}
 	return;	
 }
@@ -358,7 +362,7 @@ submaquina* submaquinaComandosCriarSubmaquina() {
 	return criarSubmaquina(&submaquinaComandosTransitar);
 }
 
-void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal) {
+void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,int* acaoSemantica) {
 	int naoEncontrouTransicao;
 	naoEncontrouTransicao = TRUE;
 	*algumaSubmaquinaTransitou = TRUE;
@@ -423,7 +427,7 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		}
 		else {
 			submaquinaAtual->estadoAtual = 11;
-			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
 			naoEncontrouTransicao = FALSE;
 		}
 	}
@@ -446,23 +450,23 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		}
 		else {
 			submaquinaAtual->estadoAtual = 19;
-			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
 			naoEncontrouTransicao = FALSE;
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 8) {
 		submaquinaAtual->estadoAtual = 16;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 9) {
 		submaquinaAtual->estadoAtual = 11;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 10) {
 		submaquinaAtual->estadoAtual = 12;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
 		*estaNoEstadoFinal = TRUE;
 		naoEncontrouTransicao = FALSE;
 	}
@@ -506,7 +510,7 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 	}
 	else if (submaquinaAtual->estadoAtual == 14) {
 		submaquinaAtual->estadoAtual = 15;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaComandosCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaComandosCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 15) {
@@ -529,7 +533,7 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 	}
 	else if (submaquinaAtual->estadoAtual == 18) {
 		submaquinaAtual->estadoAtual = 20;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 19) {
@@ -550,12 +554,12 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 	}
 	else if (submaquinaAtual->estadoAtual == 21) {
 		submaquinaAtual->estadoAtual = 23;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaComandosCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaComandosCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 22) {
 		submaquinaAtual->estadoAtual = 19;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 23) {
@@ -570,7 +574,7 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 	}
 	else if (submaquinaAtual->estadoAtual == 24) {
 		submaquinaAtual->estadoAtual = 25;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaComandosCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaComandosCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 25) {
@@ -597,7 +601,7 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 	}
 	else if (submaquinaAtual->estadoAtual == 28) {
 		submaquinaAtual->estadoAtual = 29;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 29) {
@@ -615,7 +619,7 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 	
 	
 	if(naoEncontrouTransicao == TRUE) {
-		chamarSubmaquinaDaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal);
+		chamarSubmaquinaDaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica);
 	}
 	return;	
 }
@@ -624,7 +628,7 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 submaquina* submaquinaExpressoesCriarSubmaquina() {
 	return criarSubmaquina(&submaquinaExpressoesTransitar);
 }
-void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal) {
+void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransitou,int* estaNoEstadoFinal,int* acaoSemantica) {
 	int naoEncontrouTransicao;
 	naoEncontrouTransicao = TRUE;
 	*algumaSubmaquinaTransitou = TRUE;
@@ -683,7 +687,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 	}
 	else if (submaquinaAtual->estadoAtual == 2) {
 		submaquinaAtual->estadoAtual = 17;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 3) {
@@ -727,7 +731,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 	}
 	else if (submaquinaAtual->estadoAtual == 5) {
 		submaquinaAtual->estadoAtual = 18;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 6) {
@@ -738,7 +742,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 		}
 		else {
 			submaquinaAtual->estadoAtual = 19;
-			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
 			naoEncontrouTransicao = FALSE;
 		}
 	}
@@ -783,7 +787,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 	}
 	else if (submaquinaAtual->estadoAtual == 9) {
 		submaquinaAtual->estadoAtual = 11;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 10) {
@@ -805,7 +809,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 	}
 	else if (submaquinaAtual->estadoAtual == 12) {
 		submaquinaAtual->estadoAtual = 16;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 13) {
@@ -816,7 +820,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 		}
 		else {
 			submaquinaAtual->estadoAtual = 14;
-			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
 			naoEncontrouTransicao = FALSE;
 		}
 	}
@@ -833,7 +837,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 	}
 	else if (submaquinaAtual->estadoAtual == 15) {
 		submaquinaAtual->estadoAtual = 14;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 16) {
@@ -870,7 +874,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 	}
 	else if (submaquinaAtual->estadoAtual == 20) {
 		submaquinaAtual->estadoAtual = 19;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 21) {
@@ -897,7 +901,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 	}
 	else if (submaquinaAtual->estadoAtual == 22) {
 		submaquinaAtual->estadoAtual = 24;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 23) {
@@ -923,7 +927,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 	}
 	else if (submaquinaAtual->estadoAtual == 25) {
 		submaquinaAtual->estadoAtual = 29;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 26) {
@@ -934,7 +938,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 		}
 		else {
 			submaquinaAtual->estadoAtual = 27;
-			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+			substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
 			naoEncontrouTransicao = FALSE;
 		}
 	}
@@ -951,7 +955,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 	}
 	else if (submaquinaAtual->estadoAtual == 28) {
 		submaquinaAtual->estadoAtual = 27;
-		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, submaquinaExpressoesCriarSubmaquina());
+		substituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, submaquinaExpressoesCriarSubmaquina());
 		naoEncontrouTransicao = FALSE;
 	}
 	else if (submaquinaAtual->estadoAtual == 29) {
@@ -968,7 +972,7 @@ void submaquinaExpressoesTransitar(int entradaLida, int* algumaSubmaquinaTransit
 	}
 	
 	if(naoEncontrouTransicao == TRUE) {
-		chamarSubmaquinaDaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal);
+		chamarSubmaquinaDaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica);
 	}
 	return;	
 }

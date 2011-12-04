@@ -56,24 +56,26 @@ int main (int argc, const char * argv[])
 	saida=fopen(PATH_PARA_ARQUIVO_MVN ,"w");
 	
 	token* tokenLido;
+	token* tokenAntigo;
 	
 	tokenLido = getToken(entrada);
 	inicilizarAPE();
 	int transicaoEncontrada = TRUE;
 	int deuErroSemantico = FALSE;
-	
-	fprintf(saida, "JP EXECUTE\n");
+	int acaoSemantica = -1;
+	char comandoMVNASerImpresso[80];
 	
 	if (entrada != NULL) 
-		while (tokenLido->tipo != EOF && transicaoEncontrada == TRUE && deuErroSemantico == FALSE) {
+		while (tokenLido->tipo != EOF && transicaoEncontrada == TRUE && deuErroSemantico == FALSE) {		
 			
-			deuErroSemantico = semantico_tbd(&tabelaDeSimbolos, tokenLido, 1);
+			deuErroSemantico = semantico_tbd(&tabelaDeSimbolos, tokenAntigo, acaoSemantica, saida);
 			
 			if (tokenLido->tipo == PALAVRARESERVADA)
-				transicaoEncontrada = transitarAPE(obterIdUnicoDaPalavraReservada(tokenLido));
+				transicaoEncontrada = transitarAPE(obterIdUnicoDaPalavraReservada(tokenLido), &acaoSemantica);
 			else
-				transicaoEncontrada = transitarAPE(tokenLido->tipo);
+				transicaoEncontrada = transitarAPE(tokenLido->tipo, &acaoSemantica);
 			imprimeToken(tokenLido);
+			tokenAntigo = tokenLido;
 			tokenLido = getToken(entrada);
 		}
 	
@@ -90,20 +92,6 @@ int main (int argc, const char * argv[])
 		printf("\n \n NAO ACEITOU A LINGUAGEM");
 	
 
-	
-	/*
-	int transicaoEncontrada;
-	transicaoEncontrada = transitarAPE(1);
-	transicaoEncontrada = transitarAPE(1);
-	transicaoEncontrada = transitarAPE(1);
-	transicaoEncontrada = transitarAPE(1);
-	transicaoEncontrada = transitarAPE(2);
-	transicaoEncontrada = transitarAPE(2);
-	transicaoEncontrada = transitarAPE(2);
-	transicaoEncontrada = transitarAPE(2);
-	
-	printf( "%d", linguagemAceitaPeloAPE());
-	 */
     return 0;
 }
 

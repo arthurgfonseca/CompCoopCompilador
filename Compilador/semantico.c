@@ -7,16 +7,29 @@
  *
  */
 
+#include <stdio.h>
+#include <stdlib.h>
 #include "semantico.h"
 #include "constantes.h"
 #include "tabelas.h"
 
-int semantico_tbd(noLista **tabelaDeSimbolos, token *tokenLido, int acaoSemantica) {
+int semantico_tbd(noLista **tabelaDeSimbolos, token *tokenLido, int acaoSemantica, FILE* saida) {
 	int deuErro = FALSE;
-	
-	if (tokenLido->tipo == SIMBOLO) {
-		int a = nomeJaExisteNaTabelaDeSimbolos(tokenLido->primeiroValor, tabelaDeSimbolos);
-		adicionaSimboloNaTabela(tokenLido->primeiroValor, "0", tabelaDeSimbolos);
+
+	switch (acaoSemantica) {
+		case ACAOSEMANTICA_INICIO_DO_PROGRAMA:
+			fprintf(saida, "JP EXECUTE\n");
+			break;
+		case ACAOSEMANTICA_DECLARACAO_DE_VARIAVEL:
+			if (tokenLido->tipo == SIMBOLO) {
+				if (nomeJaExisteNaTabelaDeSimbolos(tokenLido->primeiroValor, tabelaDeSimbolos) == TRUE) {
+					printf("Erro. Variavel %s já declarada.", tokenLido->primeiroValor);
+				}
+				adicionaSimboloNaTabela(tokenLido->primeiroValor, "0", tabelaDeSimbolos);
+			}
+			break;
+		default:
+			break;
 	}
 	
 	return deuErro;
