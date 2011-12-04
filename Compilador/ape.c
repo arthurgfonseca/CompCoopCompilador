@@ -476,6 +476,7 @@ void submaquinaComandosTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		if (entradaLida == ';') {
 			submaquinaAtual->estadoAtual = 13;
 			naoEncontrouTransicao = FALSE;
+			*acaoSemantica = ACAOSEMANTICA_COMANDO_FIM;
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 12) {

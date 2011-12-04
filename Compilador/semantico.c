@@ -44,6 +44,7 @@ void inicializarSemantico() {
 	contadorDeTemporarios = 0;
 	inicializaPilha(&pilhaDeOperadores);
 	inicializaPilha(&pilhaDeOperandos);
+	strcpy(nomeUltimaVariavelDeAtribuicao, (char*)(""));
 }
 
 int semantico_tbd(noLista **tabelaDeSimbolos, token *tokenLido, int acaoSemantica, FILE* saida) {
@@ -89,9 +90,6 @@ int semantico_tbd(noLista **tabelaDeSimbolos, token *tokenLido, int acaoSemantic
 			
 			strcpy(nomeUltimaVariavelDeAtribuicao, nomeDaVariavel);
 			
-			break;
-		case ACAOSEMANTICA_ATRIBUICAO_DE_VARIAVEL_FIM:			
-			fprintf(saida, "MM %s\n", nomeUltimaVariavelDeAtribuicao);
 			break;
 			
 		case ACAOSEMANTICA_EXPRESSAO_LE_INTEIRO:
@@ -169,6 +167,13 @@ int semantico_tbd(noLista **tabelaDeSimbolos, token *tokenLido, int acaoSemantic
 			while (pilhaDeOperandos != NULL && pilhaDeOperadores != NULL)
 				gerarCodigoExpressao(saida, tabelaDeSimbolos);
 			
+			break;
+			
+		case ACAOSEMANTICA_COMANDO_FIM:
+			if (strcmp(nomeUltimaVariavelDeAtribuicao, (char*) ("")) != 0)
+				fprintf(saida, "MM %s\n", nomeUltimaVariavelDeAtribuicao);
+				
+			strcpy(nomeUltimaVariavelDeAtribuicao, (char*)(""));
 			break;
 	}
 	
