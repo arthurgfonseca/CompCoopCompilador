@@ -15,8 +15,10 @@
 #include "globais.c"
 
 int contadorDeTemporarios;
-int acaoSemanticaAnterior;
+int contadorDeIf;
+int contadorDeWhile;
 int contadorDeSubexpressoes;
+int pilhaDeComandosAnteriores[1000];
 char nomeUltimaVariavelDeAtribuicao[50];
 noPilhaString* pilhaDeOperadores;
 noPilhaString* pilhaDeOperandos;
@@ -48,11 +50,14 @@ void desempilhar(char stringDesempilhada[50], noPilhaString** noPilha) {
 void inicializarSemantico(FILE* arquivoDeSaida) {
 	contadorDeTemporarios = 0;
 	contadorDeSubexpressoes = 0;
+	contadorDeWhile = 0;
+	contadorDeIf = 0;
 	inicializaPilha(&pilhaDeOperadores);
 	inicializaPilha(&pilhaDeOperandos);
 	strcpy(nomeUltimaVariavelDeAtribuicao, (char*)(""));
 	saida = arquivoDeSaida;
 	criaTabelaSimbolos(&tabelaDeSimbolos);
+	pilhaDeComandosAnteriores[0] = 0;
 }
 void semantico_tbd(token *tokenLido, int acaoSemantica) {
 
@@ -103,17 +108,18 @@ void semantico_tbd(token *tokenLido, int acaoSemantica) {
 			break;
 			
 		case ACAOSEMANTICA_COMANDO_ATRIBUICAO_DE_VARIAVEL_FIM:
-			acaoSemanticaAnterior = ACAOSEMANTICA_COMANDO_ATRIBUICAO_DE_VARIAVEL_FIM;			
+			pilhaDeComandosAnteriores[0]++;
+			pilhaDeComandosAnteriores[pilhaDeComandosAnteriores[0]] = ACAOSEMANTICA_COMANDO_ATRIBUICAO_DE_VARIAVEL_FIM;			
 			break;
 			
 		case ACAOSEMANTICA_COMANDO_FIM:
-			if (acaoSemanticaAnterior == ACAOSEMANTICA_COMANDO_ATRIBUICAO_DE_VARIAVEL_FIM) {
+			if (pilhaDeComandosAnteriores[pilhaDeComandosAnteriores[0]] == ACAOSEMANTICA_COMANDO_ATRIBUICAO_DE_VARIAVEL_FIM) {
 				fprintf(saida, "MM %s\n", nomeUltimaVariavelDeAtribuicao);
 				strcpy(nomeUltimaVariavelDeAtribuicao, (char*)(""));
+				pilhaDeComandosAnteriores[0]--;
 			}
 			
-			acaoSemanticaAnterior = -1;
-			
+						
 			break;
 			
 		case ACAOSEMANTICA_EXPRESSAO_LE_INTEIRO:
