@@ -11,6 +11,7 @@
 		2C536B2C142EC69C00D04164 /* matrizes.c in Sources */ = {isa = PBXBuildFile; fileRef = 2C536B2B142EC69C00D04164 /* matrizes.c */; };
 		2C635FBC145B43730023C828 /* ape.c in Sources */ = {isa = PBXBuildFile; fileRef = 2C635FBB145B43730023C828 /* ape.c */; };
 		2C7A429B142FA772001E2B36 /* globais.c in Sources */ = {isa = PBXBuildFile; fileRef = 2C7A429A142FA772001E2B36 /* globais.c */; };
+		2CC45C3F148B0C02007DACC3 /* semantico.c in Sources */ = {isa = PBXBuildFile; fileRef = 2CC45C3E148B0C02007DACC3 /* semantico.c */; };
 		E24ECD91142BF7D500574E4E /* estruturas.c in Sources */ = {isa = PBXBuildFile; fileRef = E24ECD90142BF7D500574E4E /* estruturas.c */; };
 		E24ECD96142BF80E00574E4E /* lex.c in Sources */ = {isa = PBXBuildFile; fileRef = E24ECD95142BF80E00574E4E /* lex.c */; };
 		E24ECD9A142CCCDF00574E4E /* tabelas.c in Sources */ = {isa = PBXBuildFile; fileRef = E24ECD99142CCCDF00574E4E /* tabelas.c */; };
@@ -40,6 +41,8 @@
 		2C635FBA145B43730023C828 /* ape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ape.h; sourceTree = "<group>"; };
 		2C635FBB145B43730023C828 /* ape.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ape.c; sourceTree = "<group>"; };
 		2C7A429A142FA772001E2B36 /* globais.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = globais.c; sourceTree = "<group>"; };
+		2CC45C3D148B0C02007DACC3 /* semantico.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = semantico.h; sourceTree = "<group>"; };
+		2CC45C3E148B0C02007DACC3 /* semantico.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = semantico.c; sourceTree = "<group>"; };
 		E24ECD90142BF7D500574E4E /* estruturas.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = estruturas.c; sourceTree = "<group>"; };
 		E24ECD93142BF7E100574E4E /* estruturas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = estruturas.h; sourceTree = "<group>"; };
 		E24ECD94142BF80100574E4E /* lex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lex.h; sourceTree = "<group>"; };
@@ -106,6 +109,8 @@
 				2C7A429A142FA772001E2B36 /* globais.c */,
 				2C635FBA145B43730023C828 /* ape.h */,
 				2C635FBB145B43730023C828 /* ape.c */,
+				2CC45C3D148B0C02007DACC3 /* semantico.h */,
+				2CC45C3E148B0C02007DACC3 /* semantico.c */,
 			);
 			path = Compilador;
 			sourceTree = "<group>";
@@ -169,6 +174,7 @@
 				2C536B2C142EC69C00D04164 /* matrizes.c in Sources */,
 				2C7A429B142FA772001E2B36 /* globais.c in Sources */,
 				2C635FBC145B43730023C828 /* ape.c in Sources */,
+				2CC45C3F148B0C02007DACC3 /* semantico.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

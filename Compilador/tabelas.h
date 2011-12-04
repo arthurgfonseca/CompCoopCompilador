@@ -14,7 +14,7 @@ void populaTabelaPalavrasReservadas(noLista **palavraReservada);
 int buscaSimboloPalavraReservada(char *palavra, noLista **lista);
 
 void criaTabelaSimbolos(noLista **simbolos);
-int adicionaSimbolo(char *palavra, noLista **simbolos);
+void adicionaSimboloNaTabela(char *palavra,char* valor, noLista **simbolos);
 int buscaTabelaSimbolos(char *palavra, noLista **simbolos);
 
 

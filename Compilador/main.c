@@ -11,13 +11,14 @@
 #include <stdlib.h>
 #include "lex.h"
 #include "ape.h"
+#include "semantico.h"
 #include "globais.c"
 
 noLista *tabelaDeSimbolos;
 
 // Função criada apenas para imprimir o token
 void imprimeToken(token* tokenObtido);
-void semantico_tbd();
+void imprimirVariaveis(FILE* saida);
 
 void imprimeToken(token* tokenObtido) {
     printf("\n\n---- TOKEN GERADO ---- \n\n");
@@ -27,9 +28,20 @@ void imprimeToken(token* tokenObtido) {
     printf("\n\n---- FIM ----");
 }
 
-void semantico_tbd() {
-	printf("TODO \n");
-}	
+void imprimirVariaveis(FILE* saida) {
+	char stringDeSaida[80];
+	
+    while(tabelaDeSimbolos != NULL){
+		strcpy(stringDeSaida, "");
+		strcat (stringDeSaida, tabelaDeSimbolos->nomeVar);
+		strcat (stringDeSaida," K /");
+		strcat (stringDeSaida, tabelaDeSimbolos->valorVar);
+		fprintf(saida, stringDeSaida);
+		strcat (stringDeSaida,"\n");
+        tabelaDeSimbolos = tabelaDeSimbolos->prox;
+    } 
+	
+}
 
 int main (int argc, const char * argv[])
 {
@@ -37,20 +49,25 @@ int main (int argc, const char * argv[])
 	numeroDaLinhaLidaNoArquivoFonte = 1;
 
 	FILE* entrada;
+	FILE* saida;
 	criaTabelaSimbolos(&tabelaDeSimbolos);
 	
 	entrada=fopen(PATH_PARA_ARQUIVO_FONTE ,"r");
+	saida=fopen(PATH_PARA_ARQUIVO_MVN ,"w");
 	
 	token* tokenLido;
 	
 	tokenLido = getToken(entrada);
 	inicilizarAPE();
 	int transicaoEncontrada = TRUE;
-	int posicaoTabelaDeSimbolos = 0;
+	int deuErroSemantico = FALSE;
+	
+	fprintf(saida, "JP EXECUTE\n");
+	
 	if (entrada != NULL) 
-		while (tokenLido->tipo != EOF && transicaoEncontrada == TRUE) {
-			if (tokenLido->tipo == SIMBOLO)
-				posicaoTabelaDeSimbolos = adicionaSimbolo(tokenLido, &tabelaDeSimbolos);
+		while (tokenLido->tipo != EOF && transicaoEncontrada == TRUE && deuErroSemantico == FALSE) {
+			
+			deuErroSemantico = semantico_tbd(&tabelaDeSimbolos, tokenLido, 1);
 			
 			if (tokenLido->tipo == PALAVRARESERVADA)
 				transicaoEncontrada = transitarAPE(obterIdUnicoDaPalavraReservada(tokenLido));
@@ -58,19 +75,19 @@ int main (int argc, const char * argv[])
 				transicaoEncontrada = transitarAPE(tokenLido->tipo);
 			imprimeToken(tokenLido);
 			tokenLido = getToken(entrada);
-			
-			semantico_tbd();
 		}
 	
-	//imprimeToken(tokenLido);
+	imprimirVariaveis(saida);
 	
-
 	fclose (entrada);    
 	
+	fclose (saida);    
+	
+	
 	if (linguagemAceitaPeloAPE() == TRUE)
-		printf("\n \n ACEITOU");
+		printf("\n \n ACEITOU LINGUAGEM");
 	else 
-		printf("\n \n NAO ACEITOU");
+		printf("\n \n NAO ACEITOU A LINGUAGEM");
 	
 
 	
