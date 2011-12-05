@@ -21,6 +21,7 @@ int contadorDeSubexpressoes;
 int pilhaDeComandosAnteriores[1000];
 int pilhaDeCondicionais[1000];
 char nomeUltimaVariavelDeAtribuicao[50];
+char nomeDaFuncaoEscopo[50];
 noPilhaString* pilhaDeOperadores;
 noPilhaString* pilhaDeOperandos;
 noLista *tabelaDeSimbolos;
@@ -78,6 +79,7 @@ void semantico_tbd(token *tokenLido, int acaoSemantica) {
 			break;
 			
 		case ACAOSEMANTICA_INICIO_DO_EXECUTE:
+			strcpy(nomeDaFuncaoEscopo, (char*)("Global"));
 			fprintf(saida, "EXECUTE + k0\n");
 			break;
 			
@@ -87,8 +89,9 @@ void semantico_tbd(token *tokenLido, int acaoSemantica) {
 			fprintf(saida, "\n# fim");
 			break;
 			
-		case ACAOSEMANTICA_DECLARACAO_DE_VARIAVEL:			
-			strcat(nomeDaVariavel, (char*)("Global-"));
+		case ACAOSEMANTICA_DECLARACAO_DE_VARIAVEL:		
+			strcat(nomeDaVariavel, nomeDaFuncaoEscopo);
+			strcat(nomeDaVariavel, (char*)("-"));
 			strcat(nomeDaVariavel, tokenLido->primeiroValor);
 			
 			if (tokenLido->tipo == SIMBOLO) {
@@ -102,13 +105,20 @@ void semantico_tbd(token *tokenLido, int acaoSemantica) {
 			
 		case ACAOSEMANTICA_COMANDO_LE_SIMBOLO:			
 			strcpy(nomeDaVariavel, (char*)(""));
-			strcat(nomeDaVariavel, (char*)("Global-"));
+			strcat(nomeDaVariavel, nomeDaFuncaoEscopo);
+			strcat(nomeDaVariavel, (char*)("-"));
 			strcat(nomeDaVariavel, tokenLido->primeiroValor);
 			
 			if (tokenLido->tipo == SIMBOLO) {
 				if (nomeJaExisteNaTabelaDeSimbolos(nomeDaVariavel) == FALSE) {
-					printf("\nErro. Variavel %s não declarada. Linha %d", tokenLido->primeiroValor, tokenLido->linha);
-					exit(1);
+					//procura no global
+					strcpy(nomeDaVariavel, (char*)(""));
+					strcat(nomeDaVariavel, (char*)("Global-"));
+					strcat(nomeDaVariavel, tokenLido->primeiroValor);
+					if (nomeJaExisteNaTabelaDeSimbolos(nomeDaVariavel) == FALSE){
+						printf("\nErro. Variavel %s não declarada. Linha %d", tokenLido->primeiroValor, tokenLido->linha);
+						exit(1);
+					}
 				}
 			}
 			
@@ -143,12 +153,19 @@ void semantico_tbd(token *tokenLido, int acaoSemantica) {
 			
 		case ACAOSEMANTICA_EXPRESSAO_LE_SIMBOLO:
 			strcpy(nomeDaVariavel, (char*)(""));
-			strcat(nomeDaVariavel, (char*)("Global-"));
+			strcat(nomeDaVariavel, nomeDaFuncaoEscopo);
+			strcat(nomeDaVariavel, (char*)("-"));
 			strcat(nomeDaVariavel, tokenLido->primeiroValor);
 			
 			if (nomeJaExisteNaTabelaDeSimbolos(nomeDaVariavel) == FALSE) {
-				printf("\nErro. Variavel %s não declarada. Linha %d", tokenLido->primeiroValor, tokenLido->linha);
-				exit(1);
+				//procura no global
+				strcpy(nomeDaVariavel, (char*)(""));
+				strcat(nomeDaVariavel, (char*)("Global-"));
+				strcat(nomeDaVariavel, tokenLido->primeiroValor);
+				if (nomeJaExisteNaTabelaDeSimbolos(nomeDaVariavel) == FALSE){
+					printf("\nErro. Variavel %s não declarada. Linha %d", tokenLido->primeiroValor, tokenLido->linha);
+					exit(1);
+				}
 			}
 			
 			empilhar(nomeDaVariavel, &pilhaDeOperandos);
@@ -432,6 +449,15 @@ void semantico_tbd(token *tokenLido, int acaoSemantica) {
 			pilhaDeCondicionais[0]--;
 			pilhaDeComandosAnteriores[0]--;
 			break;	
+			
+		case ACAOSEMANTICA_DECLARACAO_DE_FUNCAO_NOME:
+			strcpy(nomeDaFuncaoEscopo, (char*)(""));
+			strcat(nomeDaFuncaoEscopo, tokenLido->primeiroValor);
+			fprintf(saida, "%s + k0\n", nomeDaFuncaoEscopo);
+			break;
+		case ACAOSEMANTICA_DECLARACAO_DE_FUNCAO_FIM:
+			fprintf(saida, "RS k0\n", nomeDaFuncaoEscopo);
+			break;
 			
 	}
 

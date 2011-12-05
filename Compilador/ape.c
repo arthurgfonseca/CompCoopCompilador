@@ -145,6 +145,7 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		if (entradaLida == PALAVRARESERVADA_declare) {
 			submaquinaAtual->estadoAtual = 2;
 			naoEncontrouTransicao = FALSE;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_DECLARACAO_DE_FUNCAO_INICIO);
 		}
 		else if (entradaLida == PALAVRARESERVADA_execute) {
 			submaquinaAtual->estadoAtual = 3;
@@ -181,12 +182,14 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		else if (entradaLida == SIMBOLO) {
 			submaquinaAtual->estadoAtual = 8;
 			naoEncontrouTransicao = FALSE;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_DECLARACAO_DE_FUNCAO_NOME);
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 5) {
 		if (entradaLida == SIMBOLO) {
 			submaquinaAtual->estadoAtual = 8;
 			naoEncontrouTransicao = FALSE;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_DECLARACAO_DE_FUNCAO_NOME);
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 6) {
@@ -218,6 +221,7 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		else if (entradaLida == ')') {
 			submaquinaAtual->estadoAtual = 12;
 			naoEncontrouTransicao = FALSE;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_DECLARACAO_DE_FUNCAO_COMANDOS);
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 11) {
@@ -261,6 +265,7 @@ void submaquinaProgramaTransitar(int entradaLida, int* algumaSubmaquinaTransitou
 		if (entradaLida == PALAVRARESERVADA_enddeclare) {
 			submaquinaAtual->estadoAtual = 1;
 			naoEncontrouTransicao = FALSE;
+			semantico_tbd(tokenLido, ACAOSEMANTICA_DECLARACAO_DE_FUNCAO_FIM);
 		}
 	}
 	else if (submaquinaAtual->estadoAtual == 16) {
