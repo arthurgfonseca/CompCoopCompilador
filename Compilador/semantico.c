@@ -60,6 +60,7 @@ void inicializarSemantico(FILE* arquivoDeSaida) {
 	criaTabelaSimbolos(&tabelaDeSimbolos);
 	pilhaDeComandosAnteriores[0] = 0;
 	pilhaDeCondicionais[0] = 0;
+	adicionaSimboloNaTabela("k0", "0", &tabelaDeSimbolos);
 }
 void semantico_tbd(token *tokenLido, int acaoSemantica) {
 
@@ -77,11 +78,13 @@ void semantico_tbd(token *tokenLido, int acaoSemantica) {
 			break;
 			
 		case ACAOSEMANTICA_INICIO_DO_EXECUTE:
-			fprintf(saida, "EXECUTE + 0\n");
+			fprintf(saida, "EXECUTE + k0\n");
 			break;
 			
 		case ACAOSEMANTICA_FIM_DO_PROGRAMA:
+			fprintf(saida, "HM k0\n");
 			imprimirVariaveis();
+			fprintf(saida, "\n# fim");
 			break;
 			
 		case ACAOSEMANTICA_DECLARACAO_DE_VARIAVEL:			
@@ -203,7 +206,8 @@ void semantico_tbd(token *tokenLido, int acaoSemantica) {
 			
 		case ACAOSEMANTICA_EXPRESSAO_FIM:
 			if (contadorDeSubexpressoes == 0 || 
-				pilhaDeComandosAnteriores[pilhaDeComandosAnteriores[0] - 1] == ACAOSEMANTICA_COMANDO_IF_INICIO) {
+				pilhaDeComandosAnteriores[pilhaDeComandosAnteriores[0] - 1] == ACAOSEMANTICA_COMANDO_IF_INICIO ||
+				pilhaDeComandosAnteriores[pilhaDeComandosAnteriores[0] - 1] == ACAOSEMANTICA_COMANDO_WHILE_INICIO) {
 				while (pilhaDeOperandos != NULL && pilhaDeOperadores != NULL)
 					gerarCodigoExpressao();
 				
@@ -229,42 +233,42 @@ void semantico_tbd(token *tokenLido, int acaoSemantica) {
 					fprintf(saida, "MM %s\n", nomeDaVariavel);
 					fprintf(saida, "LD comparacao-parametro-1\n");
 					fprintf(saida, "- comparacao-parametro-2\n");
-					fprintf(saida, "JZ ");
-					pilhaDeComandosAnteriores[0]--;
 					break;
 				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_MENOR:
 					fprintf(saida, "MM %s\n", nomeDaVariavel);
 					fprintf(saida, "LD comparacao-parametro-1\n");
 					fprintf(saida, "- comparacao-parametro-2\n");
-					fprintf(saida, "JN ");
-					pilhaDeComandosAnteriores[0]--;
 					break;
 				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_MAIOR:
 					fprintf(saida, "MM %s\n", nomeDaVariavel);
 					fprintf(saida, "LD comparacao-parametro-2\n");
 					fprintf(saida, "- comparacao-parametro-1\n");
-					fprintf(saida, "JN ");
-					pilhaDeComandosAnteriores[0]--;
-					break;
-				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_MAIOR_IGUAL:
-					pilhaDeComandosAnteriores[0]--;
-					break;
-				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_MENOR_IGUAL:
-					pilhaDeComandosAnteriores[0]--;
 					break;
 				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_DIFERENTE:
-					pilhaDeComandosAnteriores[0]--;
+					fprintf(saida, "MM %s\n", nomeDaVariavel);
+					fprintf(saida, "LD comparacao-parametro-1\n");
+					fprintf(saida, "- comparacao-parametro-2\n");
 					break;
-					
+				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_MENOR_IGUAL:
+					fprintf(saida, "MM %s\n", nomeDaVariavel);
+					fprintf(saida, "LD comparacao-parametro-1\n");
+					fprintf(saida, "- comparacao-parametro-2\n");
+					break;
+				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_MAIOR_IGUAL:
+					fprintf(saida, "MM %s\n", nomeDaVariavel);
+					fprintf(saida, "LD comparacao-parametro-2\n");
+					fprintf(saida, "- comparacao-parametro-1\n");
+					break;
 			}
-			
+		
 			
 			break;
 			
 		case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO:
 			//desempilha todas as operações
 			if (contadorDeSubexpressoes == 0 || 
-				pilhaDeComandosAnteriores[pilhaDeComandosAnteriores[0] - 1] == ACAOSEMANTICA_COMANDO_IF_INICIO) {
+				pilhaDeComandosAnteriores[pilhaDeComandosAnteriores[0] - 1] == ACAOSEMANTICA_COMANDO_IF_INICIO ||
+				pilhaDeComandosAnteriores[pilhaDeComandosAnteriores[0] - 1] == ACAOSEMANTICA_COMANDO_WHILE_INICIO) {
 				while (pilhaDeOperandos != NULL && pilhaDeOperadores != NULL)
 					gerarCodigoExpressao();
 				
@@ -309,7 +313,7 @@ void semantico_tbd(token *tokenLido, int acaoSemantica) {
 			
 		case ACAOSEMANTICA_COMANDO_IF_INICIO:
 			contadorDeIf++;
-			fprintf(saida, "IF%d +0 \n", contadorDeIf);
+			fprintf(saida, "IF%d + k0 \n", contadorDeIf);
 			pilhaDeCondicionais[0]++;
 			pilhaDeCondicionais[pilhaDeCondicionais[0]] = contadorDeIf;
 			pilhaDeComandosAnteriores[0]++;
@@ -317,27 +321,118 @@ void semantico_tbd(token *tokenLido, int acaoSemantica) {
 			break;
 			
 		case ACAOSEMANTICA_COMANDO_IF_FIM_SEM_ELSE:
-			fprintf(saida, "IF%dELSE + 0\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
-			fprintf(saida, "IF%dEND + 0 \n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+			fprintf(saida, "IF%dELSE + k0\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+			fprintf(saida, "IF%dEND + k0 \n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
 			pilhaDeCondicionais[0]--;
 			pilhaDeComandosAnteriores[0]--;
 			break;	
 			
 		case ACAOSEMANTICA_COMANDO_IF_FIM_COM_ELSE:
-			fprintf(saida, "IF%dEND + 0\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+			fprintf(saida, "IF%dEND + k0\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
 			pilhaDeCondicionais[0]--;
 			pilhaDeComandosAnteriores[0]--;
 			break;	
 			
 		case ACAOSEMANTICA_COMANDO_IF_INICIO_THEN:
-			fprintf(saida, "IF%dTHEN\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+			//caso em que termina a expressão e era uma comparação
+			switch (pilhaDeComandosAnteriores[pilhaDeComandosAnteriores[0]]) {
+				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_IGUAL:
+					fprintf(saida, "JZ IF%dTHEN\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+					pilhaDeComandosAnteriores[0]--;
+					break;
+				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_MENOR:
+					fprintf(saida, "JN IF%dTHEN\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+					pilhaDeComandosAnteriores[0]--;
+					break;
+				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_MAIOR:
+					fprintf(saida, "JN IF%dTHEN\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+					pilhaDeComandosAnteriores[0]--;
+					break;
+				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_MAIOR_IGUAL:
+					fprintf(saida, "JN IF%dTHEN\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+					fprintf(saida, "JZ IF%dTHEN\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+					pilhaDeComandosAnteriores[0]--;
+					break;
+				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_MENOR_IGUAL:
+					fprintf(saida, "JN IF%dTHEN\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+					fprintf(saida, "JZ IF%dTHEN\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+					pilhaDeComandosAnteriores[0]--;
+					break;
+				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_DIFERENTE:
+					fprintf(saida, "JZ IF%dEND\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+					fprintf(saida, "JP IF%dTHEN\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+					pilhaDeComandosAnteriores[0]--;
+					break;
+				default:
+					fprintf(saida, "JN ");
+					break;
+					
+			}
+			
 			fprintf(saida, "JP IF%dELSE\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
-			fprintf(saida, "IF%dTHEN + 0\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+			fprintf(saida, "IF%dTHEN + k0\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
 			break;
 			
 		case ACAOSEMANTICA_COMANDO_IF_INICIO_ELSE:
-			fprintf(saida, "IF%dELSE +0\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+			fprintf(saida, "IF%dELSE + k0\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
 			break;
+			
+		case ACAOSEMANTICA_COMANDO_WHILE_INICIO:
+			contadorDeWhile++;
+			fprintf(saida, "WHILE%d + k0 \n", contadorDeWhile);
+			pilhaDeCondicionais[0]++;
+			pilhaDeCondicionais[pilhaDeCondicionais[0]] = contadorDeWhile;
+			pilhaDeComandosAnteriores[0]++;
+			pilhaDeComandosAnteriores[pilhaDeComandosAnteriores[0]]=ACAOSEMANTICA_COMANDO_WHILE_INICIO;
+			break;
+
+		case ACAOSEMANTICA_COMANDO_WHILE_DENTRO:
+			//caso em que termina a expressão e era uma comparação
+			switch (pilhaDeComandosAnteriores[pilhaDeComandosAnteriores[0]]) {
+				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_IGUAL:
+					fprintf(saida, "JZ WHILE%dCMD\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+					pilhaDeComandosAnteriores[0]--;
+					break;
+				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_MENOR:
+					fprintf(saida, "JN WHILE%dCMD\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+					pilhaDeComandosAnteriores[0]--;
+					break;
+				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_MAIOR:
+					fprintf(saida, "JN WHILE%dCMD\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+					pilhaDeComandosAnteriores[0]--;
+					break;
+				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_MAIOR_IGUAL:
+					fprintf(saida, "JN WHILE%dCMD\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+					fprintf(saida, "JZ WHILE%dCMD\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+					pilhaDeComandosAnteriores[0]--;
+					break;
+				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_MENOR_IGUAL:
+					fprintf(saida, "JN WHILE%dCMD\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+					fprintf(saida, "JZ WHILE%dCMD\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+					pilhaDeComandosAnteriores[0]--;
+					break;
+				case ACAOSEMANTICA_EXPRESSAO_LE_OPERADOR_COMPARACAO_DIFERENTE:
+					fprintf(saida, "JZ WHILE%dEND\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+					fprintf(saida, "JP WHILE%dCMD\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+					pilhaDeComandosAnteriores[0]--;
+					break;
+				default:
+					fprintf(saida, "JN WHILE%dCMD\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+					break;
+					
+			}
+			
+			fprintf(saida, "JP WHILE%dEND\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+			fprintf(saida, "WHILE%dCMD + k0\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+			break;
+			
+		case ACAOSEMANTICA_COMANDO_WHILE_FIM:
+			fprintf(saida, "JP WHILE%dCMD\n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+			fprintf(saida, "WHILE%dEND + k0 \n", pilhaDeCondicionais[pilhaDeCondicionais[0]]);
+			pilhaDeCondicionais[0]--;
+			pilhaDeComandosAnteriores[0]--;
+			break;	
+			
 	}
 
 }	
