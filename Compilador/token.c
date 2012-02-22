@@ -15,7 +15,7 @@
 //    resultadoBusca também será o identificador do token
 //    O token sera identificado pela par "identificador", "tipo"
 //    A linha é necessaria para o futuro tratamento de erros
-token* obterTokenPalavra(char *palavra, int linha, int tipo, noLista **palavrasReservadas, noLista **simbolos, noLista **strings) {
+token* obterTokenPalavra(char *palavra, int linha, int tipo, noLista **palavrasReservadas, noLista **strings) {
     
     token *token;
     int resultadoBusca;
@@ -40,22 +40,11 @@ token* obterTokenPalavra(char *palavra, int linha, int tipo, noLista **palavrasR
             token = criaToken(PALAVRARESERVADA, linha, palavra, NULL);
         }
         
-        
-        //    Se não é Palavra reservada verifica ser é simbolo
-        if (encontrou == 0) {
-            resultadoBusca = buscaTabelaSimbolos(palavra, simbolos);
-            if (resultadoBusca > 0) {
-                encontrou = 1;
-                token = criaToken(SIMBOLO, linha, palavra, NULL);
-            }
-            
-        }
+
         
 //        Não foi encontrado nem na tabela de palavras reservadas  ou de simbolos
         if (encontrou == 0) {
             int identificador;
-//            Adiciona na tabela de simbolos
-            identificador = adicionaSimbolo(palavra, simbolos);
 //            Cria token
             token = criaToken(SIMBOLO, linha, palavra, NULL);
             

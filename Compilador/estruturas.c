@@ -24,7 +24,7 @@ void inicializaLista(noLista **L){
 }
 
 //Insere um no na lista
-void insereNo(int identificador, char *palavra, noLista **L){
+void insereNo(int identificador, char *palavra, char *valor, noLista **L){
     noLista *paux, *pLoop;
     
     if ( *L != NULL) {
@@ -37,7 +37,8 @@ void insereNo(int identificador, char *palavra, noLista **L){
     
     paux = (noLista *) malloc (sizeof(noLista));
     paux ->identificador = identificador;
-    paux ->valorPalavra = palavra;
+    strcpy(paux->nomeVar, palavra);
+	strcpy(paux->valorVar, valor);
     paux ->prox = NULL;
     
     
@@ -52,10 +53,13 @@ void insereNo(int identificador, char *palavra, noLista **L){
 noLista* procuraLista(char *palavra, noLista **L){
     noLista *paux;
     
+	if (L == NULL)
+		return NULL;
+	
     paux = *L;
     
     while(paux != NULL){
-        if(strcmp(paux->valorPalavra, palavra) == 0) return paux;
+        if(strcmp(paux->nomeVar, palavra) == 0) return paux;
         paux = paux->prox;
     } 
     return paux;

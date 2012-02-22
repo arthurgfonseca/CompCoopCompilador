@@ -14,12 +14,13 @@
 
 typedef struct _noLista{
     int identificador; //Identificador
-    char *valorPalavra; //valor da palvra que será guardada
+	char nomeVar[50];
+    char valorVar[50]; 
     struct _noLista *prox; //Apronta para o próximo da lista
 }noLista;
 
 void inicializaLista(noLista **L);
-void insereNo(int value, char *palavra, noLista **L);
+void insereNo(int value, char *palavra, char *valor, noLista **L);
 noLista* procuraLista(char *palavra, noLista **L);
 int ultimoIdentificador(noLista **L);
 

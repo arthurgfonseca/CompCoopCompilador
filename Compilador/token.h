@@ -8,5 +8,5 @@
 
 #include "estruturas.h"
 
-token* obterTokenPalavra(char *palavra, int linha, int tipo, noLista **palavrasReservadas, noLista **simbolos, noLista **strings);
+token* obterTokenPalavra(char *palavra, int linha, int tipo, noLista **palavrasReservadas, noLista **strings);
 token* obterTokenNumero(char *primeiroNumero, char *segundoNumero, int linha, int tipo);

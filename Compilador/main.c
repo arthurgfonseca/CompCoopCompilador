@@ -15,6 +15,7 @@
 
 // Função criada apenas para imprimir o token
 void imprimeToken(token* tokenObtido);
+void imprimirVariaveis(FILE* saida);
 
 void imprimeToken(token* tokenObtido) {
     printf("\n\n---- TOKEN GERADO ---- \n\n");
@@ -24,65 +25,50 @@ void imprimeToken(token* tokenObtido) {
     printf("\n\n---- FIM ----");
 }
 
-void semantico_tbd();
-
-void semantico_tbd() {
-	printf("TODO \n");
-}	
-
 int main (int argc, const char * argv[])
 {
 	
-	numeroDaLinhaLidaNoArquivoFonte = 1;
+	numeroDaLinhaLidaNoArquivoFonte = 0;
 
 	FILE* entrada;
+	FILE* saida;
 	
 	entrada=fopen(PATH_PARA_ARQUIVO_FONTE ,"r");
+	saida=fopen(PATH_PARA_ARQUIVO_MVN ,"w");
 	
 	token* tokenLido;
+	token* tokenAntigo;
 	
 	tokenLido = getToken(entrada);
-	inicilizarAPE();
+	inicilizarAPE(saida);
 	int transicaoEncontrada = TRUE;
+	//int deuErroSemantico = FALSE;
+	int acaoSemantica = -1;
 	
 	if (entrada != NULL) 
-		while (tokenLido->tipo != EOF && transicaoEncontrada == TRUE) {
+		while (tokenLido->tipo != EOF && transicaoEncontrada == TRUE) {		
+			
+			//deuErroSemantico = semantico_tbd(&tabelaDeSimbolos, tokenAntigo, acaoSemantica, saida);
 			
 			if (tokenLido->tipo == PALAVRARESERVADA)
-				transicaoEncontrada = transitarAPE(obterIdUnicoDaPalavraReservada(tokenLido));
+				transicaoEncontrada = transitarAPE(obterIdUnicoDaPalavraReservada(tokenLido), tokenLido);
 			else
-				transicaoEncontrada = transitarAPE(tokenLido->tipo);
+				transicaoEncontrada = transitarAPE(tokenLido->tipo, tokenLido);
 			imprimeToken(tokenLido);
+			tokenAntigo = tokenLido;
 			tokenLido = getToken(entrada);
-			
-			semantico_tbd();
 		}
 	
-	imprimeToken(tokenLido);
-	
-
 	fclose (entrada);    
 	
-//	if (linguagemAceitaPeloAPE() == TRUE)
-//		printf("\n \n ACEITOU");
-//	else 
-//		printf("\n \n NAO ACEITOU");
+	fclose (saida);    
 	
-
 	
-	/*
-	int transicaoEncontrada;
-	transicaoEncontrada = transitarAPE(1);
-	transicaoEncontrada = transitarAPE(1);
-	transicaoEncontrada = transitarAPE(1);
-	transicaoEncontrada = transitarAPE(1);
-	transicaoEncontrada = transitarAPE(2);
-	transicaoEncontrada = transitarAPE(2);
-	transicaoEncontrada = transitarAPE(2);
-	transicaoEncontrada = transitarAPE(2);
+	if (linguagemAceitaPeloAPE() == TRUE)
+		printf("\n \n ACEITOU LINGUAGEM");
+	else
+		printf("\n \n NAO ACEITOU A LINGUAGEM");	
 	
-	printf( "%d", linguagemAceitaPeloAPE());
-	 */
     return 0;
 }
 

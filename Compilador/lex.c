@@ -22,12 +22,11 @@ int analizadorLexicoInicializado = FALSE;
 int terminouDeAnalizar = FALSE;
 int deveIncrementarLinhaLida = FALSE;
 noLista *palavraReservada;
-noLista *simbolos;
+//noLista *simbolos;
 noLista *strings;
 
 void inicializarAnalizadorLexico() {
 	criaTabelaPalavrasReservadas(&palavraReservada);
-    criaTabelaSimbolos(&simbolos);
     criaTabelaStrings(&strings);
     populaTabelaPalavrasReservadas(&palavraReservada);
 	
@@ -89,7 +88,7 @@ void inicializarAnalizadorLexico() {
 	
 	//estado 5 -> retorna para o inicial sempre
 	
-	//estado 6
+	//estado 6	
 	novaTransicao = construirDefinicaoDeTransicao(6, 7, '/'); 
 	modificarFuncaoDeTransicao(&transdutor, novaTransicao);
 	
@@ -155,11 +154,14 @@ token* obterTokenDepoisDeIicializarAnalizadorLexico(FILE* entradaLida) {
 	
 	if (terminouDeAnalizar == TRUE)
 		return gerarTokenDeFimDeArquivo();
-		
+	
 	while (encontrouToken() == FALSE) {
 		if (deveConcatenarOCaracterLidoAoLexema() == TRUE) 
 			concatenarCharNaString(caractereLido, lexemaEncontrado);
 
+		if (deveReiniciarOLexema())
+			lexemaEncontrado[0] = '\0';
+		
 		caractereLido = getc(entradaLida);
 		incrementarNumeroDaLinhaLidaCasoNecessario(caractereLido);
 		
@@ -176,7 +178,7 @@ token* obterTokenDepoisDeIicializarAnalizadorLexico(FILE* entradaLida) {
 	
 	fseek(entradaLida, -1, SEEK_CUR);
 	
-	return gerarTokenAPartirDoLexemaEncontrado(lexemaEncontrado);;
+	return gerarTokenAPartirDoLexemaEncontrado(lexemaEncontrado);
 }
 
 int deveConcatenarOCaracterLidoAoLexema() {
@@ -187,8 +189,7 @@ int deveConcatenarOCaracterLidoAoLexema() {
 		transdutor.estadoAnterior == 8 )) 
 			return FALSE;
 
-	if (transdutor.estadoAtual == 6 ||
-		transdutor.estadoAtual == 7 ||
+	if (transdutor.estadoAtual == 7 ||
 		transdutor.estadoAtual == 8 ||
 		transdutor.estadoAtual == 9 ||
 		transdutor.estadoAtual == 10 )
@@ -199,6 +200,17 @@ int deveConcatenarOCaracterLidoAoLexema() {
 
 }
 
+int deveReiniciarOLexema() {
+	
+	if (transdutor.estadoAtual == 0 &&			
+		(transdutor.estadoAnterior == 7 || 
+		 transdutor.estadoAnterior == 8)) 
+		return TRUE;
+	
+	return FALSE;
+	
+}
+			
 void concatenarCharNaString(char caractereASerConcatenado, char* stringQueVaiReceberOChar) {
 	int tamanhoDaString = strlen(stringQueVaiReceberOChar);
 	stringQueVaiReceberOChar[tamanhoDaString] = caractereASerConcatenado;
@@ -216,10 +228,13 @@ void incrementarNumeroDaLinhaLidaCasoNecessario(char caractereLido) {
 		transdutor.estadoAtual == 9 || 
 		transdutor.estadoAtual == 10) 
 		if ((caractereLido == CARRIAGE_RETURN ||
-			 caractereLido == LINE_FEED)) 
-			numeroDaLinhaLidaNoArquivoFonte++;
+			 caractereLido == LINE_FEED)) {
 			
-	
+				numeroDaLinhaLidaNoArquivoFonte++;
+				return;
+		}
+			
+	/*
 	if (transdutor.estadoAtual == 0 &&  
 	    transdutor.estadoAnterior == 0) {
 		if ((caractereLido == CARRIAGE_RETURN ||
@@ -227,7 +242,7 @@ void incrementarNumeroDaLinhaLidaCasoNecessario(char caractereLido) {
 			numeroDaLinhaLidaNoArquivoFonte++;
 	}
 	return;
-
+	 */
 	
 	//deveIncrementarLinhaLida serve para evitar que o numero seja incrementado duas vezes
 	//pois todo char é lido duas vezes pelo algoritmo
@@ -253,7 +268,7 @@ token* gerarTokenAPartirDoLexemaEncontrado(char* lexemaEncontrado) {
 
 	switch (transdutor.estadoAnterior) {
 		case 1:
-			tokenASerRetornado = obterTokenPalavra(lexemaEncontrado, numeroDaLinhaLidaNoArquivoFonte, PALAVRA, &palavraReservada, &simbolos, &strings);
+			tokenASerRetornado = obterTokenPalavra(lexemaEncontrado, numeroDaLinhaLidaNoArquivoFonte, PALAVRA, &palavraReservada, &strings);
 			break;
 		case 2:
 			tokenASerRetornado = obterTokenNumero(lexemaEncontrado, "", numeroDaLinhaLidaNoArquivoFonte, INTEIRO);
@@ -262,7 +277,7 @@ token* gerarTokenAPartirDoLexemaEncontrado(char* lexemaEncontrado) {
 			tokenASerRetornado = obterTokenNumero(lexemaEncontrado, "", numeroDaLinhaLidaNoArquivoFonte, FLOAT);
 			break;
 		case 5:
-			tokenASerRetornado = obterTokenPalavra(lexemaEncontrado, numeroDaLinhaLidaNoArquivoFonte, STRING, &palavraReservada, &simbolos, &strings);
+			tokenASerRetornado = obterTokenPalavra(lexemaEncontrado, numeroDaLinhaLidaNoArquivoFonte, STRING, &palavraReservada, &strings);
 			break;
 		case 11:
 			if (strcmp(lexemaEncontrado,(char*) "=") == 0) 

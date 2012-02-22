@@ -40,7 +40,7 @@ void populaTabelaPalavrasReservadas(noLista **palavraReservada) {
         fscanf(entrada, "%s", palavraLida);
         
         
-        insereNo(identificador, palavraLida, palavraReservada);
+        insereNo(identificador, palavraLida, "",palavraReservada);
         
         identificador ++;
         
@@ -68,7 +68,7 @@ void populaTabelaPalavrasReservadas(noLista **palavraReservada) {
         fscanf(entradaOperadores, "%s", operadorLido);
         
         
-        insereNo(identificador, operadorLido, palavraReservada);
+        insereNo(identificador, operadorLido, "", palavraReservada);
         
         identificador ++;
         
@@ -110,7 +110,7 @@ void criaTabelaSimbolos(noLista **simbolos) {
     inicializaLista(simbolos);
 }
 
-int adicionaSimbolo(char *palavra, noLista **simbolos) {
+void adicionaSimboloNaTabela(char *palavra, char* valor, noLista **simbolos) {
     
     int identificadorAnterior = ultimoIdentificador(simbolos);
     int identificador;
@@ -121,12 +121,11 @@ int adicionaSimbolo(char *palavra, noLista **simbolos) {
     }
     
     
-    insereNo(identificador, palavra, simbolos);
-    return identificador;
+    insereNo(identificador, palavra, valor, simbolos);
     
 }
 
-int buscaTabelaSimbolos(char *palavra, noLista **simbolos) {
+int buscaTabelaSimbolos(char *palavra,  noLista **simbolos) {
     
     noLista *resultado;
     resultado = procuraLista(palavra, simbolos);
@@ -164,7 +163,7 @@ int adicionaString(char *palavra, noLista **strings) {
     
     //printf("\n\nPALAVAR %s", palavra);
     
-    insereNo(identificador, palavra, strings);
+    insereNo(identificador, palavra, "", strings);
     return identificador;
     
 }

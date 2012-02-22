@@ -1,13 +1,10 @@
 <?php
 
-echo "========== ========== ==========\n";
-echo "========== ========== ==========\n";
-
 $arquivoEntrada = @fopen("estados.txt", "r");
 $matrizDeTransicao;
 
 //submaquina programa
-function eEstadoFinal($estado) {
+function PeEstadoFinal($estado) {
 	if ($estado == 9)
 		return true;
 		
@@ -15,8 +12,8 @@ function eEstadoFinal($estado) {
 }
 
 //submaquina comando
-function CeEstadoFinal($estado) {
-	if ($estado == 7)
+function eEstadoFinal($estado) {
+	if ($estado == 12)
 		return true;
 		
 	return false;
@@ -28,18 +25,11 @@ function CeEstadoFinal($estado) {
 
 function EeEstadoFinal($estado) {
 	if ($estado == 1 ||
-	$estado ==  3 ||
+	$estado ==  4 ||
 	$estado ==  9 ||
-	$estado ==  11 ||
 	$estado ==  12 ||
-	$estado ==  14 ||
-	$estado ==  22 ||
-	$estado ==  24 ||
-	$estado ==  30 ||
-	$estado ==  36 ||
-	$estado ==  52 ||
-	$estado ==  54 ||
-	$estado ==  70)
+	$estado ==  20 ||
+	$estado ==  23)
 		return true;
 		
 	return false;
@@ -188,14 +178,14 @@ foreach($matrizDeTransicao as $estadoDePartida => $transicoes) {
 		if ($primeiroIfTransicao)
 		{
 			echo "\tsubmaquinaAtual->estadoAtual = {$submaquina['proximoEstado']};\n";
-			echo "\tsubstituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, {$submaquina['nomeFuncao']}());\n";	
+			echo "\tsubstituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, {$submaquina['nomeFuncao']}());\n";	
 			if (eEstadoFinal($submaquina['proximoEstado']))
 				echo "\t*estaNoEstadoFinal = TRUE;\n";
 			echo "\tnaoEncontrouTransicao = FALSE;\n";
 		}
 		else {
 			echo "\telse {\n\t\tsubmaquinaAtual->estadoAtual = {$submaquina['proximoEstado']};\n";
-			echo "\t\tsubstituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, {$submaquina['nomeFuncao']}());\n";
+			echo "\t\tsubstituirSubmaquinaAtualColocandoAAntigaNaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal, acaoSemantica, {$submaquina['nomeFuncao']}());\n";
 			if (eEstadoFinal($submaquina['proximoEstado']))
 				echo "\t\t*estaNoEstadoFinal = TRUE;\n";
 			echo "\t\tnaoEncontrouTransicao = FALSE;\n";
@@ -209,6 +199,4 @@ foreach($matrizDeTransicao as $estadoDePartida => $transicoes) {
 echo "\n\nif(naoEncontrouTransicao == TRUE) {\n\tchamarSubmaquinaDaPilha(entradaLida, algumaSubmaquinaTransitou, estaNoEstadoFinal);\n}\n";
 echo "return;\n";
 
-echo "----------------- ------------- -----------\n";
-echo "----------------- ------------- -----------\n";
 ?>
